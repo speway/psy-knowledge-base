@@ -8,7 +8,11 @@ import { FacultyView } from './components/FacultyView';
 import { ArchiveView } from './components/ArchiveView';
 import { ReaderModal } from './components/ReaderModal';
 import { QuickSearchModal } from './components/QuickSearchModal';
+import { UnderstandingCardModal } from './components/UnderstandingCardModal';
+import { ContextualGuideModal } from './components/ContextualGuideModal';
 import { READER_SOURCES, ReaderSource } from './data/reader-sources';
+import { UnderstandingCard, UNDERSTANDING_CARDS, findUnderstandingCard } from './data/understanding-cards';
+import { ContextualGuide, CONTEXTUAL_GUIDES, findContextualGuide } from './data/contextual-guides';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SectionTab>('disciplines');
@@ -16,6 +20,10 @@ export const App: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [glossarySearchQuery, setGlossarySearchQuery] = useState('');
   const [selectedFacultyId, setSelectedFacultyId] = useState<string>('tuniyants-a-a');
+  
+  // Understanding Card & Contextual Guide Modal States
+  const [activeUnderstandingCard, setActiveUnderstandingCard] = useState<UnderstandingCard | null>(null);
+  const [activeContextualGuide, setActiveContextualGuide] = useState<ContextualGuide | null>(null);
 
   // Global keyboard shortcut for search (Ctrl+K or Cmd+K)
   useEffect(() => {
@@ -38,6 +46,30 @@ export const App: React.FC = () => {
                 READER_SOURCES.find(s => s.title.toLowerCase().includes(cleanId.toLowerCase())) ||
                 READER_SOURCES[0];
     setReaderSource(src);
+  };
+
+  const handleOpenUnderstandingCard = (cardOrQuery?: string | UnderstandingCard) => {
+    if (typeof cardOrQuery === 'object' && cardOrQuery !== null) {
+      setActiveUnderstandingCard(cardOrQuery);
+    } else if (typeof cardOrQuery === 'string') {
+      const found = findUnderstandingCard(cardOrQuery);
+      if (found) setActiveUnderstandingCard(found);
+      else setActiveUnderstandingCard(UNDERSTANDING_CARDS[0]);
+    } else {
+      setActiveUnderstandingCard(UNDERSTANDING_CARDS[0]);
+    }
+  };
+
+  const handleOpenContextualGuide = (guideOrQuery?: string | ContextualGuide) => {
+    if (typeof guideOrQuery === 'object' && guideOrQuery !== null) {
+      setActiveContextualGuide(guideOrQuery);
+    } else if (typeof guideOrQuery === 'string') {
+      const found = findContextualGuide(guideOrQuery);
+      if (found) setActiveContextualGuide(found);
+      else setActiveContextualGuide(CONTEXTUAL_GUIDES[0]);
+    } else {
+      setActiveContextualGuide(CONTEXTUAL_GUIDES[0]);
+    }
   };
 
   const handleNavigateToFaculty = (facultyId?: string) => {
@@ -77,12 +109,15 @@ export const App: React.FC = () => {
               onOpenReaderBySourceId={handleOpenReaderBySourceId}
               onNavigateToFaculty={handleNavigateToFaculty}
               onNavigateToTerm={handleNavigateToTerm}
+              onOpenUnderstandingCard={handleOpenUnderstandingCard}
+              onOpenContextualGuide={handleOpenContextualGuide}
             />
           )}
 
           {activeTab === 'reader' && (
             <LibraryView
               onOpenReader={(src) => setReaderSource(src)}
+              onOpenUnderstandingCard={handleOpenUnderstandingCard}
             />
           )}
 
@@ -105,6 +140,8 @@ export const App: React.FC = () => {
             <ArchiveView
               onNavigateToFaculty={handleNavigateToFaculty}
               onOpenReaderBySourceId={handleOpenReaderBySourceId}
+              onOpenUnderstandingCard={handleOpenUnderstandingCard}
+              onOpenContextualGuide={handleOpenContextualGuide}
             />
           )}
         </div>
@@ -161,6 +198,23 @@ export const App: React.FC = () => {
       <ReaderModal
         source={readerSource}
         onClose={() => setReaderSource(null)}
+        onOpenUnderstandingCard={handleOpenUnderstandingCard}
+        onOpenContextualGuide={handleOpenContextualGuide}
+      />
+
+      {/* Understanding Card Modal (Pedagogical framework of Prof. T.Y. Bazarov) */}
+      <UnderstandingCardModal
+        card={activeUnderstandingCard}
+        onClose={() => setActiveUnderstandingCard(null)}
+        onSelectCard={setActiveUnderstandingCard}
+        onOpenReaderBySourceId={handleOpenReaderBySourceId}
+      />
+
+      {/* Contextual Study & Research Guide Modal */}
+      <ContextualGuideModal
+        guide={activeContextualGuide}
+        onClose={() => setActiveContextualGuide(null)}
+        onSelectGuide={setActiveContextualGuide}
       />
 
       {/* Quick Search Modal */}

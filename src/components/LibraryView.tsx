@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Search, BookOpen, Calendar, User, Library, X, ArrowUpRight } from 'lucide-react';
+import { Search, BookOpen, Calendar, User, Library, X, ArrowUpRight, Sparkles } from 'lucide-react';
 import { READER_SOURCES, ReaderSource } from '../data/reader-sources';
+import { findUnderstandingCard } from '../data/understanding-cards';
 
 interface LibraryViewProps {
   onOpenReader: (source: ReaderSource) => void;
+  onOpenUnderstandingCard?: (cardId: string) => void;
 }
 
-export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
+export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader, onOpenUnderstandingCard }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Все');
 
@@ -167,20 +169,57 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
               borderTop: '1px solid var(--line-soft)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '8px'
             }}>
               <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>
                 {source.pages.length} фрагм. текста
               </span>
 
-              <button
-                onClick={() => onOpenReader(source)}
-                className="btn-ink"
-                style={{ padding: '6px 14px', fontSize: '12px' }}
-              >
-                <BookOpen size={13} />
-                Открыть ридер
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {(() => {
+                  const card = findUnderstandingCard(source.understandingCardId || source.id);
+                  if (card && onOpenUnderstandingCard) {
+                    return (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenUnderstandingCard(card.id);
+                        }}
+                        style={{
+                          background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: 'var(--radius-sm)',
+                          padding: '6px 10px',
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          boxShadow: '0 2px 6px rgba(217, 119, 6, 0.25)'
+                        }}
+                        title="Открыть Карточку понимания по модели Т.Ю. Базарова"
+                      >
+                        <Sparkles size={11} color="#fef3c7" />
+                        <span>Карточка</span>
+                      </button>
+                    );
+                  }
+                  return null;
+                })()}
+
+                <button
+                  onClick={() => onOpenReader(source)}
+                  className="btn-ink"
+                  style={{ padding: '6px 14px', fontSize: '12px' }}
+                >
+                  <BookOpen size={13} />
+                  Открыть ридер
+                </button>
+              </div>
             </div>
           </div>
         ))}

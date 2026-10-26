@@ -13,20 +13,27 @@ import {
   FileText,
   Bookmark,
   Sparkles,
-  HelpCircle
+  HelpCircle,
+  Compass
 } from 'lucide-react';
 import { COURSES, Course, SeminarItem } from '../data/courses';
+import { ResearchJourneyBanner } from './ResearchJourneyBanner';
+import { findUnderstandingCard } from '../data/understanding-cards';
 
 interface CoursesViewProps {
   onOpenReaderBySourceId: (sourceId: string) => void;
   onNavigateToFaculty: (facultyId: string) => void;
   onNavigateToTerm: (term: string) => void;
+  onOpenUnderstandingCard?: (cardId: string) => void;
+  onOpenContextualGuide?: (guideId: string) => void;
 }
 
 export const CoursesView: React.FC<CoursesViewProps> = ({
   onOpenReaderBySourceId,
   onNavigateToFaculty,
-  onNavigateToTerm
+  onNavigateToTerm,
+  onOpenUnderstandingCard,
+  onOpenContextualGuide
 }) => {
   const course: Course = COURSES[0];
   
@@ -75,6 +82,13 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
   return (
     <div style={{ paddingBottom: '90px' }}>
       
+      {/* Pedagogical Principle & Journey Banner (Prof. T.Y. Bazarov) */}
+      <ResearchJourneyBanner
+        onOpenBazarovCard={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
+        onOpenAllCards={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
+        onOpenResearchGuide={() => onOpenContextualGuide && onOpenContextualGuide('guide-how-to-do-research')}
+      />
+
       {/* Course Hero Banner */}
       <div className="paper-card" style={{
         padding: '30px 26px',
@@ -343,19 +357,58 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '12px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    fontWeight: 800,
-                    color: 'var(--primary)',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '8px',
                     marginBottom: '18px',
-                    fontFamily: 'var(--mono)',
                     paddingBottom: '8px',
                     borderBottom: '1px solid var(--line-soft)'
                   }}>
-                    <Bookmark size={13} />
-                    <span>{sem.section}</span>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '12px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      fontWeight: 800,
+                      color: 'var(--primary)',
+                      fontFamily: 'var(--mono)'
+                    }}>
+                      <Bookmark size={13} />
+                      <span>{sem.section}</span>
+                    </div>
+
+                    {onOpenContextualGuide && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (sem.num <= 2) onOpenContextualGuide('guide-self-determination');
+                          else if (sem.num === 3) onOpenContextualGuide('guide-functional-autonomy');
+                          else if (sem.num <= 5) onOpenContextualGuide('guide-achievement-motivation');
+                          else if (sem.num <= 8) onOpenContextualGuide('guide-emotions-representation');
+                          else onOpenContextualGuide('guide-bazarov-sokol-framework');
+                        }}
+                        style={{
+                          background: 'rgba(44, 82, 130, 0.08)',
+                          color: 'var(--secondary)',
+                          border: '1px solid rgba(44, 82, 130, 0.25)',
+                          borderRadius: 'var(--radius-full)',
+                          padding: '4px 12px',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="Открыть гайд по подготовке к семинару и формулировке гипотезы"
+                      >
+                        <Compass size={12} />
+                        <span>Гайд к семинару {sem.num} и выход на ВКР</span>
+                      </button>
+                    )}
                   </div>
 
                   {/* BLOCK 1: Questions with Bibliographic Ticket & Reader Launch */}
@@ -454,16 +507,89 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                               </span>
                             </div>
 
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 800,
-                              color: 'var(--primary)',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '3px'
-                            }}>
-                              Читать в ридере <ArrowUpRight size={13} />
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                              {/* Understanding Card button if card matches source */}
+                              {(() => {
+                                const matchedCard = findUnderstandingCard(q.sourceId);
+                                if (matchedCard && onOpenUnderstandingCard) {
+                                  return (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onOpenUnderstandingCard(matchedCard.id);
+                                      }}
+                                      style={{
+                                        background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                                        color: '#ffffff',
+                                        border: 'none',
+                                        borderRadius: 'var(--radius-full)',
+                                        padding: '4px 10px',
+                                        fontSize: '11px',
+                                        fontWeight: 800,
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '4px',
+                                        boxShadow: '0 2px 6px rgba(217, 119, 6, 0.3)',
+                                        transition: 'all 0.15s ease'
+                                      }}
+                                      title="Открыть Карточку понимания по модели Т.Ю. Базарова"
+                                      onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                                      onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+                                    >
+                                      <Sparkles size={11} color="#fef3c7" />
+                                      <span>Карточка понимания</span>
+                                    </button>
+                                  );
+                                }
+                                return null;
+                              })()}
+
+                              {/* Contextual guide button */}
+                              {onOpenContextualGuide && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (sem.num <= 2) onOpenContextualGuide('guide-self-determination');
+                                    else if (sem.num === 3) onOpenContextualGuide('guide-functional-autonomy');
+                                    else if (sem.num <= 5) onOpenContextualGuide('guide-achievement-motivation');
+                                    else if (sem.num <= 8) onOpenContextualGuide('guide-emotions-representation');
+                                    else onOpenContextualGuide('guide-bazarov-sokol-framework');
+                                  }}
+                                  style={{
+                                    background: 'var(--surface)',
+                                    color: 'var(--secondary)',
+                                    border: '1px solid var(--secondary)',
+                                    borderRadius: 'var(--radius-full)',
+                                    padding: '4px 10px',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  title="Гайд: как отвечать на семинаре и формулировать гипотезу"
+                                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(44, 82, 130, 0.08)'}
+                                  onMouseLeave={(e) => e.currentTarget.style.background = 'var(--surface)'}
+                                >
+                                  <Compass size={11} />
+                                  <span>Гайд</span>
+                                </button>
+                              )}
+
+                              <span style={{
+                                fontSize: '12px',
+                                fontWeight: 800,
+                                color: 'var(--primary)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '3px'
+                              }}>
+                                Читать в ридере <ArrowUpRight size={13} />
+                              </span>
+                            </div>
                           </div>
                         </div>
                       ))}

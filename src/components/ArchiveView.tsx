@@ -1,16 +1,22 @@
 import React from 'react';
-import { GraduationCap, CheckCircle2, BookOpen, ArrowUpRight, FileText, UserCheck, BookmarkCheck } from 'lucide-react';
+import { GraduationCap, CheckCircle2, BookOpen, ArrowUpRight, FileText, UserCheck, BookmarkCheck, Sparkles, Compass, Layers } from 'lucide-react';
 import { STUDENT_GUIDELINES } from '../data/student-guide';
 import { FACULTY_MEMBERS } from '../data/faculty';
+import { UNDERSTANDING_CARDS } from '../data/understanding-cards';
+import { CONTEXTUAL_GUIDES } from '../data/contextual-guides';
 
 interface ArchiveViewProps {
   onNavigateToFaculty: (facultyId: string) => void;
   onOpenReaderBySourceId?: (sourceId: string) => void;
+  onOpenUnderstandingCard?: (cardId: string) => void;
+  onOpenContextualGuide?: (guideId: string) => void;
 }
 
 export const ArchiveView: React.FC<ArchiveViewProps> = ({ 
   onNavigateToFaculty,
-  onOpenReaderBySourceId 
+  onOpenReaderBySourceId,
+  onOpenUnderstandingCard,
+  onOpenContextualGuide
 }) => {
   const tuniyants = FACULTY_MEMBERS[0];
 
@@ -64,6 +70,140 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           Официальный регламент научно-исследовательской работы студентов (НИРС) Филиала МГУ в г. Ташкенте:
           структура научного аппарата введения, реестр утверждённых тем исследований и стандарты академического оформления рукописей.
         </p>
+      </div>
+
+      {/* PEDAGOGICAL RESEARCH JOURNEY: PROF. T.Y. BAZAROV MODEL */}
+      <div 
+        className="paper-card"
+        style={{
+          padding: '24px',
+          marginBottom: '28px',
+          background: 'linear-gradient(135deg, #2b173e 0%, #431f63 100%)',
+          color: '#ffffff',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          boxShadow: '0 12px 32px rgba(43, 23, 62, 0.2)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+          <span style={{
+            background: 'rgba(245, 158, 11, 0.25)',
+            color: '#fef3c7',
+            border: '1px solid rgba(245, 158, 11, 0.45)',
+            padding: '3px 10px',
+            borderRadius: 'var(--radius-full)',
+            fontSize: '11px',
+            fontWeight: 800,
+            letterSpacing: '0.04em',
+            fontFamily: 'var(--mono)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px'
+          }}>
+            <Sparkles size={12} color="#f59e0b" />
+            ПЕДАГОГИЧЕСКИЙ ПРИНЦИП КАФЕДРЫ ПСИХОЛОГИИ
+          </span>
+          <span style={{ fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.7)' }}>
+            Концепция проф. Т.Ю. Базарова
+          </span>
+        </div>
+
+        <blockquote style={{
+          margin: '0 0 16px 0',
+          padding: '0 0 0 16px',
+          borderLeft: '3px solid #f59e0b',
+          fontSize: '16.5px',
+          lineHeight: 1.45,
+          fontFamily: 'var(--font-serif)',
+          fontStyle: 'italic',
+          color: '#fdfbfe'
+        }}>
+          «Главное — превратить знакомство с текстами в увлекательное путешествие с выходом на собственные исследования»
+        </blockquote>
+
+        {/* 7 UNDERSTANDING CARDS GRID */}
+        <div style={{ marginBottom: '18px' }}>
+          <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#fef3c7', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Layers size={14} color="#f59e0b" />
+            Карточки понимания первоисточников (6 блоков + тема курсовой и гипотеза):
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px' }}>
+            {UNDERSTANDING_CARDS.map((card) => (
+              <button
+                key={card.id}
+                onClick={() => onOpenUnderstandingCard && onOpenUnderstandingCard(card.id)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '10px 14px',
+                  textAlign: 'left',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.transform = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '11px', color: '#fef3c7', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+                    {card.author} {card.year ? `(${card.year})` : ''}
+                  </span>
+                  <Sparkles size={11} color="#f59e0b" />
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 700, lineHeight: 1.3 }}>
+                  {card.title}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 6 CONTEXTUAL RESEARCH GUIDES ROW */}
+        <div>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: 'rgba(255, 255, 255, 0.85)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Compass size={14} color="#60a5fa" />
+            Гайды понимания тем и семинарских вопросов:
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {CONTEXTUAL_GUIDES.map((g) => (
+              <button
+                key={g.id}
+                onClick={() => onOpenContextualGuide && onOpenContextualGuide(g.id)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: 'var(--radius-full)',
+                  padding: '5px 12px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+              >
+                <Compass size={11} color="#93c5fd" />
+                <span>{g.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Methodology Library in Reader */}

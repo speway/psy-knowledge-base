@@ -10,16 +10,26 @@ import {
   Download, 
   ExternalLink,
   BookOpen,
-  ListFilter
+  ListFilter,
+  Sparkles,
+  Compass
 } from 'lucide-react';
 import { ReaderSource } from '../data/reader-sources';
+import { findUnderstandingCard } from '../data/understanding-cards';
 
 interface ReaderModalProps {
   source: ReaderSource | null;
   onClose: () => void;
+  onOpenUnderstandingCard?: (cardId: string) => void;
+  onOpenContextualGuide?: (guideId: string) => void;
 }
 
-export const ReaderModal: React.FC<ReaderModalProps> = ({ source, onClose }) => {
+export const ReaderModal: React.FC<ReaderModalProps> = ({ 
+  source, 
+  onClose,
+  onOpenUnderstandingCard,
+  onOpenContextualGuide
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
   const [useSerif, setUseSerif] = useState(true);
@@ -219,6 +229,67 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({ source, onClose }) => 
                 </button>
               )}
             </div>
+
+            {/* Understanding Card button if available */}
+            {(() => {
+              const matchedCard = findUnderstandingCard(source.understandingCardId || source.id);
+              if (matchedCard && onOpenUnderstandingCard) {
+                return (
+                  <button
+                    onClick={() => onOpenUnderstandingCard(matchedCard.id)}
+                    style={{
+                      background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: 'var(--radius-full)',
+                      padding: '5px 12px',
+                      fontSize: '11.5px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: '0 2px 8px rgba(217, 119, 6, 0.4)',
+                      transition: 'all 0.15s ease'
+                    }}
+                    title="Открыть Карточку понимания по модели проф. Т.Ю. Базарова"
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+                  >
+                    <Sparkles size={12} color="#fef3c7" />
+                    <span>Карточка понимания</span>
+                  </button>
+                );
+              }
+              return null;
+            })()}
+
+            {/* Contextual Guide button */}
+            {onOpenContextualGuide && (
+              <button
+                onClick={() => onOpenContextualGuide('guide-how-to-do-research')}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.14)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-full)',
+                  padding: '5px 10px',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'all 0.15s ease'
+                }}
+                title="Гайд исследователя: выход на ВКР"
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)'}
+              >
+                <Compass size={12} />
+                <span>Гайд ВКР</span>
+              </button>
+            )}
 
             {/* Quick Actions */}
             {viewMode === 'text' && (
