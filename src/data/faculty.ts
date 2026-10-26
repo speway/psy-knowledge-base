@@ -1,3 +1,6 @@
+// Академический профиль преподавателя кафедры психологии ТФ МГУ
+// Эталонный шаблон оформления для всех последующих преподавателей кафедры
+
 export interface ResearchField {
   id: string;
   title: string;
@@ -10,7 +13,37 @@ export interface PublicationItem {
   authors: string;
   journal: string;
   doi?: string;
+  sourceId?: string;
   abstract: string;
+  indexedIn?: string;
+}
+
+export interface ResearchProject {
+  id: string;
+  period: string;
+  title: string;
+  istinaUrl: string;
+  customer: string;
+  head: {
+    name: string;
+    istinaUrl: string;
+  };
+  team: {
+    name: string;
+    istinaUrl: string;
+  }[];
+  isExternal: boolean;
+  badge: string;
+  description: string;
+}
+
+export interface AcademicCollaboration {
+  name: string;
+  degree: string;
+  role: string;
+  institution: string;
+  description: string;
+  istinaUrl?: string;
 }
 
 export interface FacultyMember {
@@ -18,16 +51,29 @@ export interface FacultyMember {
   name: string;
   role: string;
   department: string;
+  photoUrl?: string;
   avatarText: string;
   experience: string;
   badge?: string;
-  istinaId?: string;
-  istinaUrl?: string;
+  istinaId: string;
+  istinaUrl: string;
+  email?: string;
+  office?: string;
+  consultationHours?: string;
   interestsList: string[];
   summary: string;
   publications: PublicationItem[];
+  projects: ResearchProject[];
+  collaborations: AcademicCollaboration[];
   thesisTopics: string[];
-  coursesTaught: string[];
+  coursesTaught: {
+    title: string;
+    courseId?: string;
+    level: string;
+    hours: string;
+    examType: string;
+    description: string;
+  }[];
 }
 
 export const FACULTY_MEMBERS: FacultyMember[] = [
@@ -36,11 +82,15 @@ export const FACULTY_MEMBERS: FacultyMember[] = [
     name: 'Туниянц Анна Александровна',
     role: 'Старший преподаватель кафедры психологии',
     department: 'Филиал МГУ имени М.В. Ломоносова в городе Ташкенте',
+    photoUrl: '/assets/tuniyants.jpg',
     avatarText: 'АА',
     experience: 'В Ташкентском филиале МГУ с сентября 2011 года (15 лет научно-педагогического стажа)',
-    badge: 'Ведущий преподаватель',
+    badge: 'Ведущий лектор дисциплины',
     istinaId: '10554505',
     istinaUrl: 'https://istina.msu.ru/profile/TuniyantsAA/',
+    email: 'tuniyants.aa@msu.uz',
+    office: 'Кабинет психологии № 204, Ташкентский филиал МГУ',
+    consultationHours: 'Вторник: 14:00 – 16:30, Четверг: 15:00 – 17:00',
     interestsList: [
       'Позитивная психология: психологическое благополучие, саморазвитие, субъективная витальность, осознанность, внутренняя мотивация',
       'Саморегуляция',
@@ -54,7 +104,36 @@ export const FACULTY_MEMBERS: FacultyMember[] = [
       'Дискурс-анализ',
       'Нарративная практика'
     ],
-    summary: 'Старший преподаватель кафедры психологии Филиала МГУ в г. Ташкенте. Ведущий лектор дисциплины «Психология мотивации и эмоций», соавтор методики курса «Профессиональная социализация психолога». Руководитель курсовых и выпускных квалификационных работ бакалавриата.',
+    summary: 'Старший преподаватель кафедры психологии Филиала МГУ в г. Ташкенте с 2011 года. Ведущий лектор базового академического курса «Психология мотивации и эмоций». Разработчик инновационных программ тренингов, соавтор методики курса «Профессиональная социализация психолога» (совместно с проф. Т.Ю. Базаровым). Руководитель исследовательских работ студентов и соисполнитель государственных научно-исследовательских грантов Республики Узбекистан.',
+    
+    // Внешние и университетские исследовательские проекты
+    projects: [
+      {
+        id: 'mahalla-family-wellbeing-2021-2022',
+        period: '1 сентября 2021 — 1 марта 2022',
+        title: 'Психосоциальное благополучие личности как фактор преодоления семейных нормативных кризисов',
+        istinaUrl: 'https://istina.msu.ru/projects/533126236/',
+        customer: 'Министерство по поддержке махалли и семьи Республики Узбекистан и Научно-исследовательский институт «Махалля ва оила»',
+        head: {
+          name: 'Карамян М.Х.',
+          istinaUrl: 'https://istina.msu.ru/workers/533126299/'
+        },
+        team: [
+          { name: 'Илхамова Д.И.', istinaUrl: 'https://istina.msu.ru/workers/533126304/' },
+          { name: 'Тургунова Г.Б.', istinaUrl: 'https://istina.msu.ru/workers/533126305/' },
+          { name: 'Закирова Э.Б.', istinaUrl: 'https://istina.msu.ru/workers/533126306/' },
+          { name: 'Карамян М.Х.', istinaUrl: 'https://istina.msu.ru/workers/533126300/' },
+          { name: 'Туниянц А.А.', istinaUrl: 'https://istina.msu.ru/workers/533126301/' },
+          { name: 'Рябова М.С.', istinaUrl: 'https://istina.msu.ru/workers/533126302/' },
+          { name: 'Далимова Н.М.', istinaUrl: 'https://istina.msu.ru/workers/533126303/' }
+        ],
+        isExternal: true,
+        badge: 'Сторонний государственный исследовательский грант',
+        description: 'Комплексный научно-исследовательский проект, посвящённый эмпирическому изучению психологических факторов устойчивости института семьи, механизмов преодоления нормативных и ненормативных кризисов семейной системы, а также роли субъективного психосоциального благополучия супругов в условиях традиционного и трансформирующегося общества.'
+      }
+    ],
+
+    // Публикации
     publications: [
       {
         year: '2013',
@@ -62,6 +141,8 @@ export const FACULTY_MEMBERS: FacultyMember[] = [
         authors: 'Базаров Т.Ю., Губайдуллина А.Д., Туниянц А.А.',
         journal: 'Вестник Московского университета. Серия 14. Психология, № 4, с. 106–117',
         doi: 'https://istina.msu.ru/publications/article/4827059/',
+        sourceId: 'bazarov_tuniyants_socialization',
+        indexedIn: 'ВАК РФ · РИНЦ · RSCI',
         abstract: 'Статья посвящена анализу инновационного опыта подготовки психологов на базе Ташкентского филиала МГУ. Рассматриваются технологии формирования профессиональной идентичности, активные методы социально-психологического обучения и критерии оценки эффективности профессиональной социализации студентов.'
       },
       {
@@ -70,9 +151,33 @@ export const FACULTY_MEMBERS: FacultyMember[] = [
         authors: 'Зотова О.Ю., Рикель А.М., Туниянц А.А.',
         journal: 'Вестник Московского университета. Серия 14. Психология, № 3, с. 88–101',
         doi: 'https://istina.msu.ru/publications/article/21650392/',
+        sourceId: 'zotova_rikel_tuniyants_wellbeing',
+        indexedIn: 'ВАК РФ · Ядро РИНЦ · Scopus',
         abstract: 'Эмпирическое исследование личностных диспозиций, жизнестойкости и ситуационных факторов, детерминирующих субъективное психологическое благополучие студентов московской и ташкентской образовательных площадок Московского государственного университета.'
       }
     ],
+
+    // Академическое сотрудничество
+    collaborations: [
+      {
+        name: 'Базаров Тахир Юсупович',
+        degree: 'Доктор психологических наук, профессор',
+        role: 'Научный куратор и соавтор курса',
+        institution: 'Заведующий кафедрой социальной психологии факультета психологии МГУ имени М.В. Ломоносова',
+        description: 'Совместная разработка методики и проведение дисциплины «Профессиональная социализация психолога», соавторство в публикациях по активным методам обучения студентов филиала.',
+        istinaUrl: 'https://istina.msu.ru/workers/411993/'
+      },
+      {
+        name: 'Рикель Артем Маркович',
+        degree: 'Кандидат психологических наук, доцент',
+        role: 'Соавтор эмпирических исследований',
+        institution: 'Кафедра социальной психологии факультета психологии МГУ имени М.В. Ломоносова',
+        description: 'Совместные сравнительные кросс-региональные исследования психологического благополучия, ценностных ориентаций и жизнестойкости студенческой молодёжи.',
+        istinaUrl: 'https://istina.msu.ru/workers/412001/'
+      }
+    ],
+
+    // Темы курсовых и ВКР
     thesisTopics: [
       'Субъективное благополучие и жизненная витальность студентов в поликультурной университетской среде',
       'Взаимосвязь внутренней мотивации и академической успешности у бакалавров психологии',
@@ -81,9 +186,24 @@ export const FACULTY_MEMBERS: FacultyMember[] = [
       'Динамика становления профессиональной идентичности будущих психологов в процессе обучения',
       'Нарративные маркеры профессионального самосознания и рефлексии у студентов помогающих профессий'
     ],
+
+    // Читаемые курсы
     coursesTaught: [
-      'Психология мотивации и эмоций (1 курс бакалавриата, 34 акад. часа)',
-      'Профессиональная социализация психолога (авторский спецкурс совместно с проф. Т.Ю. Базаровым)'
+      {
+        title: 'Психология мотивации и эмоций',
+        courseId: 'motivation-emotion',
+        level: '1 курс бакалавриата (2 семестр)',
+        hours: '34 акад. часа (лекции и семинары)',
+        examType: 'Экзамен',
+        description: 'Фундаментальный теоретический курс по потребностно-мотивационной сфере и феноменологии эмоций с 9 оцифрованными семинарами на портале.'
+      },
+      {
+        title: 'Профессиональная социализация психолога',
+        level: 'Спецкурс бакалавриата',
+        hours: '36 акад. часов',
+        examType: 'Зачёт',
+        description: 'Авторский спецкурс социально-психологического тренинга, формирования профессиональной идентичности и этики психолога-практика.'
+      }
     ]
   }
 ];

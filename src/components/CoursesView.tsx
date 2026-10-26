@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
-import { Clock, User, BookOpen, Lightbulb, Tag, ArrowUpRight, CheckCircle2, ChevronDown, ChevronUp, Layers, Filter } from 'lucide-react';
+import { 
+  Clock, 
+  User, 
+  BookOpen, 
+  Lightbulb, 
+  Tag, 
+  ArrowUpRight, 
+  CheckCircle2, 
+  ChevronDown, 
+  ChevronUp, 
+  Layers, 
+  FileText,
+  Bookmark,
+  Sparkles,
+  HelpCircle
+} from 'lucide-react';
 import { COURSES, Course, SeminarItem } from '../data/courses';
 
 interface CoursesViewProps {
@@ -18,7 +33,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
   // Section filter: 'all' | 'motivation' | 'emotion'
   const [sectionFilter, setSectionFilter] = useState<'all' | 'motivation' | 'emotion'>('all');
 
-  // State for which seminars are expanded (first 2 open by default)
+  // State for which seminars are open (first 2 open by default)
   const [openSeminars, setOpenSeminars] = useState<Record<number, boolean>>({
     1: true,
     2: true
@@ -48,7 +63,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 50);
+    }, 60);
   };
 
   const filteredSeminars = course.seminars.filter(s => {
@@ -62,10 +77,11 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
       
       {/* Course Hero Banner */}
       <div className="paper-card" style={{
-        padding: '28px 24px',
+        padding: '30px 26px',
         marginBottom: '24px',
         background: 'var(--surface)',
-        borderLeft: '5px solid var(--primary)'
+        borderLeft: '5px solid var(--primary)',
+        boxShadow: 'var(--shadow-sm)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
@@ -83,7 +99,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
 
         <h1 style={{
           fontSize: '30px',
-          fontWeight: 700,
+          fontWeight: 800,
           color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           lineHeight: 1.25,
@@ -135,21 +151,21 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
             <button
               onClick={() => setSectionFilter('all')}
               className={`pill ${sectionFilter === 'all' ? 'pill-primary' : 'pill-neutral'}`}
-              style={{ cursor: 'pointer', padding: '6px 14px' }}
+              style={{ cursor: 'pointer', padding: '6px 14px', fontWeight: sectionFilter === 'all' ? 800 : 600 }}
             >
               Все 9 семинаров (34 ч.)
             </button>
             <button
               onClick={() => setSectionFilter('motivation')}
               className={`pill ${sectionFilter === 'motivation' ? 'pill-primary' : 'pill-neutral'}`}
-              style={{ cursor: 'pointer', padding: '6px 14px' }}
+              style={{ cursor: 'pointer', padding: '6px 14px', fontWeight: sectionFilter === 'motivation' ? 800 : 600 }}
             >
               Часть I: Мотивация (Сем. 1–5 · 18 ч.)
             </button>
             <button
               onClick={() => setSectionFilter('emotion')}
               className={`pill ${sectionFilter === 'emotion' ? 'pill-primary' : 'pill-neutral'}`}
-              style={{ cursor: 'pointer', padding: '6px 14px' }}
+              style={{ cursor: 'pointer', padding: '6px 14px', fontWeight: sectionFilter === 'emotion' ? 800 : 600 }}
             >
               Часть II: Эмоции (Сем. 6–9 · 16 ч.)
             </button>
@@ -177,7 +193,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
       {/* Interactive Quick-Jump Stepper Bar */}
       <div className="paper-card" style={{
         padding: '14px 20px',
-        marginBottom: '20px',
+        marginBottom: '22px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -187,7 +203,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Перейти к теме:
+            Навигатор семинаров:
           </span>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {course.seminars.map(s => {
@@ -199,15 +215,16 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                   className={`pill ${isOpen ? 'pill-primary' : 'pill-neutral'}`}
                   style={{
                     cursor: 'pointer',
-                    minWidth: '34px',
-                    height: '34px',
+                    minWidth: '36px',
+                    height: '36px',
                     padding: '0',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 800,
-                    fontSize: '13px',
-                    boxShadow: isOpen ? '0 2px 6px rgba(75, 50, 104, 0.25)' : 'none'
+                    fontSize: '13.5px',
+                    boxShadow: isOpen ? '0 2px 8px rgba(75, 50, 104, 0.28)' : 'none',
+                    transition: 'all 0.15s ease'
                   }}
                   title={`Семинар ${s.num}: ${s.title}`}
                 >
@@ -219,105 +236,171 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
         </div>
 
         <span style={{ fontSize: '12px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
-          Клик по номеру открывает семинар и скроллит к нему
+          Клик по номеру открывает тему и фокусирует занятие
         </span>
       </div>
 
-      {/* Seminars List */}
-      <div>
+      {/* Textured Seminars List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {filteredSeminars.map((sem) => {
           const isOpen = !!openSeminars[sem.num];
           return (
             <div 
               key={sem.num} 
               id={`seminar-card-${sem.num}`}
-              className={`seminar-item ${isOpen ? 'open' : ''}`}
+              style={{
+                background: 'var(--surface)',
+                border: isOpen ? '1.5px solid var(--primary-border)' : '1px solid var(--line)',
+                borderRadius: 'var(--radius-md)',
+                overflow: 'hidden',
+                boxShadow: isOpen ? '0 6px 24px rgba(45, 31, 63, 0.07)' : 'var(--shadow-sm)',
+                transition: 'all 0.2s ease'
+              }}
             >
               
-              {/* Seminar Title Bar */}
+              {/* Seminar Header Bar */}
               <div 
-                className="seminar-title-bar"
                 onClick={() => toggleSeminar(sem.num)}
+                style={{
+                  padding: '18px 22px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  background: isOpen ? 'var(--paper-soft)' : 'var(--surface)',
+                  borderBottom: isOpen ? '1px solid var(--line)' : 'none',
+                  userSelect: 'none',
+                  transition: 'background 0.15s ease'
+                }}
               >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                    <span className="pill pill-primary" style={{ fontSize: '11px', padding: '2px 8px' }}>
-                      Семинар {sem.num}
+                <div style={{ flex: 1, paddingRight: '12px' }}>
+                  
+                  {/* Top Badges Matrix */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                    <span style={{
+                      background: 'var(--primary)',
+                      color: '#ffffff',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      fontFamily: 'var(--mono)',
+                      padding: '3px 10px',
+                      borderRadius: 'var(--radius-full)',
+                      letterSpacing: '0.04em'
+                    }}>
+                      СЕМИНАР {sem.num < 10 ? `0${sem.num}` : sem.num}
                     </span>
-                    <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontWeight: 600, fontFamily: 'var(--mono)' }}>
-                      <Clock size={11} style={{ display: 'inline', marginRight: '3px' }} />
+
+                    <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 700, fontFamily: 'var(--mono)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <Clock size={12} color="var(--primary)" />
                       {sem.hours} акад. ч.
                     </span>
-                    <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontWeight: 600 }}>
-                      · {sem.questions.length} вопр.
+
+                    <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>
+                      · {sem.questions.length} вопросов
+                    </span>
+
+                    <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>
+                      · {sem.literature.length} первоисточника в ридере
                     </span>
                   </div>
 
+                  {/* Title */}
                   <h3 style={{
-                    fontSize: '18px',
-                    fontWeight: 700,
+                    fontSize: '19px',
+                    fontWeight: 800,
                     color: 'var(--ink)',
-                    lineHeight: 1.3
+                    lineHeight: 1.3,
+                    fontFamily: 'var(--font-serif)'
                   }}>
                     {sem.title}
                   </h3>
                 </div>
 
+                {/* Toggle Pill Indicator */}
                 <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: isOpen ? 'var(--primary-light)' : 'var(--paper-soft)',
-                  color: isOpen ? 'var(--primary)' : 'var(--muted)',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  background: isOpen ? 'var(--primary)' : 'var(--paper-soft)',
+                  color: isOpen ? '#ffffff' : 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: '16px',
+                  gap: '4px',
                   flexShrink: 0,
-                  marginLeft: '12px'
+                  transition: 'all 0.18s ease'
                 }}>
-                  {isOpen ? '−' : '+'}
+                  <span>{isOpen ? 'Свернуть' : 'Открыть'}</span>
+                  {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                 </div>
               </div>
 
-              {/* Seminar Body */}
+              {/* Seminar Expanded Body */}
               {isOpen && (
-                <div className="seminar-content-area">
+                <div style={{ padding: '24px 22px', background: 'var(--surface)' }}>
                   
                   {/* Topic Section Header */}
                   <div style={{
-                    fontSize: '11.5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '12px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                     fontWeight: 800,
-                    color: 'var(--muted)',
-                    marginBottom: '16px',
+                    color: 'var(--primary)',
+                    marginBottom: '18px',
                     fontFamily: 'var(--mono)',
                     paddingBottom: '8px',
                     borderBottom: '1px solid var(--line-soft)'
                   }}>
-                    {sem.section}
+                    <Bookmark size={13} />
+                    <span>{sem.section}</span>
                   </div>
 
-                  {/* Block 1: Questions with Direct Literature Linking */}
-                  <div style={{ marginBottom: '24px' }}>
+                  {/* BLOCK 1: Questions with Bibliographic Ticket & Reader Launch */}
+                  <div style={{ marginBottom: '26px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
-                      <strong style={{ fontSize: '13.5px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                        Вопросы к обсуждению на семинаре:
+                      <strong style={{ fontSize: '14px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <HelpCircle size={15} color="var(--primary)" />
+                        Вопросы к обсуждению на семинарском занятии:
                       </strong>
                       <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 700 }}>
-                        Кликните на вопрос для открытия текста в ридере ↓
+                        Клик по вопросу открывает первоисточник в ридере ↓
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       {sem.questions.map((q, idx) => (
                         <div
                           key={q.id || idx}
                           onClick={() => onOpenReaderBySourceId(q.sourceId)}
-                          className="question-card"
+                          style={{
+                            background: 'var(--surface-soft)',
+                            border: '1px solid var(--line)',
+                            borderLeft: '4px solid var(--primary)',
+                            borderRadius: 'var(--radius-sm)',
+                            padding: '16px 18px',
+                            cursor: 'pointer',
+                            transition: 'all 0.18s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--primary)';
+                            e.currentTarget.style.background = '#ffffff';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 18px rgba(75, 50, 104, 0.08)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--line)';
+                            e.currentTarget.style.background = 'var(--surface-soft)';
+                            e.currentTarget.style.transform = 'none';
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
                         >
+                          {/* Question Statement */}
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                             <span style={{
                               fontWeight: 800,
@@ -325,38 +408,46 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                               color: 'var(--primary)',
                               fontFamily: 'var(--mono)',
                               background: 'var(--primary-light)',
-                              width: '26px',
-                              height: '26px',
-                              borderRadius: '50%',
+                              width: '28px',
+                              height: '28px',
+                              borderRadius: '8px',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               flexShrink: 0,
-                              marginTop: '2px'
+                              marginTop: '1px'
                             }}>
-                              {idx + 1}
+                              №{idx + 1}
                             </span>
-                            <span style={{ fontSize: '14px', color: 'var(--ink)', lineHeight: 1.5, flex: 1, fontWeight: 600 }}>
+                            <span style={{ fontSize: '14.5px', color: 'var(--ink)', lineHeight: 1.5, flex: 1, fontWeight: 600 }}>
                               {q.text}
                             </span>
                           </div>
 
+                          {/* Bibliographic Reference Ticket */}
                           <div style={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             flexWrap: 'wrap',
-                            gap: '6px',
-                            paddingLeft: '38px',
+                            gap: '8px',
+                            paddingLeft: '40px',
                             paddingTop: '8px',
-                            borderTop: '1px dashed var(--line)',
-                            marginTop: '4px'
+                            borderTop: '1px dashed var(--line)'
                           }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: 'var(--muted)', flexWrap: 'wrap' }}>
                               <BookOpen size={13} color="var(--primary)" />
                               <strong style={{ color: 'var(--ink)' }}>{q.sourceAuthor}</strong>
                               <span>— {q.sourceTitle}</span>
-                              <span className="pill pill-neutral" style={{ fontSize: '11px', padding: '1px 7px' }}>
+                              <span style={{
+                                background: 'var(--paper-soft)',
+                                color: 'var(--ink-soft)',
+                                padding: '2px 8px',
+                                borderRadius: '4px',
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                fontFamily: 'var(--mono)'
+                              }}>
                                 {q.sourcePages}
                               </span>
                             </div>
@@ -377,17 +468,19 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Block 2: Literature Mapped to Seminar */}
-                  <div style={{ marginBottom: '22px' }}>
-                    <strong style={{ fontSize: '13.5px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '10px' }}>
-                      Рекомендуемые первоисточники семинара:
+                  {/* BLOCK 2: Literature Mapped to Seminar */}
+                  <div style={{ marginBottom: '24px' }}>
+                    <strong style={{ fontSize: '13.5px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                      <FileText size={15} color="var(--primary)" />
+                      Оцифрованные первоисточники темы:
                     </strong>
-                    <div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {sem.literature.map((lit, idx) => (
                         <div
                           key={idx}
                           className="literature-entry"
                           onClick={() => onOpenReaderBySourceId(lit.sourceId)}
+                          style={{ padding: '12px 16px' }}
                         >
                           <div style={{ flex: 1, minWidth: '240px' }}>
                             <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '14px' }}>
@@ -398,8 +491,8 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                             </span>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span className="pill pill-neutral" style={{ fontSize: '11px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="pill pill-neutral" style={{ fontSize: '11px', fontFamily: 'var(--mono)' }}>
                               {lit.pages}
                             </span>
                             <span className="pill pill-primary" style={{ fontSize: '11px' }}>
@@ -414,47 +507,61 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Block 3: Methodological Tip */}
+                  {/* BLOCK 3: Methodological Tip */}
                   {sem.tips && (
                     <div style={{
                       background: 'var(--paper-soft)',
                       border: '1px solid var(--line)',
                       borderLeft: '4px solid var(--teal)',
-                      padding: '14px 18px',
+                      padding: '16px 20px',
                       borderRadius: 'var(--radius-sm)',
-                      marginBottom: '18px',
+                      marginBottom: '20px',
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '12px'
                     }}>
-                      <Lightbulb size={18} color="var(--teal)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <Lightbulb size={20} color="var(--teal)" style={{ flexShrink: 0, marginTop: '2px' }} />
                       <div>
-                        <span style={{ fontWeight: 800, fontSize: '12px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                          Совет преподавателя (А.А. Туниянц):
+                        <span style={{ fontWeight: 800, fontSize: '12px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          Методический акцент преподавателя (А.А. Туниянц):
                         </span>
-                        <p style={{ fontSize: '13.5px', color: 'var(--ink)', marginTop: '3px', lineHeight: 1.55 }}>
+                        <p style={{ fontSize: '13.5px', color: 'var(--ink)', marginTop: '4px', lineHeight: 1.6 }}>
                           {sem.tips}
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* Block 4: Key Terms */}
+                  {/* BLOCK 4: Key Terms */}
                   {sem.terms && sem.terms.length > 0 && (
-                    <div style={{ paddingTop: '12px', borderTop: '1px solid var(--line)' }}>
-                      <span style={{ fontSize: '12px', color: 'var(--muted)', display: 'block', marginBottom: '8px', fontWeight: 600 }}>
-                        Ключевые понятия темы (клик открывает статью в словаре):
+                    <div style={{ paddingTop: '14px', borderTop: '1px solid var(--line)' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--muted)', display: 'block', marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                        Понятийный тезаурус темы (клик открывает словарную статью):
                       </span>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                         {sem.terms.map((t, idx) => (
                           <button
                             key={idx}
                             onClick={() => onNavigateToTerm(t)}
                             className="pill pill-neutral"
-                            style={{ cursor: 'pointer', background: 'var(--surface)', fontSize: '12px' }}
+                            style={{
+                              cursor: 'pointer',
+                              background: 'var(--surface)',
+                              fontSize: '12.5px',
+                              padding: '5px 12px',
+                              transition: 'all 0.15s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--primary)';
+                              e.currentTarget.style.color = 'var(--primary)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--line)';
+                              e.currentTarget.style.color = 'var(--ink-soft)';
+                            }}
                           >
-                            <Tag size={11} color="var(--primary)" />
-                            {t}
+                            <Tag size={12} color="var(--primary)" />
+                            <span>{t}</span>
                           </button>
                         ))}
                       </div>
