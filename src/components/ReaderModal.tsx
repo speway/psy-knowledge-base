@@ -16,6 +16,9 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({ source, onClose }) => 
   if (!source) return null;
 
   const totalPages = source.pages.length;
+  const currentPageObj = source.pages[currentPage];
+  const pageNum = typeof currentPageObj === 'object' && currentPageObj !== null ? (currentPageObj as any).num : currentPage + 1;
+  const pageText = typeof currentPageObj === 'object' && currentPageObj !== null ? (currentPageObj as any).text : String(currentPageObj || '');
 
   const handleCopyCitation = () => {
     navigator.clipboard.writeText(source.citation);
@@ -201,7 +204,7 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({ source, onClose }) => 
 
             {/* Page content */}
             <div style={{ whiteSpace: 'pre-line' }}>
-              {source.pages[currentPage]}
+              {pageText}
             </div>
 
           </div>
@@ -232,8 +235,8 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({ source, onClose }) => 
             Назад
           </button>
 
-          <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--ink)', fontFamily: 'var(--mono)' }}>
-            Фрагмент {currentPage + 1} из {totalPages}
+          <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--mono)' }}>
+            Стр. {pageNum} · фрагмент {currentPage + 1} из {totalPages}
           </span>
 
           <button

@@ -17,8 +17,12 @@ export const App: React.FC = () => {
   const [glossarySearchQuery, setGlossarySearchQuery] = useState('');
 
   const handleOpenReaderBySourceId = (sourceId: string) => {
-    const src = READER_SOURCES.find(s => s.id === sourceId) ||
-                READER_SOURCES.find(s => s.id.includes(sourceId) || s.title.toLowerCase().includes(sourceId.toLowerCase())) ||
+    const cleanId = (sourceId || '').trim();
+    const normalized = cleanId.toLowerCase().replace(/[-_]/g, '');
+    const src = READER_SOURCES.find(s => s.id === cleanId) ||
+                READER_SOURCES.find(s => s.id.toLowerCase().replace(/[-_]/g, '') === normalized) ||
+                READER_SOURCES.find(s => s.id.toLowerCase().includes(normalized) || normalized.includes(s.id.toLowerCase().replace(/[-_]/g, ''))) ||
+                READER_SOURCES.find(s => s.title.toLowerCase().includes(cleanId.toLowerCase())) ||
                 READER_SOURCES[0];
     setReaderSource(src);
   };
@@ -82,6 +86,7 @@ export const App: React.FC = () => {
           {activeTab === 'archive' && (
             <ArchiveView
               onNavigateToFaculty={handleNavigateToFaculty}
+              onOpenReaderBySourceId={handleOpenReaderBySourceId}
             />
           )}
         </div>

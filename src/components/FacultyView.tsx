@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import { ExternalLink, BookOpen, Users, User, ArrowUpRight } from 'lucide-react';
-import { FACULTY_MEMBERS, FacultyMember } from '../data/faculty';
+import { ExternalLink, BookOpen, Users, User, ArrowUpRight, Award, Compass, GraduationCap, CheckCircle } from 'lucide-react';
+import { FACULTY_MEMBERS } from '../data/faculty';
 
 interface FacultyViewProps {
   onNavigateToCourse: (courseId: string) => void;
   onOpenReaderBySourceId: (sourceId: string) => void;
 }
 
-export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) => {
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>('Все');
-  const [activeProfileTab, setActiveProfileTab] = useState<'courses' | 'theses' | 'research' | 'publications'>('courses');
+export const FacultyView: React.FC<FacultyViewProps> = ({ 
+  onNavigateToCourse,
+  onOpenReaderBySourceId 
+}) => {
+  const [activeProfileTab, setActiveProfileTab] = useState<'research' | 'courses' | 'publications' | 'theses'>('research');
 
-  const allSpecializations = ['Все', 'Организационная психология', 'Профессиональная социализация', 'Субъективное благополучие', 'Общая психология'];
-
-  const filteredFaculty = selectedSpecialization === 'Все'
-    ? FACULTY_MEMBERS
-    : FACULTY_MEMBERS.filter(f => f.specializations.some(s => s.toLowerCase().includes(selectedSpecialization.toLowerCase())));
-
-  const tuniyants = FACULTY_MEMBERS.find(f => f.id === 'tuniyants-a-a') || FACULTY_MEMBERS[0];
+  const tuniyants = FACULTY_MEMBERS[0];
 
   return (
     <div style={{ paddingBottom: '90px' }}>
@@ -26,7 +22,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
       <div style={{ marginBottom: '22px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-ochre">
           <Users size={12} />
-          <span>Кафедра психологии</span>
+          <span>Кафедра психологии Филиала МГУ в г. Ташкенте</span>
         </div>
         <h1 style={{
           fontSize: '28px',
@@ -36,26 +32,12 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
           lineHeight: 1.25,
           marginBottom: '6px'
         }}>
-          Научные профили преподавателей
+          Научно-педагогический профиль кафедры
         </h1>
         <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '820px' }}>
-          Академические профили кафедры психологии Филиала МГУ в г. Ташкенте: научные интересы, 
-          публикации в системе ИСТИНА МГУ, читаемые дисциплины и темы курсовых и дипломных работ.
+          Официальная академическая база кафедры: научные интересы, публикации в системе ИСТИНА МГУ,
+          оцифрованные дисциплины и направления научно-исследовательской работы студентов.
         </p>
-      </div>
-
-      {/* Specialization Filter Pills */}
-      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', WebkitOverflowScrolling: 'touch' }}>
-        {allSpecializations.map((spec) => (
-          <button
-            key={spec}
-            onClick={() => setSelectedSpecialization(spec)}
-            className={`pill ${selectedSpecialization === spec ? 'pill-ochre' : 'pill-neutral'}`}
-            style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
-          >
-            {spec}
-          </button>
-        ))}
       </div>
 
       {/* Flagship Profile: Туниянц Анна Александровна */}
@@ -70,7 +52,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
             
             {/* Monogram Avatar */}
-            <div className="brand-mark" style={{ width: '56px', height: '56px', fontSize: '28px' }}>
+            <div className="brand-mark" style={{ width: '56px', height: '56px', fontSize: '26px' }}>
               {tuniyants.avatarText}
             </div>
 
@@ -94,51 +76,52 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
 
               {/* Istina MSU Link */}
               {tuniyants.istinaUrl && (
-                <a
-                  href={tuniyants.istinaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-ghost"
-                  style={{
-                    padding: '4px 10px',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    textDecoration: 'none'
-                  }}
-                >
-                  <span style={{ color: 'var(--ochre)' }}>ИСТИНА МГУ</span>
-                  <span>(ID: {tuniyants.istinaId})</span>
-                  <ExternalLink size={12} />
-                </a>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <a
+                    href={tuniyants.istinaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost"
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <span style={{ color: 'var(--ochre)' }}>ИСТИНА МГУ</span>
+                    <span>(ID: {tuniyants.istinaId})</span>
+                    <ExternalLink size={12} />
+                  </a>
+
+                  <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
+                    Верифицированный профиль сотрудника МГУ
+                  </span>
+                </div>
               )}
             </div>
 
           </div>
 
-          {/* Specialization Tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-            {tuniyants.specializations.map((spec, i) => (
-              <span key={i} className="pill pill-neutral" style={{ fontSize: '11px' }}>
-                #{spec}
-              </span>
-            ))}
-          </div>
+          <p style={{ fontSize: '13.5px', color: 'var(--ink)', lineHeight: 1.6, background: 'var(--surface-soft)', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line-soft)' }}>
+            {tuniyants.summary}
+          </p>
         </div>
 
         {/* Profile Internal Tabs */}
         <div style={{
           display: 'flex',
           borderBottom: '1px solid var(--line-soft)',
-          margin: '16px 0',
+          margin: '16px 0 20px',
           gap: '4px',
           overflowX: 'auto',
           WebkitOverflowScrolling: 'touch'
         }}>
           {[
-            { id: 'courses', label: `Дисциплины (${tuniyants.coursesTaught.length})` },
-            { id: 'theses', label: `Темы ВКР (${tuniyants.thesisTopics.length})` },
-            { id: 'research', label: `Направления (${tuniyants.researchFields.length})` },
-            { id: 'publications', label: `Публикации (${tuniyants.publications.length})` }
+            { id: 'research', label: `11 научных сфер (${tuniyants.interestsList.length})` },
+            { id: 'courses', label: `Учебные дисциплины (${tuniyants.coursesTaught.length})` },
+            { id: 'publications', label: `Публикации в ИСТИНЕ (${tuniyants.publications.length})` },
+            { id: 'theses', label: `Темы ВКР и НИР (${tuniyants.thesisTopics.length})` }
           ].map(tab => (
             <button
               key={tab.id}
@@ -160,112 +143,132 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
           ))}
         </div>
 
-        {/* Courses Tab */}
+        {/* 1. Research Spheres Tab (Exact 11 from docx) */}
+        {activeProfileTab === 'research' && (
+          <div>
+            <div style={{ marginBottom: '14px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--ochre)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Научные сферы и исследовательские интересы (по официальному профилю А.А. Туниянц):
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
+              {tuniyants.interestsList.map((interest, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: 'var(--surface-soft)',
+                    border: '1px solid var(--line-soft)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '12px 14px',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '10px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <span style={{
+                    fontWeight: 800,
+                    fontSize: '11px',
+                    color: 'var(--ochre)',
+                    fontFamily: 'var(--mono)',
+                    background: 'var(--ochre-light)',
+                    width: '22px',
+                    height: '22px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '1px'
+                  }}>
+                    {idx + 1}
+                  </span>
+                  <span style={{ fontSize: '13px', color: 'var(--ink)', fontWeight: 600, lineHeight: 1.45 }}>
+                    {interest}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 2. Courses Tab */}
         {activeProfileTab === 'courses' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* Primary Course */}
             <div style={{
               background: 'var(--surface-soft)',
               border: '1px solid var(--line)',
+              borderLeft: '4px solid var(--ochre)',
               borderRadius: 'var(--radius-sm)',
-              padding: '16px',
+              padding: '18px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '6px'
+              gap: '8px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
-                <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '15px' }}>
+                <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '16px' }}>
                   Психология мотивации и эмоций
                 </span>
-                <span className="pill pill-ochre">1 курс · 34 часа · Экзамен</span>
+                <span className="pill pill-ochre">1 курс бакалавриата · 34 акад. часа · Экзамен</span>
               </div>
-              <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
-                Фундаментальный академический курс весеннего семестра для 1 курса бакалавриата. Включает 9 оцифрованных семинаров.
+              <p style={{ fontSize: '13.5px', color: 'var(--muted)', lineHeight: 1.5 }}>
+                Базовый теоретико-методологический курс кафедры психологии. Включает 9 оцифрованных семинарских занятий с постраничной привязкой к хрестоматиям и монографиям, доступным для чтения в интерактивном ридере портала.
               </p>
               <div>
                 <button
                   onClick={() => onNavigateToCourse('motivation-emotion')}
                   className="btn-ink"
-                  style={{ marginTop: '6px', fontSize: '12.5px', padding: '6px 14px' }}
+                  style={{ marginTop: '4px', fontSize: '12.5px', padding: '6px 14px' }}
                 >
                   <BookOpen size={13} />
-                  Открыть программу семинаров →
+                  Открыть силлабус 9 семинаров дисциплины →
                 </button>
               </div>
             </div>
 
+            {/* Special Course with Bazarov T.Yu. */}
             <div style={{
               background: 'var(--surface)',
               border: '1px solid var(--line)',
+              borderLeft: '4px solid var(--teal)',
               borderRadius: 'var(--radius-sm)',
-              padding: '14px'
+              padding: '18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px'
             }}>
-              <span style={{ fontWeight: 700, color: 'var(--ink)', fontSize: '14px' }}>
-                Организационное консультирование и поведение
-              </span>
-              <p style={{ fontSize: '12.5px', color: 'var(--muted)', marginTop: '2px' }}>
-                Спецкурс для 3 курса бакалавриата (ассессмент, групповая динамика, диагностика культуры).
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
+                <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '16px' }}>
+                  Профессиональная социализация психолога
+                </span>
+                <span className="pill pill-teal">Авторский спецкурс · Совместно с проф. Т.Ю. Базаровым</span>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--muted)', lineHeight: 1.5 }}>
+                Уникальный курс социально-психологической подготовки и профессиональной идентификации студентов-психологов на базе Ташкентского филиала МГУ. Научно-методический опыт курса опубликован в «Вестнике Московского университета» (Серия 14, Психология).
               </p>
+              <div>
+                <button
+                  onClick={() => onOpenReaderBySourceId('bazarov-tuniyants-2013')}
+                  className="btn-ghost"
+                  style={{ marginTop: '4px', fontSize: '12px', padding: '5px 12px' }}
+                >
+                  <BookOpen size={12} color="var(--teal)" />
+                  Читать научную публикацию курса в ридере (12 стр.) →
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Theses Topics Tab */}
-        {activeProfileTab === 'theses' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>
-              Темы выпускных квалификационных работ (ВКР) и курсовых исследований под научным руководством А.А. Туниянц:
-            </p>
-            {tuniyants.thesisTopics.map((topic, i) => (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '10px',
-                  background: 'var(--surface-soft)',
-                  padding: '11px 15px',
-                  borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--line-soft)'
-                }}
-              >
-                <span style={{ color: 'var(--ochre)', fontWeight: 800, fontSize: '12px', fontFamily: 'var(--mono)', marginTop: '2px' }}>
-                  {i + 1}.
-                </span>
-                <span style={{ fontSize: '13.5px', color: 'var(--ink)' }}>
-                  {topic}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Research Fields Tab */}
-        {activeProfileTab === 'research' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
-            {tuniyants.researchFields.map(f => (
-              <div
-                key={f.id}
-                style={{
-                  background: 'var(--surface-soft)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '16px'
-                }}
-              >
-                <h4 style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)', marginBottom: '4px' }}>
-                  {f.title}
-                </h4>
-                <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
-                  {f.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Publications Tab */}
+        {/* 3. Publications Tab (Real Papers with T.Yu. Bazarov & A.M. Rikel) */}
         {activeProfileTab === 'publications' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '2px' }}>
+              Научные публикации А.А. Туниянц в ведущих академических журналах, зарегистрированные в системе ИСТИНА МГУ:
+            </p>
+
             {tuniyants.publications.map((pub, i) => (
               <div
                 key={i}
@@ -273,36 +276,97 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
                   background: 'var(--surface-soft)',
                   border: '1px solid var(--line)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '16px'
+                  padding: '18px'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '4px' }}>
-                  <span className="pill pill-neutral" style={{ fontSize: '10.5px' }}>
-                    {pub.year} год
-                  </span>
-                  {pub.doi && (
-                    <a
-                      href={pub.doi}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: '12px', color: 'var(--ochre)', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontWeight: 700 }}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span className="pill pill-ochre" style={{ fontSize: '11px' }}>
+                      {pub.year} год
+                    </span>
+                    <span className="pill pill-neutral" style={{ fontSize: '11px' }}>
+                      ВАК / РИНЦ / ядро РИНЦ
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    {pub.doi && (
+                      <a
+                        href={pub.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-ghost"
+                        style={{ fontSize: '11.5px', padding: '3px 8px', textDecoration: 'none' }}
+                      >
+                        В ИСТИНЕ МГУ <ExternalLink size={11} />
+                      </a>
+                    )}
+                    <button
+                      onClick={() => onOpenReaderBySourceId(i === 0 ? 'bazarov-tuniyants-2013' : 'zotova-rikel-tuniyants-2019')}
+                      className="btn-ink"
+                      style={{ fontSize: '11.5px', padding: '3px 10px' }}
                     >
-                      Истина МГУ <ExternalLink size={12} />
-                    </a>
-                  )}
+                      <BookOpen size={11} /> Читать статью в ридере →
+                    </button>
+                  </div>
                 </div>
-                <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', marginBottom: '2px' }}>
+
+                <h4 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ink)', marginBottom: '4px', lineHeight: 1.35 }}>
                   «{pub.title}»
                 </h4>
-                <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
-                  Авторы: <strong>{pub.authors}</strong>
+
+                <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '2px' }}>
+                  Авторы: <strong style={{ color: 'var(--ink)' }}>{pub.authors}</strong>
                 </p>
-                <p style={{ fontSize: '12px', color: 'var(--muted-light)', marginBottom: '8px' }}>
+
+                <p style={{ fontSize: '12.5px', color: 'var(--muted-light)', marginBottom: '10px', fontStyle: 'italic' }}>
                   {pub.journal}
                 </p>
-                <p style={{ fontSize: '13px', color: 'var(--ink)', fontStyle: 'italic', background: 'var(--surface)', padding: '10px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
+
+                <div style={{
+                  fontSize: '13px',
+                  color: 'var(--ink)',
+                  background: 'var(--surface)',
+                  padding: '12px 14px',
+                  borderRadius: '4px',
+                  border: '1px solid var(--line-soft)',
+                  lineHeight: 1.55
+                }}>
+                  <strong style={{ fontSize: '11.5px', textTransform: 'uppercase', color: 'var(--muted)', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>
+                    Аннотация статьи:
+                  </strong>
                   {pub.abstract}
-                </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 4. Theses Topics Tab */}
+        {activeProfileTab === 'theses' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>
+              Темы выпускных квалификационных работ (ВКР) и курсовых исследований бакалавров под научным руководством А.А. Туниянц:
+            </p>
+            {tuniyants.thesisTopics.map((topic, i) => (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '12px',
+                  background: 'var(--surface-soft)',
+                  padding: '12px 16px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--line-soft)'
+                }}
+              >
+                <span style={{ color: 'var(--ochre)', fontWeight: 800, fontSize: '12.5px', fontFamily: 'var(--mono)', marginTop: '2px' }}>
+                  {i + 1}.
+                </span>
+                <span style={{ fontSize: '14px', color: 'var(--ink)', fontWeight: 600, lineHeight: 1.45 }}>
+                  {topic}
+                </span>
               </div>
             ))}
           </div>
@@ -310,32 +374,44 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
 
       </div>
 
-      {/* Overview of other department sections */}
-      <div>
-        <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '12px', fontFamily: 'var(--font-serif)' }}>
-          Общекафедральные направления
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
-          {filteredFaculty.filter(f => f.id !== 'tuniyants-a-a').map(m => (
-            <div key={m.id} className="paper-card" style={{ padding: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                <div className="brand-mark" style={{ width: '40px', height: '40px', fontSize: '20px' }}>
-                  {m.avatarText}
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)' }}>
-                    {m.name}
-                  </h4>
-                  <p style={{ fontSize: '12px', color: 'var(--muted)' }}>
-                    {m.role}
-                  </p>
-                </div>
-              </div>
-              <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
-                {m.summary}
-              </p>
-            </div>
-          ))}
+      {/* Verified Academic Collaboration Section */}
+      <div className="paper-card" style={{ padding: '24px', background: 'var(--surface-soft)', border: '1px solid var(--line)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+          <Compass size={18} color="var(--ochre)" />
+          <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--ink)', fontFamily: 'var(--font-serif)' }}>
+            Научно-исследовательское сотрудничество кафедры
+          </h3>
+        </div>
+
+        <p style={{ fontSize: '13.5px', color: 'var(--muted)', lineHeight: 1.6, maxWidth: '820px', marginBottom: '14px' }}>
+          Преподавательская и научная деятельность кафедры психологии Филиала МГУ в г. Ташкенте строится в тесном сотрудничестве 
+          с головным факультетом психологии Московского государственного университета имени М.В. Ломоносова:
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+          <div style={{ background: 'var(--surface)', padding: '16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line-soft)' }}>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800, color: 'var(--ochre)' }}>
+              Научный куратор и соавтор
+            </span>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', marginTop: '4px' }}>
+              Базаров Тахир Юсупович
+            </h4>
+            <p style={{ fontSize: '12.5px', color: 'var(--muted)', marginTop: '2px', lineHeight: 1.45 }}>
+              Доктор психологических наук, профессор, заведующий кафедрой социальной психологии факультета психологии МГУ имени М.В. Ломоносова.
+            </p>
+          </div>
+
+          <div style={{ background: 'var(--surface)', padding: '16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line-soft)' }}>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800, color: 'var(--teal)' }}>
+              Соавтор исследований благополучия
+            </span>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', marginTop: '4px' }}>
+              Рикель Артем Маркович
+            </h4>
+            <p style={{ fontSize: '12.5px', color: 'var(--muted)', marginTop: '2px', lineHeight: 1.45 }}>
+              Кандидат психологических наук, доцент кафедры социальной психологии факультета психологии МГУ имени М.В. Ломоносова.
+            </p>
+          </div>
         </div>
       </div>
 

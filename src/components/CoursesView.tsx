@@ -122,12 +122,68 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
         </div>
       </div>
 
+      {/* Seminar Numeric Jumper */}
+      <div className="paper-card" style={{
+        padding: '12px 18px',
+        marginBottom: '18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px',
+        background: 'var(--surface)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Семинар:
+          </span>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {course.seminars.map(s => {
+              const isOpen = !!openSeminars[s.num];
+              return (
+                <button
+                  key={s.num}
+                  onClick={() => {
+                    setOpenSeminars({ [s.num]: true });
+                    const el = document.getElementById(`seminar-card-${s.num}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className={`pill ${isOpen ? 'pill-ochre' : 'pill-neutral'}`}
+                  style={{
+                    cursor: 'pointer',
+                    minWidth: '32px',
+                    height: '32px',
+                    padding: '0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: '13px'
+                  }}
+                  title={`Семинар ${s.num}: ${s.title}`}
+                >
+                  {s.num}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
+          Клик по номеру открывает тему
+        </span>
+      </div>
+
       {/* Seminars List (Accordion) */}
       <div>
         {course.seminars.map((sem) => {
           const isOpen = !!openSeminars[sem.num];
           return (
-            <div key={sem.num} className={`seminar-item ${isOpen ? 'open' : ''}`}>
+            <div 
+              key={sem.num} 
+              id={`seminar-card-${sem.num}`}
+              className={`seminar-item ${isOpen ? 'open' : ''}`}
+            >
               
               {/* Header */}
               <div 
@@ -176,18 +232,99 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                     {sem.section}
                   </div>
 
-                  {/* Questions */}
+                  {/* Interactive Questions with Direct Reader Linking */}
                   <div style={{ marginBottom: '22px' }}>
-                    <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '8px' }}>
-                      Вопросы к семинарскому занятию:
-                    </strong>
-                    <ol className="academic-questions">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                      <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                        Вопросы к семинарскому занятию:
+                      </strong>
+                      <span style={{ fontSize: '11.5px', color: 'var(--ochre)', fontWeight: 600 }}>
+                        Кликните на вопрос для открытия текста в ридере ↓
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {sem.questions.map((q, idx) => (
-                        <li key={idx}>
-                          <span>{q}</span>
-                        </li>
+                        <div
+                          key={q.id || idx}
+                          onClick={() => onOpenReaderBySourceId(q.sourceId)}
+                          style={{
+                            background: 'var(--surface-soft)',
+                            border: '1px solid var(--line-soft)',
+                            borderRadius: 'var(--radius-sm)',
+                            padding: '12px 14px',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--ochre)';
+                            e.currentTarget.style.background = 'var(--surface)';
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--line-soft)';
+                            e.currentTarget.style.background = 'var(--surface-soft)';
+                            e.currentTarget.style.transform = 'none';
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                            <span style={{
+                              fontWeight: 800,
+                              fontSize: '12px',
+                              color: 'var(--ochre)',
+                              fontFamily: 'var(--mono)',
+                              background: 'var(--ochre-light)',
+                              width: '24px',
+                              height: '24px',
+                              borderRadius: '50%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                              marginTop: '2px'
+                            }}>
+                              {idx + 1}
+                            </span>
+                            <span style={{ fontSize: '13.5px', color: 'var(--ink)', lineHeight: 1.5, flex: 1, fontWeight: 500 }}>
+                              {q.text}
+                            </span>
+                          </div>
+
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            gap: '6px',
+                            paddingLeft: '34px',
+                            paddingTop: '6px',
+                            borderTop: '1px dashed var(--line-soft)',
+                            marginTop: '2px'
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--muted)', flexWrap: 'wrap' }}>
+                              <BookOpen size={12} color="var(--ochre)" />
+                              <span style={{ fontWeight: 700, color: 'var(--ink)' }}>{q.sourceAuthor}</span>
+                              <span>— {q.sourceTitle}</span>
+                              <span className="pill pill-neutral" style={{ fontSize: '10.5px', padding: '1px 6px' }}>{q.sourcePages}</span>
+                            </div>
+
+                            <span style={{
+                              fontSize: '11.5px',
+                              fontWeight: 700,
+                              color: 'var(--ochre)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '2px'
+                            }}>
+                              Читать в ридере <ArrowUpRight size={12} />
+                            </span>
+                          </div>
+                        </div>
                       ))}
-                    </ol>
+                    </div>
                   </div>
 
                   {/* Literature mapped to questions */}

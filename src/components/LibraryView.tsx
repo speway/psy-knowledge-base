@@ -12,11 +12,22 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
 
   const categories = ['Все', 'Мотивация', 'Эмоции', 'Статьи кафедры', 'Методология и диагностика'];
 
-  const filteredSources = READER_SOURCES.filter(src => {
-    const matchesCategory = selectedCategory === 'Все' || src.category.toLowerCase().includes(selectedCategory.toLowerCase());
+  // Deduplicate sources by title & author for library display
+  const uniqueSources = React.useMemo(() => {
+    const seen = new Set<string>();
+    return READER_SOURCES.filter(src => {
+      const key = `${src.author.trim()}_${src.title.trim()}`.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, []);
+
+  const filteredSources = uniqueSources.filter(src => {
+    const matchesCategory = selectedCategory === 'Все' || (src.category && src.category.toLowerCase().includes(selectedCategory.toLowerCase()));
     const matchesSearch = src.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           src.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          src.description.toLowerCase().includes(searchQuery.toLowerCase());
+                          (src.description && src.description.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
