@@ -9,55 +9,45 @@ interface BottomNavProps {
 
 export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onSelectTab }) => {
   return (
-    <nav className="mobile-bottom-bar">
+    <nav className="mobile-bottom-nav">
       <button 
-        className={`mobile-nav-btn ${activeTab === 'disciplines' ? 'active' : ''}`}
+        className={`mobile-nav-item ${activeTab === 'disciplines' ? 'active' : ''}`}
         onClick={() => onSelectTab('disciplines')}
       >
-        <div className="icon-container">
-          <BookOpen size={17} />
-        </div>
+        <BookOpen size={18} />
         <span>Семинары</span>
       </button>
 
       <button 
-        className={`mobile-nav-btn ${activeTab === 'reader' ? 'active' : ''}`}
+        className={`mobile-nav-item ${activeTab === 'reader' ? 'active' : ''}`}
         onClick={() => onSelectTab('reader')}
       >
-        <div className="icon-container">
-          <Library size={17} />
-        </div>
-        <span>Читалка</span>
+        <Library size={18} />
+        <span>Библиотека</span>
       </button>
 
       <button 
-        className={`mobile-nav-btn ${activeTab === 'glossary' ? 'active' : ''}`}
+        className={`mobile-nav-item ${activeTab === 'glossary' ? 'active' : ''}`}
         onClick={() => onSelectTab('glossary')}
       >
-        <div className="icon-container">
-          <Bookmark size={17} />
-        </div>
+        <Bookmark size={18} />
         <span>Словарь</span>
       </button>
 
       <button 
-        className={`mobile-nav-btn ${activeTab === 'teachers' ? 'active' : ''}`}
+        className={`mobile-nav-item ${activeTab === 'teachers' ? 'active' : ''}`}
         onClick={() => onSelectTab('teachers')}
       >
-        <div className="icon-container">
-          <Users size={17} />
-        </div>
+        <Users size={18} />
         <span>Кафедра</span>
       </button>
 
       <button 
-        className={`mobile-nav-btn ${activeTab === 'archive' ? 'active' : ''}`}
+        className={`mobile-nav-item ${activeTab === 'archive' ? 'active' : ''}`}
         onClick={() => onSelectTab('archive')}
       >
-        <div className="icon-container">
-          <GraduationCap size={17} />
-        </div>
-        <span>ВКР</span>
+        <GraduationCap size={18} />
+        <span>НИР и ВКР</span>
       </button>
     </nav>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header, SectionTab } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { CoursesView } from './components/CoursesView';
@@ -15,6 +15,18 @@ export const App: React.FC = () => {
   const [readerSource, setReaderSource] = useState<ReaderSource | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [glossarySearchQuery, setGlossarySearchQuery] = useState('');
+
+  // Global keyboard shortcut for search (Ctrl+K or Cmd+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleOpenReaderBySourceId = (sourceId: string) => {
     const cleanId = (sourceId || '').trim();
@@ -54,7 +66,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main style={{ flex: 1, paddingTop: '32px' }}>
+      <main style={{ flex: 1, paddingTop: '28px' }}>
         <div className="app-container">
           {activeTab === 'disciplines' && (
             <CoursesView
@@ -92,11 +104,11 @@ export const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Editorial Footer (styled like psy-case-trainer) */}
+      {/* Academic Editorial Footer */}
       <footer style={{
         background: 'var(--surface)',
-        borderTop: '1px solid var(--line-soft)',
-        padding: '36px 0 90px',
+        borderTop: '1px solid var(--line)',
+        padding: '40px 0 95px',
         marginTop: 'auto'
       }}>
         <div className="app-container">
@@ -106,23 +118,23 @@ export const App: React.FC = () => {
             gap: '12px',
             alignItems: 'center',
             textAlign: 'center',
-            maxWidth: '680px',
+            maxWidth: '720px',
             margin: '0 auto'
           }}>
             <div className="brand-mark" style={{ width: '42px', height: '42px', fontSize: '24px' }}>
               Ψ
             </div>
 
-            <p style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)', letterSpacing: '0.02em' }}>
+            <p style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', letterSpacing: '0.01em' }}>
               Филиал Московского государственного университета имени М.В. Ломоносова в городе Ташкенте
             </p>
 
-            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
-              Кафедра психологии · Учебно-методический портал «ПСИ-КАМПУС»<br />
-              Официальная база оцифрованных семинаров, первоисточников и научных профилей преподавателей.
+            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.55 }}>
+              Кафедра психологии · Учебно-методический портал «Психология · ТФ МГУ»<br />
+              Единая база знаний: оцифрованные семинары, читальный зал первоисточников и научные профили преподавателей.
             </p>
 
-            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '11.5px', color: 'var(--muted-light)', paddingTop: '8px', borderTop: '1px solid var(--line-soft)' }}>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '12px', color: 'var(--muted-light)', paddingTop: '10px', borderTop: '1px solid var(--line)' }}>
               <span>Система ИСТИНА МГУ</span>
               <span>•</span>
               <span>ГОСТ 7.0.5–2008</span>
@@ -163,7 +175,6 @@ export const App: React.FC = () => {
           setActiveTab('glossary');
         }}
       />
-
     </div>
   );
 };

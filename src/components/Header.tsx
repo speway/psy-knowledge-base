@@ -14,78 +14,95 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
     <header className="site-header">
       <div className="app-container" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
         
-        {/* Brand mark (styled after psy-case-trainer) */}
+        {/* Academic Brand Identity */}
         <div 
           className="brand"
           onClick={() => onSelectTab('disciplines')}
         >
-          <span className="brand-mark">Ψ</span>
-          <span>
-            <b>ПСИ-КАМПУС · ТФ МГУ</b>
-            <small>УЧЕБНЫЙ ПОРТАЛ КАФЕДРЫ ПСИХОЛОГИИ</small>
-          </span>
+          <div className="brand-mark">Ψ</div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span className="brand-title">ПСИХОЛОГИЯ · ТФ МГУ</span>
+            <span className="brand-dept">Академический портал кафедры психологии</span>
+          </div>
         </div>
 
         {/* Desktop Navigation Tabs */}
-        <nav className="header-nav">
-          <button
-            onClick={() => onSelectTab('disciplines')}
-            className={`header-nav-btn ${activeTab === 'disciplines' ? 'active' : ''}`}
-          >
-            <BookOpen size={15} />
-            Семинары и курсы
-          </button>
+        <nav style={{ display: 'none' }} className="desktop-nav-container">
+          <div className="nav-tab-list">
+            <button
+              onClick={() => onSelectTab('disciplines')}
+              className={`nav-tab-button ${activeTab === 'disciplines' ? 'active' : ''}`}
+            >
+              <BookOpen size={14} />
+              <span>Семинары</span>
+            </button>
 
-          <button
-            onClick={() => onSelectTab('reader')}
-            className={`header-nav-btn ${activeTab === 'reader' ? 'active' : ''}`}
-          >
-            <Library size={15} />
-            Читальный зал
-          </button>
+            <button
+              onClick={() => onSelectTab('reader')}
+              className={`nav-tab-button ${activeTab === 'reader' ? 'active' : ''}`}
+            >
+              <Library size={14} />
+              <span>Библиотека</span>
+            </button>
 
-          <button
-            onClick={() => onSelectTab('glossary')}
-            className={`header-nav-btn ${activeTab === 'glossary' ? 'active' : ''}`}
-          >
-            <Bookmark size={15} />
-            Словарь понятий
-          </button>
+            <button
+              onClick={() => onSelectTab('glossary')}
+              className={`nav-tab-button ${activeTab === 'glossary' ? 'active' : ''}`}
+            >
+              <Bookmark size={14} />
+              <span>Словарь</span>
+            </button>
 
-          <button
-            onClick={() => onSelectTab('teachers')}
-            className={`header-nav-btn ${activeTab === 'teachers' ? 'active' : ''}`}
-          >
-            <Users size={15} />
-            Преподаватели
-          </button>
+            <button
+              onClick={() => onSelectTab('teachers')}
+              className={`nav-tab-button ${activeTab === 'teachers' ? 'active' : ''}`}
+            >
+              <Users size={14} />
+              <span>Кафедра</span>
+            </button>
 
-          <button
-            onClick={() => onSelectTab('archive')}
-            className={`header-nav-btn ${activeTab === 'archive' ? 'active' : ''}`}
-          >
-            <GraduationCap size={15} />
-            Архив и ВКР
-          </button>
+            <button
+              onClick={() => onSelectTab('archive')}
+              className={`nav-tab-button ${activeTab === 'archive' ? 'active' : ''}`}
+            >
+              <GraduationCap size={14} />
+              <span>Стандарты НИР</span>
+            </button>
+          </div>
         </nav>
 
-        {/* Search trigger button */}
+        {/* Search Action */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={onOpenSearch}
             className="btn-ghost"
             style={{ borderRadius: 'var(--radius-full)', padding: '7px 14px', fontSize: '12px' }}
-            title="Поиск по порталу"
+            title="Поиск по порталу (Ctrl+K)"
           >
-            <Search size={14} color="var(--ochre)" />
+            <Search size={14} color="var(--primary)" />
             <span style={{ display: 'none' }} className="search-text-desktop">Поиск</span>
-            <style>{`
-              @media (min-width: 640px) {
-                .search-text-desktop { display: inline !important; }
-              }
-            `}</style>
+            <kbd style={{
+              display: 'none',
+              marginLeft: '4px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontFamily: 'var(--mono)',
+              background: 'var(--paper-soft)',
+              borderRadius: '4px',
+              border: '1px solid var(--line)'
+            }} className="search-kbd-desktop">
+              ⌘K
+            </kbd>
           </button>
         </div>
+
+        <style>{`
+          @media (min-width: 840px) {
+            .desktop-nav-container { display: flex !important; }
+            .search-text-desktop { display: inline !important; }
+            .search-kbd-desktop { display: inline !important; }
+          }
+        `}</style>
 
       </div>
     </header>
