@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, GraduationCap, BookOpen, User, Calendar, BookMarked } from 'lucide-react';
+import { Search, BookOpen, Calendar, User, Library, X } from 'lucide-react';
 import { READER_SOURCES, ReaderSource } from '../data/reader-sources';
 
 interface LibraryViewProps {
@@ -21,60 +21,83 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
   });
 
   return (
-    <div className="animate-fade-in" style={{ paddingBottom: '80px' }}>
+    <div style={{ paddingBottom: '90px' }}>
       
       {/* Title */}
       <div style={{ marginBottom: '20px' }}>
-        <h1 style={{ 
-          fontSize: '24px', 
-          fontWeight: 800, 
-          color: 'var(--msu-blue-deep)', 
-          fontFamily: 'var(--font-brand)',
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-tag badge-turq">
+          <Library size={13} />
+          <span>Цифровая библиотека</span>
+        </div>
+        <h1 style={{
+          fontSize: '25px',
+          fontWeight: 800,
+          color: 'var(--blue-deep)',
+          fontFamily: 'var(--font-serif)',
+          lineHeight: 1.25,
           marginBottom: '6px'
         }}>
-          Библиотека первоисточников и хрестоматий
+          Читальный зал первоисточников
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-          Оцифрованные классические труды отечественных и зарубежных психологов, статьи кафедры и хрестоматии с возможностью постраничного чтения в ридере.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '820px' }}>
+          Оцифрованная коллекция обязательной и дополнительной литературы: труды классиков Московской психологической школы, 
+          зарубежные монографии и статьи преподавателей кафедры с постраничным чтением в ридере.
         </p>
       </div>
 
       {/* Search Input */}
-      <div style={{ position: 'relative', marginBottom: '16px' }}>
+      <div style={{ position: 'relative', marginBottom: '14px' }}>
         <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
         <input
           type="text"
-          placeholder="Поиск по автору, названию или ключевым словам..."
+          placeholder="Поиск первоисточника по автору, названию книги или ключевым словам..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            padding: '12px 16px 12px 40px',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-light)',
+            padding: '12px 38px 12px 40px',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border)',
             background: '#ffffff',
             fontSize: '14px',
-            color: 'var(--text-main)',
+            color: 'var(--text)',
             outline: 'none',
             boxShadow: 'var(--shadow-sm)'
           }}
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            style={{
+              position: 'absolute',
+              right: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer'
+            }}
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {/* Category Pills */}
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '20px', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px', WebkitOverflowScrolling: 'touch' }}>
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
             style={{
-              padding: '6px 14px',
-              borderRadius: '9999px',
+              padding: '5px 14px',
+              borderRadius: 'var(--radius-full)',
               fontSize: '12.5px',
-              fontWeight: selectedCategory === cat ? 600 : 500,
-              background: selectedCategory === cat ? 'var(--msu-blue-deep)' : '#ffffff',
+              fontWeight: selectedCategory === cat ? 700 : 500,
+              background: selectedCategory === cat ? 'var(--blue-deep)' : '#ffffff',
               color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedCategory === cat ? 'var(--msu-blue-deep)' : 'var(--border-light)'),
+              border: '1px solid ' + (selectedCategory === cat ? 'var(--blue-deep)' : 'var(--border)'),
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
@@ -84,53 +107,86 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
         ))}
       </div>
 
-      {/* Books Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+      {/* Grid of Sources */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
         {filteredSources.map((source) => (
-          <div 
-            key={source.id} 
-            className="card-academic"
-            style={{ 
-              padding: '18px', 
-              display: 'flex', 
-              flexDirection: 'column', 
+          <div
+            key={source.id}
+            className="card-clean"
+            style={{
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'space-between',
-              gap: '12px'
+              gap: '14px'
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span className="badge-blue" style={{ fontSize: '11px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+                <span className="badge-tag badge-turq">
                   {source.category}
                 </span>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                   <Calendar size={12} />
                   {source.year} г.
                 </span>
               </div>
 
-              <h3 style={{ fontSize: '15.5px', fontWeight: 700, color: 'var(--msu-blue-deep)', marginBottom: '4px', lineHeight: 1.35 }}>
+              <h3 style={{
+                fontSize: '16px',
+                fontWeight: 700,
+                color: 'var(--blue-deep)',
+                lineHeight: 1.35,
+                marginBottom: '6px'
+              }}>
                 {source.title}
               </h3>
 
-              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--msu-gold-hover)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <p style={{
+                fontSize: '13px',
+                fontWeight: 700,
+                color: 'var(--blue-mid)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                marginBottom: '8px'
+              }}>
                 <User size={13} />
                 {source.author}
               </p>
 
-              <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
                 {source.description}
               </p>
             </div>
 
-            <div style={{ paddingTop: '10px', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
-                Страниц: {source.pages.length}
+            <div style={{
+              paddingTop: '12px',
+              borderTop: '1px solid var(--border-light)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>
+                {source.pages.length} фрагм. текста
               </span>
+
               <button
                 onClick={() => onOpenReader(source)}
-                className="btn-primary"
-                style={{ padding: '6px 14px', fontSize: '12.5px' }}
+                style={{
+                  background: 'var(--blue-deep)',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '7px 14px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'background 0.15s ease'
+                }}
               >
                 <BookOpen size={14} />
                 Открыть ридер
@@ -139,13 +195,6 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader }) => {
           </div>
         ))}
       </div>
-
-      {filteredSources.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--text-muted)' }}>
-          <BookMarked size={36} color="#cbd5e1" style={{ margin: '0 auto 12px' }} />
-          <p>По вашему запросу первоисточников не найдено.</p>
-        </div>
-      )}
 
     </div>
   );

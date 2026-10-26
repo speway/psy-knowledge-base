@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Sparkles, Shuffle, Bookmark, Tag } from 'lucide-react';
+import { Search, Sparkles, Shuffle, Bookmark, Tag, X, ChevronRight, BookOpen } from 'lucide-react';
 import { GLOSSARY_TERMS, GLOSSARY_CATEGORIES, GlossaryTerm } from '../data/glossary';
 
 interface GlossarySectionProps {
@@ -10,8 +10,9 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
   const [searchQuery, setSearchQuery] = useState(initialSearchTerm);
   const [selectedCategory, setSelectedCategory] = useState<string>('Все');
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
-  
-  // Deterministic "Term of the Day"
+  const [selectedTermDetail, setSelectedTermDetail] = useState<GlossaryTerm | null>(null);
+
+  // Deterministic daily term
   const dayOfYear = useMemo(() => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
@@ -25,7 +26,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
 
   const termOfDay = GLOSSARY_TERMS[termOfDayIndex] || GLOSSARY_TERMS[0];
 
-  const handleRandomTerm = () => {
+  const handleShuffleTerm = () => {
     const nextIdx = Math.floor(Math.random() * GLOSSARY_TERMS.length);
     setTermOfDayIndex(nextIdx);
   };
@@ -42,7 +43,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
     return Array.from(letters).sort((a, b) => a.localeCompare(b, 'ru'));
   }, []);
 
-  // Filter terms
+  // Filtered terms
   const filteredTerms = useMemo(() => {
     return GLOSSARY_TERMS.filter(t => {
       const matchesSearch = searchQuery === '' || 
@@ -57,47 +58,51 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
     });
   }, [searchQuery, selectedCategory, selectedLetter]);
 
+  const handleSelectTermFromList = (term: GlossaryTerm) => {
+    setSelectedTermDetail(term);
+  };
+
   return (
-    <div className="animate-fade-in" style={{ paddingBottom: '80px' }}>
+    <div style={{ paddingBottom: '90px' }}>
       
-      {/* Title */}
+      {/* Page Title */}
       <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-gold">
-          <Bookmark size={14} />
-          <span>Мини-уголок научного сообщества</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-tag badge-turq">
+          <Bookmark size={13} />
+          <span>Академический лексикон</span>
         </div>
-        <h1 style={{ 
-          fontSize: '24px', 
-          fontWeight: 800, 
-          color: 'var(--msu-blue-deep)', 
-          fontFamily: 'var(--font-brand)',
+        <h1 style={{
+          fontSize: '25px',
+          fontWeight: 800,
+          color: 'var(--blue-deep)',
+          fontFamily: 'var(--font-serif)',
+          lineHeight: 1.25,
           marginBottom: '6px'
         }}>
-          Психологический лексикон и понятийный аппарат
+          Психологический понятийный аппарат
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '780px' }}>
-          Академический глоссарий кафедры психологии: 280 верифицированных терминов, категориальный аппарат 
-          общей психологии, мотивации, эмоций и методологии исследования.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '820px' }}>
+          Единый интерактивный глоссарий кафедры психологии: 280 верифицированных понятий общей психологии, 
+          мотивации, эмоций, экспериментальной психодиагностики и методологии.
         </p>
       </div>
 
-      {/* Mini-Corner Highlight: Термин Дня */}
-      <div className="card-academic" style={{
-        background: 'linear-gradient(135deg, #0c2340 0%, #153a6b 100%)',
+      {/* Hero Widget: Термин Дня (Interactive) */}
+      <div className="card-clean" style={{
+        background: 'linear-gradient(135deg, #2b6175 0%, #358682 60%, #5d487d 100%)',
         color: '#ffffff',
-        padding: '22px',
+        padding: '24px',
         borderRadius: 'var(--radius-md)',
-        marginBottom: '28px',
-        boxShadow: 'var(--shadow-md)',
-        border: '1px solid var(--msu-gold)'
+        marginBottom: '24px',
+        boxShadow: 'var(--shadow-md)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{
-              background: 'var(--msu-gold)',
+              background: 'rgba(255, 255, 255, 0.22)',
               color: '#ffffff',
-              padding: '4px 10px',
-              borderRadius: '9999px',
+              padding: '3px 10px',
+              borderRadius: 'var(--radius-full)',
               fontSize: '11.5px',
               fontWeight: 700,
               display: 'inline-flex',
@@ -107,20 +112,20 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
               <Sparkles size={13} />
               Термин дня
             </span>
-            <span style={{ color: '#cbd5e1', fontSize: '12px' }}>
+            <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '12px' }}>
               Категория: {termOfDay.category}
             </span>
           </div>
 
           <button
-            onClick={handleRandomTerm}
+            onClick={handleShuffleTerm}
             style={{
-              background: 'rgba(255, 255, 255, 0.15)',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
+              background: 'rgba(255, 255, 255, 0.18)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
               color: '#ffffff',
               padding: '6px 12px',
-              borderRadius: '6px',
-              fontSize: '12.5px',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
               display: 'inline-flex',
@@ -130,31 +135,37 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             }}
           >
             <Shuffle size={13} />
-            Случайный термин
+            Другой термин 🎲
           </button>
         </div>
 
-        <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff', marginBottom: '8px', letterSpacing: '0.01em' }}>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: 800,
+          color: '#ffffff',
+          fontFamily: 'var(--font-serif)',
+          marginBottom: '6px'
+        }}>
           {termOfDay.term}
         </h2>
 
         {termOfDay.etymology && (
-          <p style={{ fontSize: '12px', color: '#dfb15b', fontStyle: 'italic', marginBottom: '8px' }}>
+          <p style={{ fontSize: '12.5px', color: '#c4e8e5', fontStyle: 'italic', marginBottom: '8px' }}>
             {termOfDay.etymology}
           </p>
         )}
 
-        <p style={{ fontSize: '14px', color: '#f1f5f9', lineHeight: 1.55 }}>
+        <p style={{ fontSize: '14.5px', color: '#f7fafc', lineHeight: 1.55 }}>
           {termOfDay.definition}
         </p>
       </div>
 
-      {/* Search Input */}
+      {/* Live Search Input */}
       <div style={{ position: 'relative', marginBottom: '14px' }}>
         <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
         <input
           type="text"
-          placeholder="Быстрый поиск понятия или определения..."
+          placeholder="Живой поиск термина или фрагмента определения..."
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -162,42 +173,59 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           }}
           style={{
             width: '100%',
-            padding: '12px 16px 12px 40px',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-light)',
+            padding: '12px 38px 12px 40px',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border)',
             background: '#ffffff',
             fontSize: '14px',
-            color: 'var(--text-main)',
+            color: 'var(--text)',
             outline: 'none',
             boxShadow: 'var(--shadow-sm)'
           }}
         />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            style={{
+              position: 'absolute',
+              right: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer'
+            }}
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
-      {/* Alphabet Selector Ribbon */}
+      {/* Alphabet Ribbon */}
       <div style={{
         display: 'flex',
         gap: '4px',
         overflowX: 'auto',
         paddingBottom: '8px',
-        marginBottom: '16px',
+        marginBottom: '14px',
         WebkitOverflowScrolling: 'touch'
       }}>
         <button
           onClick={() => setSelectedLetter(null)}
           style={{
             padding: '4px 10px',
-            borderRadius: '6px',
+            borderRadius: 'var(--radius-sm)',
             fontSize: '12px',
             fontWeight: selectedLetter === null ? 700 : 500,
-            background: selectedLetter === null ? 'var(--msu-blue-deep)' : '#ffffff',
+            background: selectedLetter === null ? 'var(--blue-deep)' : '#ffffff',
             color: selectedLetter === null ? '#ffffff' : 'var(--text-secondary)',
-            border: '1px solid ' + (selectedLetter === null ? 'var(--msu-blue-deep)' : 'var(--border-light)'),
+            border: '1px solid ' + (selectedLetter === null ? 'var(--blue-deep)' : 'var(--border)'),
             cursor: 'pointer',
             flexShrink: 0
           }}
         >
-          Все
+          Все (280)
         </button>
         {alphabet.map((letter) => (
           <button
@@ -210,12 +238,12 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
               minWidth: '28px',
               height: '28px',
               padding: '0 4px',
-              borderRadius: '6px',
+              borderRadius: 'var(--radius-sm)',
               fontSize: '12px',
               fontWeight: selectedLetter === letter ? 700 : 500,
-              background: selectedLetter === letter ? 'var(--msu-blue-deep)' : '#ffffff',
+              background: selectedLetter === letter ? 'var(--turq)' : '#ffffff',
               color: selectedLetter === letter ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedLetter === letter ? 'var(--msu-blue-deep)' : 'var(--border-light)'),
+              border: '1px solid ' + (selectedLetter === letter ? 'var(--turq)' : 'var(--border)'),
               cursor: 'pointer',
               flexShrink: 0
             }}
@@ -231,7 +259,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
         gap: '6px',
         overflowX: 'auto',
         paddingBottom: '8px',
-        marginBottom: '20px',
+        marginBottom: '18px',
         WebkitOverflowScrolling: 'touch'
       }}>
         {['Все', ...GLOSSARY_CATEGORIES].map((cat) => (
@@ -240,12 +268,12 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             onClick={() => setSelectedCategory(cat)}
             style={{
               padding: '5px 12px',
-              borderRadius: '9999px',
+              borderRadius: 'var(--radius-full)',
               fontSize: '12px',
-              fontWeight: selectedCategory === cat ? 600 : 500,
-              background: selectedCategory === cat ? 'var(--msu-blue-deep)' : '#ffffff',
+              fontWeight: selectedCategory === cat ? 700 : 500,
+              background: selectedCategory === cat ? 'var(--blue-deep)' : '#ffffff',
               color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedCategory === cat ? 'var(--msu-blue-deep)' : 'var(--border-light)'),
+              border: '1px solid ' + (selectedCategory === cat ? 'var(--blue-deep)' : 'var(--border)'),
               cursor: 'pointer',
               whiteSpace: 'nowrap'
             }}
@@ -255,53 +283,155 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
         ))}
       </div>
 
-      {/* Terms Count & Results Header */}
+      {/* Active Search & Filter Status */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
         <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-          Найдено понятий: <strong>{filteredTerms.length}</strong>
+          Отображается понятий: <strong>{filteredTerms.length}</strong>
         </span>
+        {(searchQuery || selectedLetter || selectedCategory !== 'Все') && (
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedLetter(null);
+              setSelectedCategory('Все');
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--turq)',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Сбросить фильтры ✕
+          </button>
+        )}
       </div>
 
-      {/* Terms List (Clean, Compact, Non-cluttered Cards) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {filteredTerms.slice(0, 50).map((termItem) => (
-          <div 
+      {/* Terms Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+        {filteredTerms.map((termItem) => (
+          <div
             key={termItem.id}
-            className="card-academic"
-            style={{ padding: '14px 16px' }}
+            className="card-clean"
+            style={{
+              padding: '16px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              cursor: 'pointer'
+            }}
+            onClick={() => handleSelectTermFromList(termItem)}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px', marginBottom: '4px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--msu-blue-deep)' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', marginBottom: '6px' }}>
+                <span className="badge-tag badge-turq" style={{ fontSize: '10.5px' }}>
+                  {termItem.category}
+                </span>
+              </div>
+
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--blue-deep)', marginBottom: '4px' }}>
                 {termItem.term}
               </h3>
-              <span className="badge-neutral" style={{ fontSize: '11px' }}>
-                <Tag size={10} style={{ marginRight: '3px' }} />
-                {termItem.category}
-              </span>
-            </div>
 
-            {termItem.etymology && (
-              <p style={{ fontSize: '11.5px', color: 'var(--msu-gold-hover)', fontStyle: 'italic', marginBottom: '4px' }}>
-                {termItem.etymology}
+              {termItem.etymology && (
+                <p style={{ fontSize: '11.5px', color: 'var(--turq)', fontStyle: 'italic', marginBottom: '6px' }}>
+                  {termItem.etymology}
+                </p>
+              )}
+
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                {termItem.definition}
               </p>
-            )}
-
-            <p style={{ fontSize: '13px', color: 'var(--text-main)', lineHeight: 1.5 }}>
-              {termItem.definition}
-            </p>
+            </div>
           </div>
         ))}
       </div>
 
-      {filteredTerms.length > 50 && (
-        <p style={{ textAlign: 'center', fontSize: '12.5px', color: 'var(--text-muted)', marginTop: '16px' }}>
-          Отображено первые 50 терминов. Уточните запрос в строке поиска для более точного результата.
-        </p>
-      )}
-
       {filteredTerms.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--text-muted)' }}>
-          <p>По вашему запросу терминов не найдено.</p>
+          <p>По вашему запросу понятий не найдено.</p>
+        </div>
+      )}
+
+      {/* Modal for detailed term view */}
+      {selectedTermDetail && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(25, 39, 52, 0.65)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 110,
+          padding: '16px'
+        }}>
+          <div className="card-clean" style={{
+            maxWidth: '560px',
+            width: '100%',
+            padding: '24px',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setSelectedTermDetail(null)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: 'var(--bg)',
+                border: 'none',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'var(--text-muted)'
+              }}
+            >
+              <X size={18} />
+            </button>
+
+            <span className="badge-tag badge-turq" style={{ marginBottom: '8px' }}>
+              {selectedTermDetail.category}
+            </span>
+
+            <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--blue-deep)', fontFamily: 'var(--font-serif)', marginBottom: '6px' }}>
+              {selectedTermDetail.term}
+            </h2>
+
+            {selectedTermDetail.etymology && (
+              <p style={{ fontSize: '13px', color: 'var(--turq)', fontStyle: 'italic', marginBottom: '12px' }}>
+                {selectedTermDetail.etymology}
+              </p>
+            )}
+
+            <p style={{ fontSize: '14.5px', color: 'var(--text)', lineHeight: 1.6, marginBottom: '20px' }}>
+              {selectedTermDetail.definition}
+            </p>
+
+            <button
+              onClick={() => setSelectedTermDetail(null)}
+              style={{
+                background: 'var(--blue-deep)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: 'var(--radius-sm)',
+                fontWeight: 600,
+                fontSize: '13px',
+                cursor: 'pointer'
+              }}
+            >
+              Закрыть
+            </button>
+          </div>
         </div>
       )}
 
