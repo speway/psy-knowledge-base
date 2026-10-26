@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraduationCap, FileText, CheckCircle2, Download, BookMarked, UserCheck } from 'lucide-react';
+import { GraduationCap, CheckCircle2 } from 'lucide-react';
 import { STUDENT_GUIDELINES } from '../data/student-guide';
 
 interface ArchiveViewProps {
@@ -41,60 +41,60 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ onNavigateToFaculty })
     <div style={{ paddingBottom: '90px' }}>
       
       {/* Title */}
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-tag badge-turq">
-          <GraduationCap size={13} />
+      <div style={{ marginBottom: '22px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-ochre">
+          <GraduationCap size={12} />
           <span>Студенческий научный сектор</span>
         </div>
         <h1 style={{
-          fontSize: '25px',
-          fontWeight: 800,
-          color: 'var(--blue-deep)',
+          fontSize: '28px',
+          fontWeight: 700,
+          color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           lineHeight: 1.25,
           marginBottom: '6px'
         }}>
           Архив студенческих работ и стандарты ВКР
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '820px' }}>
-          Официальные требования кафедры психологии Филиала МГУ в г. Ташкенте: архив лучших курсовых и дипломных исследований, 
-          структура научного аппарата и правила библиографии по ГОСТ 7.0.5–2008.
+        <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '820px' }}>
+          Официальные требования кафедры психологии Филиала МГУ в г. Ташкенте: репозиторий защищённых работ, 
+          канонический научный аппарат введения и стандарты оформления по ГОСТ 7.0.5–2008.
         </p>
       </div>
 
-      {/* Archive Samples List (Zarina's exact archive section) */}
+      {/* Archive Samples */}
       <div style={{ marginBottom: '28px' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--blue-deep)', fontFamily: 'var(--font-serif)', marginBottom: '12px' }}>
-          Репозиторий защищённых студенческих работ
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-serif)', marginBottom: '12px' }}>
+          Репозиторий защищённых студенческих исследований
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '14px' }}>
           {sampleTheses.map((item) => (
-            <div key={item.id} className="card-clean" style={{ padding: '18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '10px' }}>
+            <div key={item.id} className="paper-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '12px' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', marginBottom: '6px' }}>
-                  <span className="badge-tag badge-blue" style={{ fontSize: '10.5px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', marginBottom: '8px' }}>
+                  <span className="pill pill-neutral" style={{ fontSize: '10.5px' }}>
                     {item.category}
                   </span>
-                  <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
                     {item.year} г.
                   </span>
                 </div>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--blue-deep)', marginBottom: '4px', lineHeight: 1.35 }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ink)', marginBottom: '6px', lineHeight: 1.35, fontFamily: 'var(--font-serif)' }}>
                   «{item.title}»
                 </h3>
-                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+                <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
                   Автор: <strong>{item.author}</strong>
                 </p>
-                <p style={{ fontSize: '12px', color: 'var(--blue-mid)', marginTop: '2px' }}>
+                <p style={{ fontSize: '12.5px', color: 'var(--teal)', fontWeight: 600, marginTop: '2px' }}>
                   Научный руководитель: {item.supervisor}
                 </p>
               </div>
 
-              <div style={{ paddingTop: '10px', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span className="badge-tag badge-turq" style={{ fontSize: '11px' }}>
+              <div style={{ paddingTop: '10px', borderTop: '1px solid var(--line-soft)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className="pill pill-ochre" style={{ fontSize: '11px' }}>
                   {item.grade}
                 </span>
-                <span style={{ fontSize: '11.5px', color: 'var(--turq)', fontWeight: 600 }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontWeight: 600 }}>
                   Депонировано на кафедре
                 </span>
               </div>
@@ -105,23 +105,23 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ onNavigateToFaculty })
 
       {/* Guidelines Accordion */}
       <div>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--blue-deep)', fontFamily: 'var(--font-serif)', marginBottom: '12px' }}>
-          Методические требования к оформлению
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-serif)', marginBottom: '12px' }}>
+          Методические требования к оформлению курсовых и дипломов
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {STUDENT_GUIDELINES.map((guide) => (
-            <div key={guide.id} className="card-clean" style={{ padding: '20px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--blue-deep)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <CheckCircle2 size={16} color="var(--turq)" />
+            <div key={guide.id} className="paper-card" style={{ padding: '22px' }}>
+              <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontFamily: 'var(--font-serif)' }}>
+                <CheckCircle2 size={16} color="var(--ochre)" />
                 {guide.title}
               </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+              <p style={{ fontSize: '13.5px', color: 'var(--muted)', marginBottom: '12px' }}>
                 {guide.summary}
               </p>
 
               <ul style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {guide.points.map((pt, i) => (
-                  <li key={i} style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.45 }}>
+                  <li key={i} style={{ fontSize: '13px', color: 'var(--ink)', lineHeight: 1.5 }}>
                     {pt}
                   </li>
                 ))}
@@ -129,13 +129,14 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ onNavigateToFaculty })
 
               {guide.example && (
                 <div style={{
-                  background: 'var(--turq-soft)',
-                  borderLeft: '3px solid var(--turq)',
-                  padding: '10px 14px',
+                  background: 'var(--surface-soft)',
+                  border: '1px solid var(--line)',
+                  borderLeft: '3px solid var(--ochre)',
+                  padding: '12px 16px',
                   borderRadius: 'var(--radius-sm)',
                   fontSize: '12.5px',
-                  color: 'var(--text)',
-                  marginTop: '10px',
+                  color: 'var(--ink)',
+                  marginTop: '12px',
                   fontStyle: 'italic'
                 }}>
                   <strong>Образец:</strong> {guide.example}

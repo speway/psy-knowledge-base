@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, BookOpen, Clock, User, CheckCircle2, Lightbulb, Tag, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, User, BookOpen, Lightbulb, Tag, ArrowUpRight } from 'lucide-react';
 import { COURSES, Course, SeminarItem, SeminarLiterature } from '../data/courses';
 
 interface CoursesViewProps {
@@ -41,37 +41,36 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
   return (
     <div style={{ paddingBottom: '90px' }}>
       
-      {/* Course Hero Banner (Zarina's style) */}
-      <div className="card-clean" style={{
-        padding: '24px',
+      {/* Course Overview Banner */}
+      <div className="paper-card" style={{
+        padding: '28px',
         marginBottom: '24px',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f4f8fa 100%)',
-        borderLeft: '4px solid var(--turq)'
+        background: 'var(--surface)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span className="badge-tag badge-turq">1 курс бакалавриата</span>
-            <span className="badge-tag badge-blue">2 семестр</span>
-            <span className="badge-tag badge-lilac">34 академических часа</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <span className="pill pill-ochre">1 курс бакалавриата</span>
+            <span className="pill pill-teal">2 семестр</span>
+            <span className="pill pill-neutral">34 акад. часа</span>
           </div>
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>
-            Форма контроля: Экзамен
+          <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 700, fontFamily: 'var(--mono)' }}>
+            ФОРМА КОНТРОЛЯ: ЭКЗАМЕН
           </span>
         </div>
 
         <h1 style={{
-          fontSize: '25px',
-          fontWeight: 800,
-          color: 'var(--blue-deep)',
+          fontSize: '28px',
+          fontWeight: 700,
+          color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           lineHeight: 1.25,
-          marginBottom: '6px'
+          marginBottom: '8px'
         }}>
           {course.title}
         </h1>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '14px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--muted)' }}>
             Ведущий преподаватель дисциплины:
           </span>
           <button
@@ -79,58 +78,43 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--blue-mid)',
+              color: 'var(--ink)',
               fontWeight: 700,
               fontSize: '13.5px',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '4px',
-              textDecoration: 'underline'
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px'
             }}
           >
-            <User size={14} />
+            <User size={14} color="var(--ochre)" />
             {course.instructorName}
           </button>
         </div>
 
-        <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: '840px' }}>
+        <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6, maxWidth: '860px' }}>
           {course.description}
         </p>
 
         {/* Global Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px', paddingTop: '14px', borderTop: '1px solid var(--border-light)' }}>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--blue-deep)' }}>
-            Семинарский план: 9 занятий (34 часа)
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--line-soft)' }}>
+          <span style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            СИЛЛАБУС: 9 СЕМИНАРСКИХ ЗАНЯТИЙ (34 ЧАСА)
           </span>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={handleExpandAll}
-              style={{
-                background: 'transparent',
-                border: '1px solid var(--border)',
-                color: 'var(--blue-deep)',
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
+              className="btn-ghost"
+              style={{ padding: '5px 10px', fontSize: '11.5px' }}
             >
               Развернуть все
             </button>
             <button
               onClick={handleCollapseAll}
-              style={{
-                background: 'transparent',
-                border: '1px solid var(--border)',
-                color: 'var(--text-muted)',
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
+              className="btn-ghost"
+              style={{ padding: '5px 10px', fontSize: '11.5px' }}
             >
               Свернуть все
             </button>
@@ -138,65 +122,66 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
         </div>
       </div>
 
-      {/* Seminars List (Zarina's exact accordion structure & logic) */}
+      {/* Seminars List (Accordion) */}
       <div>
         {course.seminars.map((sem) => {
           const isOpen = !!openSeminars[sem.num];
           return (
-            <div key={sem.num} className={`seminar-card ${isOpen ? 'is-open' : ''}`}>
+            <div key={sem.num} className={`seminar-item ${isOpen ? 'open' : ''}`}>
               
-              {/* Accordion Header */}
+              {/* Header */}
               <div 
-                className="seminar-header"
+                className="seminar-title-bar"
                 onClick={() => toggleSeminar(sem.num)}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-                    <span className="badge-tag badge-turq" style={{ fontSize: '11px', padding: '1px 8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <span className="pill pill-neutral" style={{ fontSize: '10.5px', padding: '1px 8px' }}>
                       Семинар {sem.num}
                     </span>
-                    <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>
-                      <Clock size={12} style={{ display: 'inline', marginRight: '3px' }} />
-                      {sem.hours} акад. ч.
+                    <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontWeight: 600, fontFamily: 'var(--mono)' }}>
+                      <Clock size={11} style={{ display: 'inline', marginRight: '3px' }} />
+                      {sem.hours} ч.
                     </span>
                   </div>
                   <h3 style={{
-                    fontSize: '16px',
+                    fontSize: '17px',
                     fontWeight: 700,
-                    color: 'var(--blue-deep)',
+                    color: 'var(--ink)',
                     lineHeight: 1.3
                   }}>
                     {sem.title}
                   </h3>
                 </div>
 
-                <div className="seminar-toggle-btn">
-                  {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                <div className="toggle-indicator">
+                  {isOpen ? '−' : '+'}
                 </div>
               </div>
 
-              {/* Accordion Body */}
+              {/* Body */}
               {isOpen && (
-                <div className="seminar-body">
+                <div className="seminar-content-area">
                   
-                  {/* Section name */}
+                  {/* Section Label */}
                   <div style={{
-                    fontSize: '12px',
+                    fontSize: '11px',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.04em',
-                    fontWeight: 700,
-                    color: 'var(--blue-mid)',
-                    marginBottom: '8px'
+                    letterSpacing: '0.05em',
+                    fontWeight: 800,
+                    color: 'var(--muted)',
+                    marginBottom: '10px',
+                    fontFamily: 'var(--mono)'
                   }}>
                     {sem.section}
                   </div>
 
-                  {/* Questions block */}
-                  <div style={{ marginBottom: '18px' }}>
-                    <strong style={{ fontSize: '13.5px', color: 'var(--blue-deep)', display: 'block', marginBottom: '6px' }}>
+                  {/* Questions */}
+                  <div style={{ marginBottom: '22px' }}>
+                    <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '8px' }}>
                       Вопросы к семинарскому занятию:
                     </strong>
-                    <ol className="questions-list">
+                    <ol className="academic-questions">
                       {sem.questions.map((q, idx) => (
                         <li key={idx}>
                           <span>{q}</span>
@@ -205,36 +190,36 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                     </ol>
                   </div>
 
-                  {/* Literature block with click-to-read (Zarina's exact logic) */}
-                  <div style={{ marginBottom: '18px' }}>
-                    <strong style={{ fontSize: '13.5px', color: 'var(--blue-deep)', display: 'block', marginBottom: '8px' }}>
-                      📚 Рекомендуемая литература — клик открывает полные страницы в читалке:
+                  {/* Literature mapped to questions */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '10px' }}>
+                      Рекомендуемые первоисточники (клик открывает текст в ридере):
                     </strong>
                     <div>
                       {sem.literature.map((lit, idx) => (
                         <div
                           key={idx}
-                          className="lit-click-item"
+                          className="literature-entry"
                           onClick={() => onOpenReaderBySourceId(lit.sourceId)}
                         >
                           <div style={{ flex: 1, minWidth: '220px' }}>
-                            <span style={{ fontWeight: 700, color: 'var(--text)', fontSize: '13.5px' }}>
+                            <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '13.5px' }}>
                               {lit.author}
                             </span>{' '}
-                            <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+                            <span style={{ color: 'var(--muted)', fontSize: '13px' }}>
                               {lit.title}. — {lit.publisher}
                             </span>
                           </div>
 
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span className="badge-tag badge-turq">
+                            <span className="pill pill-neutral" style={{ fontSize: '10.5px' }}>
                               {lit.pages}
                             </span>
-                            <span className="badge-tag badge-lilac">
+                            <span className="pill pill-ochre" style={{ fontSize: '10.5px' }}>
                               {lit.questionRef}
                             </span>
-                            <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--blue-mid)', marginLeft: '4px' }}>
-                              Читать ↗
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ochre)', display: 'inline-flex', alignItems: 'center', gap: '2px', marginLeft: '4px' }}>
+                              Читать <ArrowUpRight size={12} />
                             </span>
                           </div>
                         </div>
@@ -242,45 +227,46 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Methodological Tip from Teacher */}
+                  {/* Methodological Tip */}
                   {sem.tips && (
                     <div style={{
-                      background: 'var(--lilac-soft)',
-                      borderLeft: '3px solid var(--lilac)',
-                      padding: '12px 14px',
+                      background: 'var(--surface-soft)',
+                      border: '1px solid var(--line)',
+                      borderLeft: '3px solid var(--teal)',
+                      padding: '12px 16px',
                       borderRadius: 'var(--radius-sm)',
-                      marginBottom: '14px',
+                      marginBottom: '16px',
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '10px'
                     }}>
-                      <Lightbulb size={18} color="var(--lilac)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <Lightbulb size={16} color="var(--teal)" style={{ flexShrink: 0, marginTop: '2px' }} />
                       <div>
-                        <span style={{ fontWeight: 700, fontSize: '12.5px', color: 'var(--lilac)' }}>
+                        <span style={{ fontWeight: 800, fontSize: '12px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
                           Совет преподавателя (А.А. Туниянц):
                         </span>
-                        <p style={{ fontSize: '12.5px', color: 'var(--text)', marginTop: '2px', lineHeight: 1.45 }}>
+                        <p style={{ fontSize: '13px', color: 'var(--ink)', marginTop: '3px', lineHeight: 1.5 }}>
                           {sem.tips}
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* Key Terms tags (click jumps to dictionary) */}
+                  {/* Key Terms */}
                   {sem.terms && sem.terms.length > 0 && (
-                    <div>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
-                        Ключевые понятия темы (нажмите для поиска в словаре):
+                    <div style={{ paddingTop: '10px', borderTop: '1px solid var(--line-soft)' }}>
+                      <span style={{ fontSize: '11.5px', color: 'var(--muted)', display: 'block', marginBottom: '6px', fontWeight: 600 }}>
+                        Ключевые понятия темы (клик ищет в словаре):
                       </span>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                         {sem.terms.map((t, idx) => (
                           <button
                             key={idx}
                             onClick={() => onNavigateToTerm(t)}
-                            className="badge-tag badge-blue"
-                            style={{ cursor: 'pointer', background: '#ffffff', borderColor: 'var(--border)' }}
+                            className="pill pill-neutral"
+                            style={{ cursor: 'pointer', background: 'var(--surface)' }}
                           >
-                            <Tag size={11} />
+                            <Tag size={10} color="var(--ochre)" />
                             {t}
                           </button>
                         ))}

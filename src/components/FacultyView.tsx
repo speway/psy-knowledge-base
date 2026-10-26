@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, BookOpen, Users, GraduationCap, CheckCircle2, Award } from 'lucide-react';
+import { ExternalLink, BookOpen, Users, User, ArrowUpRight } from 'lucide-react';
 import { FACULTY_MEMBERS, FacultyMember } from '../data/faculty';
 
 interface FacultyViewProps {
@@ -23,24 +23,24 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
     <div style={{ paddingBottom: '90px' }}>
       
       {/* Title */}
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-tag badge-turq">
-          <Users size={13} />
+      <div style={{ marginBottom: '22px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-ochre">
+          <Users size={12} />
           <span>Кафедра психологии</span>
         </div>
         <h1 style={{
-          fontSize: '25px',
-          fontWeight: 800,
-          color: 'var(--blue-deep)',
+          fontSize: '28px',
+          fontWeight: 700,
+          color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           lineHeight: 1.25,
           marginBottom: '6px'
         }}>
           Научные профили преподавателей
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '820px' }}>
-          Академические профили преподавательского состава Филиала МГУ в г. Ташкенте: исследовательские интересы, 
-          публикационная активность в системе ИСТИНА МГУ, читаемые дисциплины и руководство ВКР.
+        <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '820px' }}>
+          Академические профили кафедры психологии Филиала МГУ в г. Ташкенте: научные интересы, 
+          публикации в системе ИСТИНА МГУ, читаемые дисциплины и темы курсовых и дипломных работ.
         </p>
       </div>
 
@@ -50,17 +50,8 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
           <button
             key={spec}
             onClick={() => setSelectedSpecialization(spec)}
-            style={{
-              padding: '5px 14px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '12.5px',
-              fontWeight: selectedSpecialization === spec ? 700 : 500,
-              background: selectedSpecialization === spec ? 'var(--blue-deep)' : '#ffffff',
-              color: selectedSpecialization === spec ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedSpecialization === spec ? 'var(--blue-deep)' : 'var(--border)'),
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
+            className={`pill ${selectedSpecialization === spec ? 'pill-ochre' : 'pill-neutral'}`}
+            style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             {spec}
           </button>
@@ -68,50 +59,36 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
       </div>
 
       {/* Flagship Profile: Туниянц Анна Александровна */}
-      <div className="card-clean" style={{
-        padding: '24px',
+      <div className="paper-card" style={{
+        padding: '28px',
         marginBottom: '28px',
-        borderLeft: '4px solid var(--turq)'
+        background: 'var(--surface)'
       }}>
         
         {/* Profile Header */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '18px', borderBottom: '1px solid var(--border-light)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '18px', borderBottom: '1px solid var(--line-soft)' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
             
             {/* Monogram Avatar */}
-            <div style={{
-              width: '68px',
-              height: '68px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #245266 0%, #358682 100%)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '24px',
-              fontWeight: 800,
-              fontFamily: 'var(--font-serif)',
-              flexShrink: 0,
-              boxShadow: 'var(--shadow-sm)'
-            }}>
+            <div className="brand-mark" style={{ width: '56px', height: '56px', fontSize: '28px' }}>
               {tuniyants.avatarText}
             </div>
 
             <div style={{ flex: 1, minWidth: '260px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
-                <span className="badge-tag badge-turq">
+                <span className="pill pill-ochre">
                   {tuniyants.badge}
                 </span>
-                <span className="badge-tag badge-blue">
+                <span className="pill pill-neutral">
                   {tuniyants.experience}
                 </span>
               </div>
 
-              <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--blue-deep)', fontFamily: 'var(--font-serif)', marginBottom: '3px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-serif)', marginBottom: '3px' }}>
                 {tuniyants.name}
               </h2>
 
-              <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+              <p style={{ fontSize: '13.5px', color: 'var(--muted)', marginBottom: '10px' }}>
                 {tuniyants.role} · {tuniyants.department}
               </p>
 
@@ -121,21 +98,15 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
                   href={tuniyants.istinaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="btn-ghost"
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    background: '#f4f8fa',
-                    border: '1px solid #c2d6e2',
                     padding: '4px 10px',
-                    borderRadius: 'var(--radius-sm)',
                     fontSize: '12px',
                     fontWeight: 700,
-                    color: 'var(--blue-deep)',
                     textDecoration: 'none'
                   }}
                 >
-                  <span style={{ color: '#b54632' }}>ИСТИНА МГУ</span>
+                  <span style={{ color: 'var(--ochre)' }}>ИСТИНА МГУ</span>
                   <span>(ID: {tuniyants.istinaId})</span>
                   <ExternalLink size={12} />
                 </a>
@@ -147,7 +118,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
           {/* Specialization Tags */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
             {tuniyants.specializations.map((spec, i) => (
-              <span key={i} className="badge-tag badge-blue" style={{ fontSize: '11px' }}>
+              <span key={i} className="pill pill-neutral" style={{ fontSize: '11px' }}>
                 #{spec}
               </span>
             ))}
@@ -157,7 +128,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
         {/* Profile Internal Tabs */}
         <div style={{
           display: 'flex',
-          borderBottom: '1px solid var(--border-light)',
+          borderBottom: '1px solid var(--line-soft)',
           margin: '16px 0',
           gap: '4px',
           overflowX: 'auto',
@@ -176,9 +147,9 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
                 padding: '9px 14px',
                 border: 'none',
                 background: 'none',
-                borderBottom: activeProfileTab === tab.id ? '2px solid var(--blue-deep)' : '2px solid transparent',
-                color: activeProfileTab === tab.id ? 'var(--blue-deep)' : 'var(--text-muted)',
-                fontWeight: activeProfileTab === tab.id ? 700 : 500,
+                borderBottom: activeProfileTab === tab.id ? '2px solid var(--ink)' : '2px solid transparent',
+                color: activeProfileTab === tab.id ? 'var(--ink)' : 'var(--muted)',
+                fontWeight: activeProfileTab === tab.id ? 800 : 600,
                 fontSize: '13px',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
@@ -193,57 +164,45 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
         {activeProfileTab === 'courses' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{
-              background: '#f4f8fa',
-              border: '1px solid var(--border-light)',
+              background: 'var(--surface-soft)',
+              border: '1px solid var(--line)',
               borderRadius: 'var(--radius-sm)',
-              padding: '14px',
+              padding: '16px',
               display: 'flex',
               flexDirection: 'column',
               gap: '6px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
-                <span style={{ fontWeight: 700, color: 'var(--blue-deep)', fontSize: '14.5px' }}>
+                <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '15px' }}>
                   Психология мотивации и эмоций
                 </span>
-                <span className="badge-tag badge-turq">1 курс · 34 часа · Экзамен</span>
+                <span className="pill pill-ochre">1 курс · 34 часа · Экзамен</span>
               </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                Фундаментальный академический курс весеннего семестра для 1 курса. Включает 9 оцифрованных семинаров.
+              <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
+                Фундаментальный академический курс весеннего семестра для 1 курса бакалавриата. Включает 9 оцифрованных семинаров.
               </p>
               <div>
                 <button
                   onClick={() => onNavigateToCourse('motivation-emotion')}
-                  style={{
-                    background: 'var(--blue-deep)',
-                    color: '#ffffff',
-                    border: 'none',
-                    padding: '6px 14px',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '12.5px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    marginTop: '4px'
-                  }}
+                  className="btn-ink"
+                  style={{ marginTop: '6px', fontSize: '12.5px', padding: '6px 14px' }}
                 >
-                  <BookOpen size={14} />
+                  <BookOpen size={13} />
                   Открыть программу семинаров →
                 </button>
               </div>
             </div>
 
             <div style={{
-              background: '#ffffff',
-              border: '1px solid var(--border-light)',
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
               borderRadius: 'var(--radius-sm)',
-              padding: '12px 14px'
+              padding: '14px'
             }}>
-              <span style={{ fontWeight: 600, color: 'var(--text)', fontSize: '13.5px' }}>
+              <span style={{ fontWeight: 700, color: 'var(--ink)', fontSize: '14px' }}>
                 Организационное консультирование и поведение
               </span>
-              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
+              <p style={{ fontSize: '12.5px', color: 'var(--muted)', marginTop: '2px' }}>
                 Спецкурс для 3 курса бакалавриата (ассессмент, групповая динамика, диагностика культуры).
               </p>
             </div>
@@ -253,8 +212,8 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
         {/* Theses Topics Tab */}
         {activeProfileTab === 'theses' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
-              Темы выпускных квалификационных работ (ВКР) и курсовых исследований под руководством А.А. Туниянц:
+            <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>
+              Темы выпускных квалификационных работ (ВКР) и курсовых исследований под научным руководством А.А. Туниянц:
             </p>
             {tuniyants.thesisTopics.map((topic, i) => (
               <div
@@ -263,16 +222,16 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: '10px',
-                  background: '#f8fafc',
-                  padding: '10px 14px',
+                  background: 'var(--surface-soft)',
+                  padding: '11px 15px',
                   borderRadius: 'var(--radius-sm)',
-                  border: '1px solid var(--border-light)'
+                  border: '1px solid var(--line-soft)'
                 }}
               >
-                <span style={{ color: 'var(--turq)', fontWeight: 800, fontSize: '13px', marginTop: '1px' }}>
+                <span style={{ color: 'var(--ochre)', fontWeight: 800, fontSize: '12px', fontFamily: 'var(--mono)', marginTop: '2px' }}>
                   {i + 1}.
                 </span>
-                <span style={{ fontSize: '13.5px', color: 'var(--text)' }}>
+                <span style={{ fontSize: '13.5px', color: 'var(--ink)' }}>
                   {topic}
                 </span>
               </div>
@@ -287,16 +246,16 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
               <div
                 key={f.id}
                 style={{
-                  background: '#f8fafc',
-                  border: '1px solid var(--border-light)',
+                  background: 'var(--surface-soft)',
+                  border: '1px solid var(--line)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '14px'
+                  padding: '16px'
                 }}
               >
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--blue-deep)', marginBottom: '4px' }}>
+                <h4 style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)', marginBottom: '4px' }}>
                   {f.title}
                 </h4>
-                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
                   {f.description}
                 </p>
               </div>
@@ -311,14 +270,14 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
               <div
                 key={i}
                 style={{
-                  background: '#f8fafc',
-                  border: '1px solid var(--border-light)',
+                  background: 'var(--surface-soft)',
+                  border: '1px solid var(--line)',
                   borderRadius: 'var(--radius-sm)',
-                  padding: '14px'
+                  padding: '16px'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '4px' }}>
-                  <span className="badge-tag badge-blue" style={{ fontSize: '11px' }}>
+                  <span className="pill pill-neutral" style={{ fontSize: '10.5px' }}>
                     {pub.year} год
                   </span>
                   {pub.doi && (
@@ -326,22 +285,22 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
                       href={pub.doi}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ fontSize: '12px', color: 'var(--blue-mid)', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontWeight: 600 }}
+                      style={{ fontSize: '12px', color: 'var(--ochre)', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none', fontWeight: 700 }}
                     >
                       Истина МГУ <ExternalLink size={12} />
                     </a>
                   )}
                 </div>
-                <h4 style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--blue-deep)', marginBottom: '2px' }}>
+                <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', marginBottom: '2px' }}>
                   «{pub.title}»
                 </h4>
-                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+                <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
                   Авторы: <strong>{pub.authors}</strong>
                 </p>
-                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                <p style={{ fontSize: '12px', color: 'var(--muted-light)', marginBottom: '8px' }}>
                   {pub.journal}
                 </p>
-                <p style={{ fontSize: '12.5px', color: 'var(--text)', fontStyle: 'italic', background: '#ffffff', padding: '8px', borderRadius: '4px', border: '1px solid #edf2f7' }}>
+                <p style={{ fontSize: '13px', color: 'var(--ink)', fontStyle: 'italic', background: 'var(--surface)', padding: '10px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
                   {pub.abstract}
                 </p>
               </div>
@@ -351,41 +310,28 @@ export const FacultyView: React.FC<FacultyViewProps> = ({ onNavigateToCourse }) 
 
       </div>
 
-      {/* Scalable view of other department staff */}
+      {/* Overview of other department sections */}
       <div>
-        <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--blue-deep)', marginBottom: '12px', fontFamily: 'var(--font-serif)' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)', marginBottom: '12px', fontFamily: 'var(--font-serif)' }}>
           Общекафедральные направления
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
           {filteredFaculty.filter(f => f.id !== 'tuniyants-a-a').map(m => (
-            <div key={m.id} className="card-clean" style={{ padding: '16px' }}>
+            <div key={m.id} className="paper-card" style={{ padding: '18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                <div style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  background: 'var(--bg)',
-                  color: 'var(--blue-deep)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 700,
-                  fontSize: '15px',
-                  fontFamily: 'var(--font-serif)',
-                  flexShrink: 0
-                }}>
+                <div className="brand-mark" style={{ width: '40px', height: '40px', fontSize: '20px' }}>
                   {m.avatarText}
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '14.5px', fontWeight: 700, color: 'var(--blue-deep)' }}>
+                  <h4 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)' }}>
                     {m.name}
                   </h4>
-                  <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                  <p style={{ fontSize: '12px', color: 'var(--muted)' }}>
                     {m.role}
                   </p>
                 </div>
               </div>
-              <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
                 {m.summary}
               </p>
             </div>

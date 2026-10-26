@@ -42,21 +42,16 @@ export const App: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       
-      {/* Ambient background orbs */}
-      <div className="ambient-fx ambient-fx-1" />
-      <div className="ambient-fx ambient-fx-2" />
-      <div className="ambient-fx ambient-fx-3" />
-
-      {/* Main Header */}
+      {/* Site Header */}
       <Header
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, paddingTop: '28px' }}>
-        <div className="container-app">
+      {/* Main Content */}
+      <main style={{ flex: 1, paddingTop: '32px' }}>
+        <div className="app-container">
           {activeTab === 'disciplines' && (
             <CoursesView
               onOpenReaderBySourceId={handleOpenReaderBySourceId}
@@ -92,16 +87,14 @@ export const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Refined Academic Footer */}
+      {/* Editorial Footer (styled like psy-case-trainer) */}
       <footer style={{
-        background: '#ffffff',
-        borderTop: '1px solid var(--border)',
-        padding: '32px 0 90px',
-        marginTop: 'auto',
-        position: 'relative',
-        zIndex: 10
+        background: 'var(--surface)',
+        borderTop: '1px solid var(--line-soft)',
+        padding: '36px 0 90px',
+        marginTop: 'auto'
       }}>
-        <div className="container-app">
+        <div className="app-container">
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -111,32 +104,20 @@ export const App: React.FC = () => {
             maxWidth: '680px',
             margin: '0 auto'
           }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #245266 0%, #358682 100%)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: '20px',
-              fontFamily: 'var(--font-serif)'
-            }}>
+            <div className="brand-mark" style={{ width: '42px', height: '42px', fontSize: '24px' }}>
               Ψ
             </div>
 
-            <p style={{ fontSize: '14px', fontWeight: 800, color: 'var(--blue-deep)', letterSpacing: '0.02em', fontFamily: 'var(--font-serif)' }}>
-              Филиал МГУ имени М.В. Ломоносова в городе Ташкенте
+            <p style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)', letterSpacing: '0.02em' }}>
+              Филиал Московского государственного университета имени М.В. Ломоносова в городе Ташкенте
             </p>
 
-            <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
               Кафедра психологии · Учебно-методический портал «ПСИ-КАМПУС»<br />
-              Официальные программы семинаров, цифровая библиотека первоисточников и научные профили.
+              Официальная база оцифрованных семинаров, первоисточников и научных профилей преподавателей.
             </p>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '11.5px', color: 'var(--text-muted)', paddingTop: '6px' }}>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '11.5px', color: 'var(--muted-light)', paddingTop: '8px', borderTop: '1px solid var(--line-soft)' }}>
               <span>Система ИСТИНА МГУ</span>
               <span>•</span>
               <span>ГОСТ 7.0.5–2008</span>
@@ -159,7 +140,7 @@ export const App: React.FC = () => {
         onClose={() => setReaderSource(null)}
       />
 
-      {/* Search Modal */}
+      {/* Quick Search Modal */}
       <QuickSearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}

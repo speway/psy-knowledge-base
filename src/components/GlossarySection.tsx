@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Sparkles, Shuffle, Bookmark, Tag, X, ChevronRight, BookOpen, Layers } from 'lucide-react';
+import { Search, Sparkles, Shuffle, Bookmark, Tag, X, ArrowUpRight } from 'lucide-react';
 import { GLOSSARY_TERMS, GLOSSARY_CATEGORIES, GlossaryTerm } from '../data/glossary';
 
 interface GlossarySectionProps {
@@ -70,84 +70,60 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
   return (
     <div style={{ paddingBottom: '90px' }}>
       
-      {/* Page Title */}
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="badge-tag badge-turq">
-          <Bookmark size={13} />
-          <span>Психологический лексикон</span>
+      {/* Title */}
+      <div style={{ marginBottom: '22px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-ochre">
+          <Bookmark size={12} />
+          <span>Академический лексикон</span>
         </div>
         <h1 style={{
-          fontSize: '25px',
-          fontWeight: 800,
-          color: 'var(--blue-deep)',
+          fontSize: '28px',
+          fontWeight: 700,
+          color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           lineHeight: 1.25,
           marginBottom: '6px'
         }}>
           Словарь психологических понятий
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '820px' }}>
-          Интерактивный понятийный аппарат кафедры психологии: <strong>280 академических терминов</strong>, 
+        <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '820px' }}>
+          Единый интерактивный понятийный аппарат кафедры: <strong>280 верифицированных терминов</strong>, 
           структурированных по 9 научным разделам с этимологией, контекстом применения и перекрёстными ссылками.
         </p>
       </div>
 
       {/* Hero Widget: Термин Дня */}
-      <div className="card-clean" style={{
-        background: 'linear-gradient(135deg, #245266 0%, #358682 60%, #5d487d 100%)',
-        color: '#ffffff',
+      <div className="paper-card" style={{
         padding: '24px',
-        borderRadius: 'var(--radius-md)',
         marginBottom: '24px',
-        boxShadow: 'var(--shadow-md)'
+        background: 'var(--surface)',
+        borderLeft: '4px solid var(--ochre)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              background: 'rgba(255, 255, 255, 0.22)',
-              color: '#ffffff',
-              padding: '3px 10px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px'
-            }}>
-              <Sparkles size={13} />
+            <span className="pill pill-ochre">
+              <Sparkles size={12} />
               Термин дня
             </span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '12px' }}>
+            <span style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 600 }}>
               Раздел: {termOfDay.category}
             </span>
           </div>
 
           <button
             onClick={handleShuffleTerm}
-            style={{
-              background: 'rgba(255, 255, 255, 0.18)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              padding: '6px 14px',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '12.5px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease'
-            }}
+            className="btn-ghost"
+            style={{ padding: '6px 12px', fontSize: '12px' }}
           >
-            <Shuffle size={13} />
-            Другой случайный термин 🎲
+            <Shuffle size={13} color="var(--ochre)" />
+            Другой термин 🎲
           </button>
         </div>
 
         <h2 style={{
           fontSize: '24px',
-          fontWeight: 800,
-          color: '#ffffff',
+          fontWeight: 700,
+          color: 'var(--ink)',
           fontFamily: 'var(--font-serif)',
           marginBottom: '6px'
         }}>
@@ -155,29 +131,24 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
         </h2>
 
         {termOfDay.shortDefinition && (
-          <p style={{ fontSize: '13.5px', color: '#c4e8e5', fontStyle: 'italic', marginBottom: '8px' }}>
+          <p style={{ fontSize: '13.5px', color: 'var(--teal)', fontStyle: 'italic', marginBottom: '8px' }}>
             {termOfDay.shortDefinition}
           </p>
         )}
 
-        <p style={{ fontSize: '14.5px', color: '#f7fafc', lineHeight: 1.55 }}>
+        <p style={{ fontSize: '14px', color: 'var(--ink)', lineHeight: 1.55 }}>
           {termOfDay.definition}
         </p>
 
         {termOfDay.related && termOfDay.related.length > 0 && (
-          <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.7)' }}>Связано с:</span>
+          <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontWeight: 600 }}>Связано с:</span>
             {termOfDay.related.map((r, i) => (
               <span 
                 key={i} 
                 onClick={() => setSearchQuery(r)}
-                style={{ 
-                  background: 'rgba(255, 255, 255, 0.15)', 
-                  padding: '2px 8px', 
-                  borderRadius: '10px', 
-                  fontSize: '11px', 
-                  cursor: 'pointer' 
-                }}
+                className="pill pill-neutral"
+                style={{ cursor: 'pointer', fontSize: '10.5px' }}
               >
                 {r}
               </span>
@@ -188,7 +159,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
 
       {/* Live Search Input */}
       <div style={{ position: 'relative', marginBottom: '14px' }}>
-        <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
+        <Search size={16} color="var(--muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
         <input
           type="text"
           placeholder="Живой поиск по 280 терминам и определениям..."
@@ -200,11 +171,11 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           style={{
             width: '100%',
             padding: '12px 38px 12px 40px',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border)',
-            background: '#ffffff',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--line)',
+            background: 'var(--surface)',
             fontSize: '14px',
-            color: 'var(--text)',
+            color: 'var(--ink)',
             outline: 'none',
             boxShadow: 'var(--shadow-sm)'
           }}
@@ -219,7 +190,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
               transform: 'translateY(-50%)',
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: 'var(--muted)',
               cursor: 'pointer'
             }}
           >
@@ -243,10 +214,10 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             padding: '4px 10px',
             borderRadius: 'var(--radius-sm)',
             fontSize: '12px',
-            fontWeight: selectedLetter === null ? 700 : 500,
-            background: selectedLetter === null ? 'var(--blue-deep)' : '#ffffff',
-            color: selectedLetter === null ? '#ffffff' : 'var(--text-secondary)',
-            border: '1px solid ' + (selectedLetter === null ? 'var(--blue-deep)' : 'var(--border)'),
+            fontWeight: selectedLetter === null ? 800 : 600,
+            background: selectedLetter === null ? 'var(--ink)' : 'var(--surface)',
+            color: selectedLetter === null ? '#ffffff' : 'var(--ink)',
+            border: '1px solid ' + (selectedLetter === null ? 'var(--ink)' : 'var(--line)'),
             cursor: 'pointer',
             flexShrink: 0
           }}
@@ -266,10 +237,11 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
               padding: '0 4px',
               borderRadius: 'var(--radius-sm)',
               fontSize: '12px',
-              fontWeight: selectedLetter === letter ? 700 : 500,
-              background: selectedLetter === letter ? 'var(--turq)' : '#ffffff',
-              color: selectedLetter === letter ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedLetter === letter ? 'var(--turq)' : 'var(--border)'),
+              fontFamily: 'var(--mono)',
+              fontWeight: selectedLetter === letter ? 800 : 600,
+              background: selectedLetter === letter ? 'var(--ochre)' : 'var(--surface)',
+              color: selectedLetter === letter ? '#ffffff' : 'var(--ink)',
+              border: '1px solid ' + (selectedLetter === letter ? 'var(--ochre)' : 'var(--line)'),
               cursor: 'pointer',
               flexShrink: 0
             }}
@@ -292,27 +264,18 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            style={{
-              padding: '5px 12px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '12px',
-              fontWeight: selectedCategory === cat ? 700 : 500,
-              background: selectedCategory === cat ? 'var(--blue-deep)' : '#ffffff',
-              color: selectedCategory === cat ? '#ffffff' : 'var(--text-secondary)',
-              border: '1px solid ' + (selectedCategory === cat ? 'var(--blue-deep)' : 'var(--border)'),
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
+            className={`pill ${selectedCategory === cat ? 'pill-ochre' : 'pill-neutral'}`}
+            style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Active Search Status & Count */}
+      {/* Active Search Status */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-          Найдено понятий: <strong>{filteredTerms.length}</strong>
+        <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>
+          Отображается понятий: <strong>{filteredTerms.length}</strong>
         </span>
         {(searchQuery || selectedLetter || selectedCategory !== 'Все') && (
           <button
@@ -324,7 +287,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--turq)',
+              color: 'var(--ochre)',
               fontSize: '12px',
               fontWeight: 700,
               cursor: 'pointer'
@@ -340,7 +303,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
         {filteredTerms.map((termItem) => (
           <div
             key={termItem.id}
-            className="card-clean"
+            className="paper-card"
             style={{
               padding: '18px',
               display: 'flex',
@@ -353,29 +316,29 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           >
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', marginBottom: '6px' }}>
-                <span className="badge-tag badge-turq" style={{ fontSize: '10.5px' }}>
+                <span className="pill pill-neutral" style={{ fontSize: '10px' }}>
                   {termItem.category}
                 </span>
               </div>
 
-              <h3 style={{ fontSize: '16.5px', fontWeight: 800, color: 'var(--blue-deep)', marginBottom: '4px', fontFamily: 'var(--font-serif)' }}>
+              <h3 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--ink)', marginBottom: '4px', fontFamily: 'var(--font-serif)' }}>
                 {termItem.term || termItem.title}
               </h3>
 
               {termItem.shortDefinition && (
-                <p style={{ fontSize: '13px', color: 'var(--blue-mid)', fontStyle: 'italic', marginBottom: '6px', lineHeight: 1.4 }}>
+                <p style={{ fontSize: '13px', color: 'var(--teal)', fontStyle: 'italic', marginBottom: '6px', lineHeight: 1.4 }}>
                   {termItem.shortDefinition}
                 </p>
               )}
 
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
                 {termItem.definition}
               </p>
             </div>
 
-            <div style={{ paddingTop: '8px', borderTop: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11.5px', color: 'var(--turq)', fontWeight: 700 }}>
-                Открыть статью →
+            <div style={{ paddingTop: '8px', borderTop: '1px solid var(--line-soft)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '11.5px', color: 'var(--ochre)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                Открыть карточку <ArrowUpRight size={12} />
               </span>
             </div>
           </div>
@@ -383,7 +346,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
       </div>
 
       {filteredTerms.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--text-muted)' }}>
+        <div style={{ textAlign: 'center', padding: '40px 16px', color: 'var(--muted)' }}>
           <p>По вашему запросу понятий не найдено.</p>
         </div>
       )}
@@ -396,7 +359,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(25, 39, 52, 0.7)',
+          background: 'rgba(16, 32, 28, 0.65)',
           backdropFilter: 'blur(6px)',
           display: 'flex',
           alignItems: 'center',
@@ -404,11 +367,12 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
           zIndex: 110,
           padding: '16px'
         }}>
-          <div className="card-clean" style={{
+          <div className="paper-card" style={{
             maxWidth: '580px',
             width: '100%',
-            padding: '24px',
-            position: 'relative'
+            padding: '28px',
+            position: 'relative',
+            background: 'var(--surface)'
           }}>
             <button
               onClick={() => setSelectedTermDetail(null)}
@@ -416,45 +380,45 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
                 position: 'absolute',
                 top: '16px',
                 right: '16px',
-                background: 'var(--bg)',
-                border: 'none',
+                background: 'var(--paper)',
+                border: '1px solid var(--line)',
                 width: '32px',
                 height: '32px',
-                borderRadius: '50%',
+                borderRadius: 'var(--radius-sm)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: 'var(--text-muted)'
+                color: 'var(--ink)'
               }}
             >
-              <X size={18} />
+              <X size={16} />
             </button>
 
-            <span className="badge-tag badge-turq" style={{ marginBottom: '8px' }}>
+            <span className="pill pill-ochre" style={{ marginBottom: '8px' }}>
               {selectedTermDetail.category}
             </span>
 
-            <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--blue-deep)', fontFamily: 'var(--font-serif)', marginBottom: '6px' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-serif)', marginBottom: '6px' }}>
               {selectedTermDetail.term || selectedTermDetail.title}
             </h2>
 
             {selectedTermDetail.shortDefinition && (
-              <p style={{ fontSize: '13.5px', color: 'var(--turq)', fontStyle: 'italic', marginBottom: '12px' }}>
+              <p style={{ fontSize: '13.5px', color: 'var(--teal)', fontStyle: 'italic', marginBottom: '12px' }}>
                 {selectedTermDetail.shortDefinition}
               </p>
             )}
 
-            <p style={{ fontSize: '14.5px', color: 'var(--text)', lineHeight: 1.6, marginBottom: '16px' }}>
+            <p style={{ fontSize: '14.5px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '18px' }}>
               {selectedTermDetail.definition}
             </p>
 
             {selectedTermDetail.usefulFor && selectedTermDetail.usefulFor.length > 0 && (
-              <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 14px', borderRadius: 'var(--radius-sm)' }}>
-                <strong style={{ fontSize: '12px', color: 'var(--blue-deep)', display: 'block', marginBottom: '4px' }}>
+              <div style={{ marginBottom: '16px', background: 'var(--surface-soft)', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line-soft)' }}>
+                <strong style={{ fontSize: '12px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'block', marginBottom: '6px' }}>
                   Применение в психологической практике:
                 </strong>
-                <ul style={{ paddingLeft: '16px', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
+                <ul style={{ paddingLeft: '16px', fontSize: '13px', color: 'var(--muted)' }}>
                   {selectedTermDetail.usefulFor.map((u, i) => (
                     <li key={i}>{u}</li>
                   ))}
@@ -463,8 +427,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             )}
 
             {selectedTermDetail.related && selectedTermDetail.related.length > 0 && (
-              <div style={{ marginBottom: '16px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+              <div style={{ marginBottom: '18px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--muted)', display: 'block', marginBottom: '6px', fontWeight: 600 }}>
                   Связанные понятия:
                 </span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -475,7 +439,7 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
                         setSearchQuery(rel);
                         setSelectedTermDetail(null);
                       }}
-                      className="badge-tag badge-blue"
+                      className="pill pill-neutral"
                       style={{ cursor: 'pointer' }}
                     >
                       {rel}
@@ -487,16 +451,8 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
 
             <button
               onClick={() => setSelectedTermDetail(null)}
-              style={{
-                background: 'var(--blue-deep)',
-                color: '#ffffff',
-                border: 'none',
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-sm)',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: 'pointer'
-              }}
+              className="btn-ink"
+              style={{ padding: '7px 16px', fontSize: '12.5px' }}
             >
               Закрыть
             </button>
