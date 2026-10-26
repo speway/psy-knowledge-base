@@ -3,24 +3,17 @@ import {
   ExternalLink, 
   BookOpen, 
   Users, 
-  User, 
-  ArrowUpRight, 
-  GraduationCap, 
-  Briefcase, 
   Calendar, 
   Mail, 
   MapPin, 
   Clock, 
   Award, 
-  FileText, 
+  Search, 
+  Check, 
+  Copy, 
+  Info,
   Sparkles,
-  Layers,
-  Search,
-  Check,
-  Copy,
-  FolderGit2,
-  ChevronRight,
-  Info
+  AlertCircle
 } from 'lucide-react';
 import { FACULTY_MEMBERS, FacultyMember } from '../data/faculty';
 
@@ -40,7 +33,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
   const [internalSelectedId, setInternalSelectedId] = useState<string>(selectedFacultyId);
   const [activeProfileTab, setActiveProfileTab] = useState<'research' | 'projects' | 'publications' | 'courses' | 'theses' | 'collaborations'>('research');
   const [searchFilter, setSearchFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'flagship' | 'curators' | 'grants'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'ready' | 'curators' | 'dev'>('all');
   const [copiedContact, setCopiedContact] = useState(false);
 
   // Sync prop changes
@@ -52,12 +45,11 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
     if (onSelectFaculty) {
       onSelectFaculty(id);
     }
-    // Reset tab to research when switching
     setActiveProfileTab('research');
   };
 
   const handleCopyContacts = () => {
-    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\nКабинет: ${faculty.office || 'Кафедра психологии'}\nКонсультации: ${faculty.consultationHours || 'По согласованию'}\nEmail: ${faculty.email || 'dep.psychology@msu.uz'}`;
+    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\nКабинет: ${faculty.office || 'Кафедра психологии'}\nКонсультации: ${faculty.consultationHours || 'По расписанию кафедры'}\nEmail: ${faculty.email || 'dep.psychology@msu.uz'}`;
     navigator.clipboard?.writeText(text);
     setCopiedContact(true);
     setTimeout(() => setCopiedContact(false), 2200);
@@ -74,14 +66,14 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
 
     if (!matchesSearch) return false;
 
-    if (categoryFilter === 'flagship') {
-      return f.id === 'tuniyants-a-a';
+    if (categoryFilter === 'ready') {
+      return !f.isUnderDevelopment;
     }
     if (categoryFilter === 'curators') {
       return f.id === 'bazarov-t-yu';
     }
-    if (categoryFilter === 'grants') {
-      return f.projects.length > 0;
+    if (categoryFilter === 'dev') {
+      return !!f.isUnderDevelopment;
     }
     return true;
   });
@@ -93,7 +85,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-primary">
           <Users size={12} />
-          <span>Кафедра психологии · Ташкентский филиал МГУ имени М.В. Ломоносова</span>
+          <span>Кафедра психологии · Филиал МГУ в г. Ташкенте</span>
         </div>
         <h1 style={{
           fontSize: '30px',
@@ -103,11 +95,11 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
           lineHeight: 1.25,
           marginBottom: '6px'
         }}>
-          Академические профили преподавателей
+          Преподаватели кафедры психологии
         </h1>
         <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '840px', lineHeight: 1.55 }}>
-          Единая университетская база научно-педагогической деятельности кафедры: эталонные профили преподавателей,
-          исследовательские сферы, внешние государственные гранты, публикации в системе ИСТИНА МГУ, оцифрованные курсы и темы НИР.
+          Академические профили преподавательского состава филиала: научные направления, 
+          исследовательские проекты, публикации, читаемые дисциплины и темы студенческих исследований.
         </p>
       </div>
 
@@ -122,7 +114,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Каталог преподавателей ({FACULTY_MEMBERS.length}):
+              Каталог кафедры ({FACULTY_MEMBERS.length}):
             </span>
           </div>
 
@@ -133,28 +125,28 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               className={`pill ${categoryFilter === 'all' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Все сотрудники ({FACULTY_MEMBERS.length})
+              Все преподаватели ({FACULTY_MEMBERS.length})
             </button>
             <button
-              onClick={() => setCategoryFilter('flagship')}
-              className={`pill ${categoryFilter === 'flagship' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => { setCategoryFilter('all'); handleSelectFaculty('tuniyants-a-a'); }}
+              className={`pill ${faculty.id === 'tuniyants-a-a' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              ⭐ Эталонный профиль (Туниянц А.А.)
+              Туниянц А.А.
             </button>
             <button
-              onClick={() => setCategoryFilter('curators')}
-              className={`pill ${categoryFilter === 'curators' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => { setCategoryFilter('all'); handleSelectFaculty('bazarov-t-yu'); }}
+              className={`pill ${faculty.id === 'bazarov-t-yu' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Куратор кафедры (Базаров Т.Ю.)
+              Базаров Т.Ю. (Куратор)
             </button>
             <button
-              onClick={() => setCategoryFilter('grants')}
-              className={`pill ${categoryFilter === 'grants' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => setCategoryFilter('dev')}
+              className={`pill ${categoryFilter === 'dev' ? 'pill-ochre' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Грант НИИ «Махалля ва оила»
+              В процессе оцифровки ({FACULTY_MEMBERS.filter(f => f.isUnderDevelopment).length})
             </button>
           </div>
         </div>
@@ -167,7 +159,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
           <Search size={16} color="var(--muted)" style={{ position: 'absolute', left: '12px', top: '11px' }} />
           <input
             type="text"
-            placeholder="Поиск преподавателя по фамилии, предмету или научному направлению..."
+            placeholder="Поиск преподавателя по фамилии, предмету или научной сфере..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             style={{
@@ -186,7 +178,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         {/* Interactive Faculty Chips Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(235px, 1fr))',
           gap: '10px'
         }}>
           {filteredFaculty.map(item => {
@@ -251,13 +243,13 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                   </div>
                   <div style={{
                     fontSize: '11px',
-                    color: 'var(--muted)',
+                    color: item.isUnderDevelopment ? 'var(--ochre)' : 'var(--muted)',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     marginTop: '2px'
                   }}>
-                    {item.badge || item.role}
+                    {item.isUnderDevelopment ? 'В разработке' : (item.badge || item.role)}
                   </div>
                 </div>
 
@@ -270,7 +262,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         </div>
       </div>
 
-      {/* SELECTED FACULTY PROFILE MASTER CARD (GOLD STANDARD TEMPLATE) */}
+      {/* SELECTED FACULTY PROFILE MASTER CARD */}
       <div className="paper-card" style={{
         padding: '32px 28px',
         marginBottom: '28px',
@@ -279,6 +271,27 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         boxShadow: 'var(--shadow-sm)'
       }}>
         
+        {/* Banner if Profile is in Development */}
+        {faculty.isUnderDevelopment && (
+          <div style={{
+            background: 'var(--ochre-light)',
+            border: '1px solid var(--ochre-border)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '13px',
+            color: 'var(--ink)'
+          }}>
+            <AlertCircle size={18} color="var(--ochre)" style={{ flexShrink: 0 }} />
+            <div>
+              <strong>Профиль в процессе оцифровки:</strong> Полные программы семинаров, публикации и материалы преподавателя подготавливаются Научным сектором кафедры.
+            </div>
+          </div>
+        )}
+
         {/* Profile Hero: Photo + Biographical Coordinates */}
         <div style={{
           display: 'flex',
@@ -356,7 +369,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                       {faculty.avatarText}
                     </div>
                     <span style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'var(--mono)', textTransform: 'uppercase' }}>
-                      ТФ МГУ имени М.В. Ломоносова
+                      Кафедра психологии
                     </span>
                   </div>
                 )}
@@ -379,7 +392,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                     textTransform: 'uppercase',
                     fontFamily: 'var(--mono)'
                   }}>
-                    {faculty.badge ? faculty.badge.split('·')[0].trim() : 'ТФ МГУ'}
+                    ТФ МГУ
                   </span>
                 </div>
               </div>
@@ -392,7 +405,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
             }}>
               <span className="pill pill-primary" style={{ fontSize: '11px', padding: '3px 10px' }}>
                 <Award size={12} />
-                Верифицирован кафедрой
+                Кафедра психологии
               </span>
             </div>
           </div>
@@ -461,28 +474,32 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                   </a>
                 </div>
               )}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
-                <Award size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
-                <span>ИСТИНА ID: <strong style={{ fontFamily: 'var(--mono)' }}>{faculty.istinaId}</strong></span>
-              </div>
+              {faculty.istinaId && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
+                  <Award size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
+                  <span>ИСТИНА ID: <strong style={{ fontFamily: 'var(--mono)' }}>{faculty.istinaId}</strong></span>
+                </div>
+              )}
             </div>
 
             {/* Quick Action Links */}
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
-              <a
-                href={faculty.istinaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ink"
-                style={{
-                  padding: '7px 14px',
-                  fontSize: '12.5px',
-                  textDecoration: 'none'
-                }}
-              >
-                <span>Профиль в ИСТИНА МГУ</span>
-                <ExternalLink size={13} />
-              </a>
+              {faculty.istinaUrl && (
+                <a
+                  href={faculty.istinaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ink"
+                  style={{
+                    padding: '7px 14px',
+                    fontSize: '12.5px',
+                    textDecoration: 'none'
+                  }}
+                >
+                  <span>Профиль в ИСТИНА МГУ</span>
+                  <ExternalLink size={13} />
+                </a>
+              )}
 
               {faculty.coursesTaught.length > 0 && faculty.coursesTaught[0].courseId && (
                 <button
@@ -533,9 +550,9 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         }}>
           {[
             { id: 'research', label: `Сферы исследований (${faculty.interestsList.length})` },
-            { id: 'projects', label: `Научные гранты и проекты (${faculty.projects.length})` },
-            { id: 'publications', label: `Публикации ИСТИНА (${faculty.publications.length})` },
-            { id: 'courses', label: `Учебные дисциплины (${faculty.coursesTaught.length})` },
+            { id: 'projects', label: `Проекты и гранты (${faculty.projects.length})` },
+            { id: 'publications', label: `Публикации (${faculty.publications.length})` },
+            { id: 'courses', label: `Читаемые курсы (${faculty.coursesTaught.length})` },
             { id: 'theses', label: `Темы ВКР и НИР (${faculty.thesisTopics.length})` },
             { id: 'collaborations', label: `Научные связи (${faculty.collaborations.length})` }
           ].map(tab => (
@@ -565,10 +582,10 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
               <span style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Исследовательские интересы: {faculty.name}
+                Научные направления: {faculty.name}
               </span>
               <span style={{ fontSize: '11.5px', color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
-                {faculty.interestsList.length} ключевых направлений
+                {faculty.interestsList.length} направлений
               </span>
             </div>
 
@@ -620,16 +637,9 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
           </div>
         )}
 
-        {/* TAB 2: Research Projects & Grants (Special Highlighted Section) */}
+        {/* TAB 2: Research Projects & Grants */}
         {activeProfileTab === 'projects' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ marginBottom: '4px' }}>
-              <p style={{ fontSize: '13.5px', color: 'var(--muted)' }}>
-                Государственные научно-исследовательские проекты, прикладные гранты и целевые программы, 
-                зарегистрированные в системе ИСТИНА МГУ:
-              </p>
-            </div>
-
             {faculty.projects.length > 0 ? (
               faculty.projects.map((proj) => (
                 <div
@@ -655,22 +665,24 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                       </span>
                     </div>
 
-                    <a
-                      href={proj.istinaUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-ink"
-                      style={{
-                        background: proj.isExternal ? 'var(--ochre)' : 'var(--primary)',
-                        borderColor: proj.isExternal ? 'var(--ochre)' : 'var(--primary)',
-                        fontSize: '11.5px',
-                        padding: '5px 12px',
-                        textDecoration: 'none'
-                      }}
-                    >
-                      <span>Страница проекта в ИСТИНЕ</span>
-                      <ExternalLink size={12} />
-                    </a>
+                    {proj.istinaUrl && (
+                      <a
+                        href={proj.istinaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-ink"
+                        style={{
+                          background: proj.isExternal ? 'var(--ochre)' : 'var(--primary)',
+                          borderColor: proj.isExternal ? 'var(--ochre)' : 'var(--primary)',
+                          fontSize: '11.5px',
+                          padding: '5px 12px',
+                          textDecoration: 'none'
+                        }}
+                      >
+                        <span>Страница проекта в ИСТИНЕ</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
                   </div>
 
                   {/* Project Title */}
@@ -765,7 +777,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                 fontSize: '13.5px'
               }}>
                 <Info size={20} color="var(--primary)" style={{ margin: '0 auto 8px', display: 'block' }} />
-                Данные по научно-исследовательским грантам и хоздоговорным темам преподавателя подготавливаются к оцифровке в системе ИСТИНА МГУ.
+                Данные по научно-исследовательским грантам и проектам преподавателя подготавливаются к публикации.
               </div>
             )}
           </div>
@@ -774,10 +786,6 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         {/* TAB 3: Publications */}
         {activeProfileTab === 'publications' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '2px' }}>
-              Научные труды преподавателя, зарегистрированные в системе ИСТИНА МГУ и перечнях ВАК / РИНЦ / Scopus:
-            </p>
-
             {faculty.publications.length > 0 ? (
               faculty.publications.map((pub, i) => (
                 <div
@@ -864,7 +872,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                 fontSize: '13.5px'
               }}>
                 <Info size={20} color="var(--primary)" style={{ margin: '0 auto 8px', display: 'block' }} />
-                Полный библиографический список публикаций преподавателя оцифровывается в читальном зале портала. Ознакомьтесь с профилем в системе <a href={faculty.istinaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontWeight: 700 }}>ИСТИНА МГУ</a>.
+                Библиографический список публикаций преподавателя оцифровывается Научным сектором.
               </div>
             )}
           </div>
@@ -919,7 +927,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               ))
             ) : (
               <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)', background: 'var(--surface-soft)', borderRadius: 'var(--radius-sm)' }}>
-                Список читаемых дисциплин согласуется с учебным планом кафедры.
+                Список читаемых дисциплин согласуется с кафедрой.
               </div>
             )}
           </div>
@@ -929,7 +937,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         {activeProfileTab === 'theses' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <p style={{ fontSize: '13.5px', color: 'var(--muted)', marginBottom: '4px' }}>
-              Рекомендуемые темы выпускных квалификационных работ (ВКР) и курсовых исследований под научным руководством {faculty.name}:
+              Темы выпускных квалификационных работ (ВКР) и курсовых исследований под научным руководством {faculty.name}:
             </p>
             {faculty.thesisTopics.length > 0 ? (
               faculty.thesisTopics.map((topic, i) => (
@@ -955,7 +963,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               ))
             ) : (
               <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)', background: 'var(--surface-soft)', borderRadius: 'var(--radius-sm)' }}>
-                Тематика курсовых и дипломных исследований утверждается на заседании кафедры.
+                Темы курсовых и дипломных исследований утверждаются на заседании кафедры.
               </div>
             )}
           </div>
@@ -1016,27 +1024,12 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               </div>
             ) : (
               <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)', background: 'var(--surface-soft)', borderRadius: 'var(--radius-sm)' }}>
-                Межвузовские и кафедральные научные связи преподавателя оформляются в текущем академическом году.
+                Межвузовские и кафедральные научные связи преподавателя оформляются Научным сектором.
               </div>
             )}
           </div>
         )}
 
-      </div>
-
-      {/* Standard Profile Architecture Reference Note */}
-      <div className="paper-card" style={{ padding: '20px 24px', background: 'var(--paper-soft)', border: '1px dashed var(--line)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <Sparkles size={16} color="var(--primary)" />
-          <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Эталонный академический стандарт оцифровки кафедры психологии
-          </h4>
-        </div>
-        <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
-          Каждый преподаватель кафедры психологии Филиала МГУ в г. Ташкенте получает персональный цифровой профиль единого образца:
-          официальную верификацию в ИСТИНА МГУ, учет внешних государственных грантов (включая проекты с НИИ «Махалля ва оила»),
-          библиографию публикаций с прямой связью с полнотекстовым читальным залом, структуру научных интересов и оцифрованные курсы.
-        </p>
       </div>
 
     </div>

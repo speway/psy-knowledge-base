@@ -356,6 +356,16 @@ body {
   background: #ffffff;
 }
 
+/* Question Ticket Footer Responsive */
+.ticket-footer {
+  padding-left: 0;
+}
+@media (min-width: 640px) {
+  .ticket-footer {
+    padding-left: 40px;
+  }
+}
+
 /* Mobile Sticky Bottom Nav */
 .mobile-bottom-nav {
   display: flex;

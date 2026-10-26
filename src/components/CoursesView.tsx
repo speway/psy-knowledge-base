@@ -425,16 +425,18 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                           </div>
 
                           {/* Bibliographic Reference Ticket */}
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            gap: '8px',
-                            paddingLeft: '40px',
-                            paddingTop: '8px',
-                            borderTop: '1px dashed var(--line)'
-                          }}>
+                          <div 
+                            className="ticket-footer"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              flexWrap: 'wrap',
+                              gap: '8px',
+                              paddingTop: '8px',
+                              borderTop: '1px dashed var(--line)'
+                            }}
+                          >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: 'var(--muted)', flexWrap: 'wrap' }}>
                               <BookOpen size={13} color="var(--primary)" />
                               <strong style={{ color: 'var(--ink)' }}>{q.sourceAuthor}</strong>

@@ -18,6 +18,10 @@ export interface ReaderSource {
   description: string;
   citation: string;
   pages: PageContent[];
+  fileName?: string;
+  fileUrl?: string;
+  fileType?: 'pdf' | 'docx' | 'text';
+  fileSize?: string;
 }
 
 export const READER_SOURCES: ReaderSource[] = [
