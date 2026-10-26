@@ -15,6 +15,7 @@ export const App: React.FC = () => {
   const [readerSource, setReaderSource] = useState<ReaderSource | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [glossarySearchQuery, setGlossarySearchQuery] = useState('');
+  const [selectedFacultyId, setSelectedFacultyId] = useState<string>('tuniyants-a-a');
 
   // Global keyboard shortcut for search (Ctrl+K or Cmd+K)
   useEffect(() => {
@@ -39,7 +40,10 @@ export const App: React.FC = () => {
     setReaderSource(src);
   };
 
-  const handleNavigateToFaculty = (_facultyId: string) => {
+  const handleNavigateToFaculty = (facultyId?: string) => {
+    if (facultyId) {
+      setSelectedFacultyId(facultyId);
+    }
     setActiveTab('teachers');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -90,6 +94,8 @@ export const App: React.FC = () => {
 
           {activeTab === 'teachers' && (
             <FacultyView
+              selectedFacultyId={selectedFacultyId}
+              onSelectFaculty={setSelectedFacultyId}
               onNavigateToCourse={handleNavigateToCourse}
               onOpenReaderBySourceId={handleOpenReaderBySourceId}
             />
@@ -164,9 +170,13 @@ export const App: React.FC = () => {
         onSelectTab={(tab) => {
           if (tab === 'courses') setActiveTab('disciplines');
           else if (tab === 'library') setActiveTab('reader');
-          else if (tab === 'faculty') setActiveTab('teachers');
+          else if (tab === 'teachers') setActiveTab('teachers');
           else if (tab === 'student-guide') setActiveTab('archive');
           else setActiveTab('glossary');
+        }}
+        onSelectFaculty={(facultyId) => {
+          setSelectedFacultyId(facultyId);
+          setActiveTab('teachers');
         }}
         onOpenReader={(src) => setReaderSource(src)}
         onSelectCourse={(_id) => setActiveTab('disciplines')}

@@ -9,6 +9,7 @@ interface QuickSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTab: (tab: string) => void;
+  onSelectFaculty?: (facultyId: string) => void;
   onOpenReader: (source: ReaderSource) => void;
   onSelectCourse: (courseId: string) => void;
   onSelectTerm: (term: string) => void;
@@ -18,6 +19,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
   isOpen,
   onClose,
   onSelectTab,
+  onSelectFaculty,
   onOpenReader,
   onSelectCourse,
   onSelectTerm
@@ -40,7 +42,9 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
 
   const matchedFaculty = q ? FACULTY_MEMBERS.filter(f => 
     f.name.toLowerCase().includes(q) || 
-    f.specializations.some(s => s.toLowerCase().includes(q))
+    f.role.toLowerCase().includes(q) ||
+    (f.interestsList && f.interestsList.some(s => s.toLowerCase().includes(q))) ||
+    (f.coursesTaught && f.coursesTaught.some(c => c.title.toLowerCase().includes(q)))
   ) : [];
 
   const matchedCourses = q ? COURSES.filter(c => 
@@ -151,6 +155,9 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
                 <div
                   key={f.id}
                   onClick={() => {
+                    if (onSelectFaculty) {
+                      onSelectFaculty(f.id);
+                    }
                     onSelectTab('teachers');
                     onClose();
                   }}
