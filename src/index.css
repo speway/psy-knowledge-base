@@ -64,16 +64,24 @@ body {
   min-height: 100vh;
 }
 
-/* Container */
+/* Container - Widescreen Fluid Standard */
 .app-container {
-  max-width: 1140px;
+  max-width: 1540px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 16px;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
   .app-container {
-    padding: 0 24px;
+    padding: 0 28px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-container {
+    padding: 0 36px;
   }
 }
 
@@ -480,4 +488,55 @@ body {
   border-color: var(--primary);
   outline: 2px solid rgba(75, 50, 104, 0.4);
   outline-offset: 1px;
+}
+
+/* Widescreen Dashboard & Layout Grids */
+.home-layout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (min-width: 1100px) {
+  .home-layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 28px;
+    align-items: start;
+  }
+}
+
+@media (min-width: 1400px) {
+  .home-layout-grid {
+    grid-template-columns: minmax(0, 1fr) 390px;
+    gap: 32px;
+  }
+}
+
+.home-sidebar-sticky {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+@media (min-width: 1100px) {
+  .home-sidebar-sticky {
+    position: sticky;
+    top: 88px;
+  }
+}
+
+.seminar-content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .seminar-content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 24px;
+    align-items: start;
+  }
 }

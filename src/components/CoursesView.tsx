@@ -366,205 +366,213 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
           </div>
         </div>
 
-        {/* Seminar Content Body */}
+        {/* Seminar Content Body with 2-Column Widescreen Layout */}
         <div style={{ padding: '22px 22px', background: 'var(--surface)' }}>
-          
-          {/* BLOCK 1: Questions to discuss */}
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
-              <strong style={{ fontSize: '13.5px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <HelpCircle size={15} color="var(--primary)" />
-                Вопросы к обсуждению на семинаре:
-              </strong>
-              <span style={{ fontSize: '11.5px', color: 'var(--muted)' }}>
-                Клик по вопросу открывает первоисточник в ридере
-              </span>
-            </div>
+          <div className="seminar-content-grid">
+            
+            {/* LEFT COLUMN: Questions to discuss */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
+                <strong style={{ fontSize: '13.5px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <HelpCircle size={15} color="var(--primary)" />
+                  Вопросы к обсуждению на семинаре:
+                </strong>
+                <span style={{ fontSize: '11.5px', color: 'var(--muted)' }}>
+                  Клик открывает первоисточник в ридере
+                </span>
+              </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {currentSeminar.questions.map((q, idx) => {
-                const matchedCard = findUnderstandingCard(q.sourceId);
-                return (
-                  <div
-                    key={q.id || idx}
-                    onClick={() => onOpenReaderBySourceId(q.sourceId)}
-                    style={{
-                      background: 'var(--surface-soft)',
-                      border: '1px solid var(--line)',
-                      borderLeft: '4px solid var(--primary)',
-                      borderRadius: 'var(--radius-sm)',
-                      padding: '14px 16px',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--primary)';
-                      e.currentTarget.style.background = '#ffffff';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(75, 50, 104, 0.08)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--line)';
-                      e.currentTarget.style.background = 'var(--surface-soft)';
-                      e.currentTarget.style.transform = 'none';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    {/* Question Statement */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                      <span style={{
-                        fontWeight: 800,
-                        fontSize: '11.5px',
-                        color: 'var(--primary)',
-                        fontFamily: 'var(--mono)',
-                        background: 'var(--primary-light)',
-                        width: '26px',
-                        height: '26px',
-                        borderRadius: '6px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '1px'
-                      }}>
-                        №{idx + 1}
-                      </span>
-                      <span style={{ fontSize: '14px', color: 'var(--ink)', lineHeight: 1.45, flex: 1, fontWeight: 600 }}>
-                        {q.text}
-                      </span>
-                    </div>
-
-                    {/* Bibliographic Reference Ticket & Discreet Secondary Actions */}
-                    <div 
-                      className="ticket-footer"
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {currentSeminar.questions.map((q, idx) => {
+                  return (
+                    <div
+                      key={q.id || idx}
+                      onClick={() => onOpenReaderBySourceId(q.sourceId)}
                       style={{
+                        background: 'var(--surface-soft)',
+                        border: '1px solid var(--line)',
+                        borderLeft: '4px solid var(--primary)',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '14px 16px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
-                        gap: '8px',
-                        paddingTop: '8px',
-                        borderTop: '1px dashed var(--line)'
+                        flexDirection: 'column',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--primary)';
+                        e.currentTarget.style.background = '#ffffff';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 14px rgba(75, 50, 104, 0.08)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--line)';
+                        e.currentTarget.style.background = 'var(--surface-soft)';
+                        e.currentTarget.style.transform = 'none';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
-                      {/* Left: Source metadata */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--muted)', flexWrap: 'wrap' }}>
-                        <BookOpen size={12} color="var(--primary)" />
-                        <strong style={{ color: 'var(--ink)' }}>{q.sourceAuthor}</strong>
-                        <span>— {q.sourceTitle}</span>
+                      {/* Question Statement */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                         <span style={{
-                          background: 'var(--paper-soft)',
-                          color: 'var(--ink-soft)',
-                          padding: '1px 6px',
-                          borderRadius: '4px',
-                          fontSize: '10.5px',
-                          fontWeight: 600,
-                          fontFamily: 'var(--mono)'
+                          fontWeight: 800,
+                          fontSize: '11.5px',
+                          color: 'var(--primary)',
+                          fontFamily: 'var(--mono)',
+                          background: 'var(--primary-light)',
+                          width: '26px',
+                          height: '26px',
+                          borderRadius: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          marginTop: '1px'
                         }}>
-                          {q.sourcePages}
+                          №{idx + 1}
+                        </span>
+                        <span style={{ fontSize: '14px', color: 'var(--ink)', lineHeight: 1.45, flex: 1, fontWeight: 600 }}>
+                          {q.text}
                         </span>
                       </div>
 
-                      {/* Right: Clean, elegant primary reader action */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          color: 'var(--primary)',
-                          display: 'inline-flex',
+                      {/* Bibliographic Reference Ticket & Secondary Actions */}
+                      <div 
+                        className="ticket-footer"
+                        style={{
+                          display: 'flex',
                           alignItems: 'center',
-                          gap: '3px'
-                        }}>
-                          <span>Открыть в ридере</span>
-                          <ArrowUpRight size={13} />
+                          justifyContent: 'space-between',
+                          flexWrap: 'wrap',
+                          gap: '8px',
+                          paddingTop: '8px',
+                          borderTop: '1px dashed var(--line)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--muted)', flexWrap: 'wrap' }}>
+                          <BookOpen size={12} color="var(--primary)" />
+                          <strong style={{ color: 'var(--ink)' }}>{q.sourceAuthor}</strong>
+                          <span>— {q.sourceTitle}</span>
+                          <span style={{
+                            background: 'var(--paper-soft)',
+                            color: 'var(--ink-soft)',
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            fontSize: '10.5px',
+                            fontWeight: 600,
+                            fontFamily: 'var(--mono)'
+                          }}>
+                            {q.sourcePages}
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            color: 'var(--primary)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px'
+                          }}>
+                            <span>Открыть в ридере</span>
+                            <ArrowUpRight size={13} />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: Digitized Literature & Key Terms */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Digitized literature */}
+              <div style={{
+                background: 'var(--paper-soft)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '16px'
+              }}>
+                <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                  <FileText size={14} color="var(--primary)" />
+                  Оцифрованные первоисточники темы:
+                </strong>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {currentSeminar.literature.map((lit, idx) => (
+                    <div
+                      key={idx}
+                      className="literature-entry"
+                      onClick={() => onOpenReaderBySourceId(lit.sourceId)}
+                      style={{ padding: '10px 12px' }}
+                    >
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '13px', display: 'block' }}>
+                          {lit.author}
+                        </span>
+                        <span style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: 1.3, display: 'block' }}>
+                          {lit.title}. — {lit.publisher}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, marginTop: '4px' }}>
+                        <span className="pill pill-neutral" style={{ fontSize: '10px', fontFamily: 'var(--mono)' }}>
+                          {lit.pages}
+                        </span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                          Читать <ArrowUpRight size={11} />
                         </span>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </div>
 
-          {/* BLOCK 2: Digitized literature mapped to the seminar */}
-          <div style={{ marginBottom: '22px' }}>
-            <strong style={{ fontSize: '13px', color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.03em', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-              <FileText size={14} color="var(--primary)" />
-              Оцифрованные первоисточники темы:
-            </strong>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {currentSeminar.literature.map((lit, idx) => (
-                <div
-                  key={idx}
-                  className="literature-entry"
-                  onClick={() => onOpenReaderBySourceId(lit.sourceId)}
-                  style={{ padding: '10px 14px' }}
-                >
-                  <div style={{ flex: 1, minWidth: '220px' }}>
-                    <span style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '13.5px' }}>
-                      {lit.author}
-                    </span>{' '}
-                    <span style={{ color: 'var(--muted)', fontSize: '13px' }}>
-                      {lit.title}. — {lit.publisher}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span className="pill pill-neutral" style={{ fontSize: '10.5px', fontFamily: 'var(--mono)' }}>
-                      {lit.pages}
-                    </span>
-                    <span className="pill pill-primary" style={{ fontSize: '10.5px' }}>
-                      {lit.questionRef}
-                    </span>
-                    <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--primary)', display: 'inline-flex', alignItems: 'center', gap: '2px', marginLeft: '2px' }}>
-                      Читать <ArrowUpRight size={11} />
-                    </span>
+              {/* Key terms */}
+              {currentSeminar.terms && currentSeminar.terms.length > 0 && (
+                <div style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '14px 16px'
+                }}>
+                  <span style={{ fontSize: '11.5px', color: 'var(--muted)', display: 'block', marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                    Понятийный тезаурус темы:
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {currentSeminar.terms.map((t, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => onNavigateToTerm(t)}
+                        className="pill pill-neutral"
+                        style={{
+                          cursor: 'pointer',
+                          background: 'var(--paper-soft)',
+                          fontSize: '11.5px',
+                          padding: '4px 9px',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--primary)';
+                          e.currentTarget.style.color = 'var(--primary)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--line)';
+                          e.currentTarget.style.color = 'var(--ink-soft)';
+                        }}
+                      >
+                        <Tag size={11} color="var(--primary)" />
+                        <span>{t}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
-              ))}
+              )}
             </div>
+
           </div>
-
-
-
-          {/* BLOCK 4: Key terms */}
-          {currentSeminar.terms && currentSeminar.terms.length > 0 && (
-            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--line)', marginBottom: '20px' }}>
-              <span style={{ fontSize: '11.5px', color: 'var(--muted)', display: 'block', marginBottom: '6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                Понятийный тезаурус темы (клик открывает словарную статью):
-              </span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {currentSeminar.terms.map((t, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => onNavigateToTerm(t)}
-                    className="pill pill-neutral"
-                    style={{
-                      cursor: 'pointer',
-                      background: 'var(--surface)',
-                      fontSize: '12px',
-                      padding: '4px 10px',
-                      transition: 'all 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--primary)';
-                      e.currentTarget.style.color = 'var(--primary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--line)';
-                      e.currentTarget.style.color = 'var(--ink-soft)';
-                    }}
-                  >
-                    <Tag size={11} color="var(--primary)" />
-                    <span>{t}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* SEMINAR STEPPER (Prev / Next) */}
           <div style={{
