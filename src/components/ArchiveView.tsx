@@ -1,22 +1,25 @@
 import React from 'react';
-import { GraduationCap, CheckCircle2, BookOpen, ArrowUpRight, FileText, UserCheck, BookmarkCheck, Sparkles, Compass, Layers } from 'lucide-react';
+import { GraduationCap, CheckCircle2, BookOpen, ArrowUpRight, FileText, UserCheck, BookmarkCheck, Sparkles, Compass, Layers, FileEdit } from 'lucide-react';
 import { STUDENT_GUIDELINES } from '../data/student-guide';
 import { FACULTY_MEMBERS } from '../data/faculty';
 import { UNDERSTANDING_CARDS } from '../data/understanding-cards';
 import { CONTEXTUAL_GUIDES } from '../data/contextual-guides';
+import { ResearchDraftInitialData } from './ResearchDraftModal';
 
 interface ArchiveViewProps {
   onNavigateToFaculty: (facultyId: string) => void;
   onOpenReaderBySourceId?: (sourceId: string) => void;
   onOpenUnderstandingCard?: (cardId: string) => void;
   onOpenContextualGuide?: (guideId: string) => void;
+  onOpenResearchDraft?: (data: ResearchDraftInitialData) => void;
 }
 
 export const ArchiveView: React.FC<ArchiveViewProps> = ({ 
   onNavigateToFaculty,
   onOpenReaderBySourceId,
   onOpenUnderstandingCard,
-  onOpenContextualGuide
+  onOpenContextualGuide,
+  onOpenResearchDraft
 }) => {
   const tuniyants = FACULTY_MEMBERS[0];
 
@@ -54,7 +57,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
       <div style={{ marginBottom: '22px' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }} className="pill pill-ochre">
           <GraduationCap size={12} />
-          <span>Учебно-методический кабинет кафедры психологии</span>
+          <span>Студенческий учебно-методический кабинет НИРС</span>
         </div>
         <h1 style={{
           fontSize: '28px',
@@ -67,8 +70,8 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           Методические рекомендации по подготовке курсовых и ВКР
         </h1>
         <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '820px' }}>
-          Официальный регламент научно-исследовательской работы студентов (НИРС) Филиала МГУ в г. Ташкенте:
-          структура научного аппарата введения, реестр утверждённых тем исследований и стандарты академического оформления рукописей.
+          Учебно-методические рекомендации по научно-исследовательской работе студентов (НИРС):
+          структура научного аппарата введения, ориентировочный реестр тем исследований и стандарты академического оформления рукописей.
         </p>
       </div>
 
@@ -205,6 +208,73 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* STUDENT RESEARCH NOTEBOOK CALLOUT */}
+      {onOpenResearchDraft && (
+        <div 
+          className="paper-card animate-fade-in"
+          style={{
+            padding: '20px 24px',
+            marginBottom: '28px',
+            background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
+            border: '1px solid #a7f3d0',
+            borderLeft: '5px solid #059669',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: 'var(--shadow-xs)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px'
+          }}
+        >
+          <div style={{ flex: 1, minWidth: '260px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span className="pill" style={{ background: '#d1fae5', color: '#065f46', fontWeight: 800, fontSize: '11px', padding: '2px 8px' }}>
+                ИНСТРУМЕНТ СТУДЕНТА
+              </span>
+              <span style={{ fontSize: '12px', color: '#047857', fontWeight: 600 }}>
+                Локальное сохранение · Экспорт в файл
+              </span>
+            </div>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#064e3b', margin: '0 0 4px 0' }}>
+              Интерактивный черновик исследования (ВКР / курсовая)
+            </h3>
+            <p style={{ fontSize: '13px', color: '#065f46', margin: 0, lineHeight: 1.5 }}>
+              Сформулируйте проблему своими словами, зафиксируйте рабочую гипотезу как научное предположение, опишите методы проверки и выгрузите готовый текстовый черновик с библиографией.
+            </p>
+          </div>
+
+          <button
+            onClick={() => onOpenResearchDraft({
+              sourceTitle: 'Методология психологического исследования (ГОСТ и стандарты кафедры)',
+              sourceAuthor: 'Кафедра психологии ТФ МГУ',
+              citation: 'Ануфриев А.Ф. Научное исследование. Курсовые, дипломные и диссертационные работы. М.: Ось-89. // Методические рекомендации СНС психологии ТФ МГУ',
+              topic: 'Планирование курсовой работы / выпускной квалификационной работы (ВКР)'
+            })}
+            style={{
+              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              padding: '10px 18px',
+              fontSize: '13px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 14px rgba(5, 150, 105, 0.28)',
+              transition: 'all 0.15s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+          >
+            <FileEdit size={15} />
+            <span>Открыть Черновик исследования</span>
+          </button>
+        </div>
+      )}
 
       {/* Methodology Library in Reader */}
       <div style={{ marginBottom: '28px' }}>

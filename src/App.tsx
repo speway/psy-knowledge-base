@@ -10,9 +10,11 @@ import { ReaderModal } from './components/ReaderModal';
 import { QuickSearchModal } from './components/QuickSearchModal';
 import { UnderstandingCardModal } from './components/UnderstandingCardModal';
 import { ContextualGuideModal } from './components/ContextualGuideModal';
+import { ResearchDraftModal, ResearchDraftInitialData } from './components/ResearchDraftModal';
 import { READER_SOURCES, ReaderSource } from './data/reader-sources';
 import { UnderstandingCard, UNDERSTANDING_CARDS, findUnderstandingCard } from './data/understanding-cards';
 import { ContextualGuide, CONTEXTUAL_GUIDES, findContextualGuide } from './data/contextual-guides';
+import { bringModalToTop } from './utils/modal-stack';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<SectionTab>('disciplines');
@@ -24,6 +26,7 @@ export const App: React.FC = () => {
   // Understanding Card & Contextual Guide Modal States
   const [activeUnderstandingCard, setActiveUnderstandingCard] = useState<UnderstandingCard | null>(null);
   const [activeContextualGuide, setActiveContextualGuide] = useState<ContextualGuide | null>(null);
+  const [activeResearchDraft, setActiveResearchDraft] = useState<ResearchDraftInitialData | null>(null);
 
   // Global keyboard shortcut for search (Ctrl+K or Cmd+K)
   useEffect(() => {
@@ -37,7 +40,15 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleOpenReaderBySourceId = (sourceId: string) => {
+  const handleOpenReader = (source: ReaderSource, triggerElement?: HTMLElement | null) => {
+    const trigger = triggerElement !== undefined 
+      ? triggerElement 
+      : (typeof document !== 'undefined' ? (document.activeElement as HTMLElement) : null);
+    setReaderSource(source);
+    bringModalToTop('reader-modal', trigger);
+  };
+
+  const handleOpenReaderBySourceId = (sourceId: string, triggerElement?: HTMLElement | null) => {
     const cleanId = (sourceId || '').trim();
     const normalized = cleanId.toLowerCase().replace(/[-_]/g, '');
     const src = READER_SOURCES.find(s => s.id === cleanId) ||
@@ -45,10 +56,11 @@ export const App: React.FC = () => {
                 READER_SOURCES.find(s => s.id.toLowerCase().includes(normalized) || normalized.includes(s.id.toLowerCase().replace(/[-_]/g, ''))) ||
                 READER_SOURCES.find(s => s.title.toLowerCase().includes(cleanId.toLowerCase())) ||
                 READER_SOURCES[0];
-    setReaderSource(src);
+    handleOpenReader(src, triggerElement);
   };
 
   const handleOpenUnderstandingCard = (cardOrQuery?: string | UnderstandingCard) => {
+    const trigger = typeof document !== 'undefined' ? (document.activeElement as HTMLElement) : null;
     if (typeof cardOrQuery === 'object' && cardOrQuery !== null) {
       setActiveUnderstandingCard(cardOrQuery);
     } else if (typeof cardOrQuery === 'string') {
@@ -58,9 +70,11 @@ export const App: React.FC = () => {
     } else {
       setActiveUnderstandingCard(UNDERSTANDING_CARDS[0]);
     }
+    bringModalToTop('understanding-card-modal', trigger);
   };
 
   const handleOpenContextualGuide = (guideOrQuery?: string | ContextualGuide) => {
+    const trigger = typeof document !== 'undefined' ? (document.activeElement as HTMLElement) : null;
     if (typeof guideOrQuery === 'object' && guideOrQuery !== null) {
       setActiveContextualGuide(guideOrQuery);
     } else if (typeof guideOrQuery === 'string') {
@@ -70,6 +84,15 @@ export const App: React.FC = () => {
     } else {
       setActiveContextualGuide(CONTEXTUAL_GUIDES[0]);
     }
+    bringModalToTop('contextual-guide-modal', trigger);
+  };
+
+  const handleOpenResearchDraft = (data: ResearchDraftInitialData, triggerElement?: HTMLElement | null) => {
+    const trigger = triggerElement !== undefined 
+      ? triggerElement 
+      : (typeof document !== 'undefined' ? (document.activeElement as HTMLElement) : null);
+    setActiveResearchDraft(data);
+    bringModalToTop('research-draft-modal', trigger);
   };
 
   const handleNavigateToFaculty = (facultyId?: string) => {
@@ -111,12 +134,13 @@ export const App: React.FC = () => {
               onNavigateToTerm={handleNavigateToTerm}
               onOpenUnderstandingCard={handleOpenUnderstandingCard}
               onOpenContextualGuide={handleOpenContextualGuide}
+              onOpenResearchDraft={handleOpenResearchDraft}
             />
           )}
 
           {activeTab === 'reader' && (
             <LibraryView
-              onOpenReader={(src) => setReaderSource(src)}
+              onOpenReader={handleOpenReader}
               onOpenUnderstandingCard={handleOpenUnderstandingCard}
             />
           )}
@@ -142,6 +166,7 @@ export const App: React.FC = () => {
               onOpenReaderBySourceId={handleOpenReaderBySourceId}
               onOpenUnderstandingCard={handleOpenUnderstandingCard}
               onOpenContextualGuide={handleOpenContextualGuide}
+              onOpenResearchDraft={handleOpenResearchDraft}
             />
           )}
         </div>
@@ -200,6 +225,7 @@ export const App: React.FC = () => {
         onClose={() => setReaderSource(null)}
         onOpenUnderstandingCard={handleOpenUnderstandingCard}
         onOpenContextualGuide={handleOpenContextualGuide}
+        onOpenResearchDraft={handleOpenResearchDraft}
       />
 
       {/* Understanding Card Modal (Pedagogical framework of Prof. T.Y. Bazarov) */}
@@ -208,6 +234,7 @@ export const App: React.FC = () => {
         onClose={() => setActiveUnderstandingCard(null)}
         onSelectCard={setActiveUnderstandingCard}
         onOpenReaderBySourceId={handleOpenReaderBySourceId}
+        onOpenResearchDraft={handleOpenResearchDraft}
       />
 
       {/* Contextual Study & Research Guide Modal */}
@@ -215,6 +242,13 @@ export const App: React.FC = () => {
         guide={activeContextualGuide}
         onClose={() => setActiveContextualGuide(null)}
         onSelectGuide={setActiveContextualGuide}
+      />
+
+      {/* Student Research Draft Modal (Local Save & Export) */}
+      <ResearchDraftModal
+        isOpen={Boolean(activeResearchDraft)}
+        onClose={() => setActiveResearchDraft(null)}
+        initialData={activeResearchDraft}
       />
 
       {/* Quick Search Modal */}
@@ -232,7 +266,7 @@ export const App: React.FC = () => {
           setSelectedFacultyId(facultyId);
           setActiveTab('teachers');
         }}
-        onOpenReader={(src) => setReaderSource(src)}
+        onOpenReader={handleOpenReader}
         onSelectCourse={(_id) => setActiveTab('disciplines')}
         onSelectTerm={(term) => {
           setGlossarySearchQuery(term);

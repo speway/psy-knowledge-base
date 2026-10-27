@@ -14,11 +14,13 @@ import {
   Bookmark,
   Sparkles,
   HelpCircle,
-  Compass
+  Compass,
+  FileEdit
 } from 'lucide-react';
 import { COURSES, Course, SeminarItem } from '../data/courses';
 import { ResearchJourneyBanner } from './ResearchJourneyBanner';
 import { findUnderstandingCard } from '../data/understanding-cards';
+import { ResearchDraftInitialData } from './ResearchDraftModal';
 
 interface CoursesViewProps {
   onOpenReaderBySourceId: (sourceId: string) => void;
@@ -26,6 +28,7 @@ interface CoursesViewProps {
   onNavigateToTerm: (term: string) => void;
   onOpenUnderstandingCard?: (cardId: string) => void;
   onOpenContextualGuide?: (guideId: string) => void;
+  onOpenResearchDraft?: (data: ResearchDraftInitialData) => void;
 }
 
 export const CoursesView: React.FC<CoursesViewProps> = ({
@@ -33,7 +36,8 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
   onNavigateToFaculty,
   onNavigateToTerm,
   onOpenUnderstandingCard,
-  onOpenContextualGuide
+  onOpenContextualGuide,
+  onOpenResearchDraft
 }) => {
   const course: Course = COURSES[0];
   
@@ -87,6 +91,14 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
         onOpenBazarovCard={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
         onOpenAllCards={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
         onOpenResearchGuide={() => onOpenContextualGuide && onOpenContextualGuide('guide-how-to-do-research')}
+        onOpenResearchDraft={() => onOpenResearchDraft && onOpenResearchDraft({
+          sourceId: 'bazarov_sokol_2026',
+          sourceTitle: 'Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)»',
+          sourceAuthor: 'Базаров Т.Ю., Гасимов А.Ф.',
+          citation: 'Базаров Т.Ю., Гасимов А.Ф. Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)» // Социальная психология и общество. 2026. Т. 17. № 2. С. 202–220. DOI: 10.17759/sps.2026170212',
+          topic: 'Влияние отзывчивости лидера на групповую динамику и решение задач в условиях неопределенности',
+          starterHypothesis: 'Предполагается, что высокая чувствительность лидера к межличностным отношениям в группе опосредует психологическую безопасность и продуктивность совместной деятельности.'
+        })}
       />
 
       {/* Course Hero Banner */}
@@ -494,6 +506,44 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                               <BookOpen size={13} color="var(--primary)" />
                               <strong style={{ color: 'var(--ink)' }}>{q.sourceAuthor}</strong>
                               <span>— {q.sourceTitle}</span>
+                              {/* Research Draft Button */}
+                              {onOpenResearchDraft && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpenResearchDraft({
+                                      sourceId: q.sourceId,
+                                      sourceTitle: q.sourceTitle,
+                                      sourceAuthor: q.sourceAuthor,
+                                      citation: `${q.sourceAuthor}. ${q.sourceTitle} (стр. ${q.sourcePages}) // Учебная программа курса «Психология мотивации и эмоций», семинар №${sem.num}, вопрос №${idx + 1}`,
+                                      topic: `Семинар №${sem.num}, вопрос №${idx + 1}: ${q.text}`,
+                                      seminarNum: sem.num,
+                                      questionNum: idx + 1
+                                    });
+                                  }}
+                                  style={{
+                                    background: 'rgba(75, 50, 104, 0.08)',
+                                    color: 'var(--primary)',
+                                    border: '1px solid rgba(75, 50, 104, 0.22)',
+                                    borderRadius: 'var(--radius-full)',
+                                    padding: '4px 10px',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  title="Открыть Черновик исследования по данному вопросу"
+                                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(75, 50, 104, 0.16)'}
+                                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(75, 50, 104, 0.08)'}
+                                >
+                                  <FileEdit size={11} />
+                                  <span>Черновик</span>
+                                </button>
+                              )}
+
                               <span style={{
                                 background: 'var(--paper-soft)',
                                 color: 'var(--ink-soft)',
@@ -576,6 +626,44 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                                 >
                                   <Compass size={11} />
                                   <span>Гайд</span>
+                                </button>
+                              )}
+
+                              {/* Research Draft Button */}
+                              {onOpenResearchDraft && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpenResearchDraft({
+                                      sourceId: q.sourceId,
+                                      sourceTitle: q.sourceTitle,
+                                      sourceAuthor: q.sourceAuthor,
+                                      citation: `${q.sourceAuthor}. ${q.sourceTitle} (стр. ${q.sourcePages}) // Учебная программа курса «Психология мотивации и эмоций», семинар №${sem.num}, вопрос №${idx + 1}`,
+                                      topic: `Семинар №${sem.num}, вопрос №${idx + 1}: ${q.text}`,
+                                      seminarNum: sem.num,
+                                      questionNum: idx + 1
+                                    });
+                                  }}
+                                  style={{
+                                    background: 'rgba(75, 50, 104, 0.08)',
+                                    color: 'var(--primary)',
+                                    border: '1px solid rgba(75, 50, 104, 0.22)',
+                                    borderRadius: 'var(--radius-full)',
+                                    padding: '4px 10px',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  title="Открыть Черновик исследования по данному вопросу"
+                                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(75, 50, 104, 0.16)'}
+                                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(75, 50, 104, 0.08)'}
+                                >
+                                  <FileEdit size={11} />
+                                  <span>Черновик</span>
                                 </button>
                               )}
 

@@ -1,16 +1,18 @@
 import React from 'react';
-import { Sparkles, Compass, BookOpen, Layers, ArrowRight, Lightbulb } from 'lucide-react';
+import { Sparkles, Compass, BookOpen, Layers, ArrowRight, Lightbulb, FileEdit } from 'lucide-react';
 
 interface ResearchJourneyBannerProps {
   onOpenBazarovCard: () => void;
   onOpenAllCards: () => void;
   onOpenResearchGuide: () => void;
+  onOpenResearchDraft?: () => void;
 }
 
 export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
   onOpenBazarovCard,
   onOpenAllCards,
-  onOpenResearchGuide
+  onOpenResearchGuide,
+  onOpenResearchDraft
 }) => {
   return (
     <div 
@@ -190,6 +192,33 @@ export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
           <span>Гайд: от чтения к исследованию</span>
           <ArrowRight size={13} />
         </button>
+
+        {onOpenResearchDraft && (
+          <button
+            onClick={onOpenResearchDraft}
+            style={{
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: 'var(--radius-sm)',
+              padding: '9px 15px',
+              fontSize: '12.5px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)',
+              transition: 'all 0.18s ease'
+            }}
+            title="Открыть интерактивный Черновик исследования студента"
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+          >
+            <FileEdit size={14} />
+            <span>Черновик исследования</span>
+          </button>
+        )}
       </div>
     </div>
   );

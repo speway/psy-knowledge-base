@@ -431,3 +431,47 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #9b8ba7;
 }
+
+/* Modal Mobile & Keyboard Responsiveness */
+@media (max-width: 640px) {
+  .modal-dialog-responsive {
+    max-height: 94vh !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .modal-header-responsive {
+    padding: 12px 16px !important;
+  }
+  .modal-body-responsive {
+    padding: 14px !important;
+  }
+  .modal-btn-touch {
+    min-height: 38px;
+    padding: 6px 12px !important;
+  }
+}
+
+/* Accessible Search Result Items in QuickSearchModal */
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #f8fafc;
+  border: 1px solid transparent;
+  margin-bottom: 6px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.search-result-item:hover,
+.search-result-item:focus-visible {
+  background: #f1f5f9;
+  border-color: var(--primary);
+  outline: 2px solid rgba(75, 50, 104, 0.4);
+  outline-offset: 1px;
+}

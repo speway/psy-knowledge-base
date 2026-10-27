@@ -4,6 +4,7 @@ import { COURSES } from '../data/courses';
 import { FACULTY_MEMBERS } from '../data/faculty';
 import { READER_SOURCES, ReaderSource } from '../data/reader-sources';
 import { GLOSSARY_TERMS } from '../data/glossary';
+import { useModalLayer } from '../utils/modal-stack';
 
 interface QuickSearchModalProps {
   isOpen: boolean;
@@ -25,16 +26,17 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
   onSelectTerm
 }) => {
   const [query, setQuery] = useState('');
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  const { zIndex } = useModalLayer({
+    id: 'quick-search-modal',
+    isOpen,
+    onClose,
+    dialogRef,
+    initialFocusRef: inputRef,
+    baseZIndex: 1200
+  });
 
   if (!isOpen) return null;
 
@@ -76,10 +78,15 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
       display: 'flex',
       alignItems: 'flex-start',
       justifyContent: 'center',
-      zIndex: 250,
+      zIndex,
       padding: '40px 16px 20px'
     }}>
       <div 
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Быстрый поиск по базе знаний"
+        tabIndex={-1}
         className="card-clean"
         style={{
           width: '100%',
@@ -103,11 +110,11 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
         }}>
           <Search size={20} color="var(--turq)" />
           <input
+            ref={inputRef}
             type="text"
             placeholder="Поиск по семинарам, первоисточникам, авторам и терминам..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            autoFocus
             style={{
               flex: 1,
               border: 'none',
@@ -118,6 +125,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
           />
           <button
             onClick={onClose}
+            aria-label="Закрыть поиск"
             style={{
               background: 'none',
               border: 'none',
@@ -151,37 +159,39 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
               <span style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
                 Преподаватели ({matchedFaculty.length})
               </span>
-              {matchedFaculty.map(f => (
-                <div
-                  key={f.id}
-                  onClick={() => {
-                    if (onSelectFaculty) {
-                      onSelectFaculty(f.id);
-                    }
-                    onSelectTab('teachers');
-                    onClose();
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    marginBottom: '6px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Users size={16} color="var(--blue-mid)" />
-                    <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{f.name}</div>
-                      <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{f.role}</div>
+              {matchedFaculty.map(f => {
+                const handleSelectFaculty = () => {
+                  if (onSelectFaculty) {
+                    onSelectFaculty(f.id);
+                  }
+                  onSelectTab('teachers');
+                  onClose();
+                };
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    className="search-result-item"
+                    onClick={handleSelectFaculty}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectFaculty();
+                      }
+                    }}
+                    aria-label={`Преподаватель: ${f.name}, ${f.role}`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Users size={16} color="var(--blue-mid)" />
+                      <div>
+                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{f.name}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{f.role}</div>
+                      </div>
                     </div>
-                  </div>
-                  <ArrowRight size={14} color="var(--text-muted)" />
-                </div>
-              ))}
+                    <ArrowRight size={14} color="var(--text-muted)" />
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -191,35 +201,37 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
               <span style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
                 Семинары и курсы ({matchedCourses.length})
               </span>
-              {matchedCourses.map(c => (
-                <div
-                  key={c.id}
-                  onClick={() => {
-                    onSelectCourse(c.id);
-                    onSelectTab('disciplines');
-                    onClose();
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    marginBottom: '6px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <BookOpen size={16} color="var(--blue-mid)" />
-                    <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{c.title}</div>
-                      <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{c.code} · {c.instructorName}</div>
+              {matchedCourses.map(c => {
+                const handleSelectCourse = () => {
+                  onSelectCourse(c.id);
+                  onSelectTab('disciplines');
+                  onClose();
+                };
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className="search-result-item"
+                    onClick={handleSelectCourse}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectCourse();
+                      }
+                    }}
+                    aria-label={`Курс: ${c.title}, ${c.code}`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <BookOpen size={16} color="var(--blue-mid)" />
+                      <div>
+                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{c.title}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{c.code} · {c.instructorName}</div>
+                      </div>
                     </div>
-                  </div>
-                  <ArrowRight size={14} color="var(--text-muted)" />
-                </div>
-              ))}
+                    <ArrowRight size={14} color="var(--text-muted)" />
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -229,34 +241,36 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
               <span style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
                 Первоисточники в читалке ({matchedSources.length})
               </span>
-              {matchedSources.map(s => (
-                <div
-                  key={s.id}
-                  onClick={() => {
-                    onOpenReader(s);
-                    onClose();
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    marginBottom: '6px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <GraduationCap size={16} color="var(--turq)" />
-                    <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{s.title}</div>
-                      <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{s.author} ({s.year})</div>
+              {matchedSources.map(s => {
+                const handleSelectSource = () => {
+                  onOpenReader(s);
+                  onClose();
+                };
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className="search-result-item"
+                    onClick={handleSelectSource}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectSource();
+                      }
+                    }}
+                    aria-label={`Первоисточник: ${s.title}, автор: ${s.author}`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <GraduationCap size={16} color="var(--turq)" />
+                      <div>
+                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{s.title}</div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>{s.author} ({s.year})</div>
+                      </div>
                     </div>
-                  </div>
-                  <span className="badge-tag badge-turq" style={{ fontSize: '10.5px' }}>Ридер ↗</span>
-                </div>
-              ))}
+                    <span className="badge-tag badge-turq" style={{ fontSize: '10.5px' }}>Ридер ↗</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -266,32 +280,34 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
               <span style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
                 Понятия словаря ({matchedTerms.length})
               </span>
-              {matchedTerms.map(t => (
-                <div
-                  key={t.id}
-                  onClick={() => {
-                    onSelectTerm(t.term);
-                    onSelectTab('glossary');
-                    onClose();
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    background: '#f8fafc',
-                    marginBottom: '6px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Bookmark size={15} color="var(--lilac)" />
-                    <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{t.term}</span>
-                  </div>
-                  <span className="badge-tag badge-lilac" style={{ fontSize: '10px' }}>{t.category}</span>
-                </div>
-              ))}
+              {matchedTerms.map(t => {
+                const handleSelectTerm = () => {
+                  onSelectTerm(t.term);
+                  onSelectTab('glossary');
+                  onClose();
+                };
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className="search-result-item"
+                    onClick={handleSelectTerm}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectTerm();
+                      }
+                    }}
+                    aria-label={`Понятие словаря: ${t.term}, категория: ${t.category}`}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Bookmark size={15} color="var(--lilac)" />
+                      <span style={{ fontSize: '13.5px', fontWeight: 600, color: 'var(--text)' }}>{t.term}</span>
+                    </div>
+                    <span className="badge-tag badge-lilac" style={{ fontSize: '10px' }}>{t.category}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 

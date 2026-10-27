@@ -13,6 +13,7 @@ import {
   Award
 } from 'lucide-react';
 import { ContextualGuide, CONTEXTUAL_GUIDES } from '../data/contextual-guides';
+import { useModalLayer } from '../utils/modal-stack';
 
 interface ContextualGuideModalProps {
   guide: ContextualGuide | null;
@@ -27,21 +28,17 @@ export const ContextualGuideModal: React.FC<ContextualGuideModalProps> = ({
 }) => {
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
-  // Lock body scroll while modal is active
-  useEffect(() => {
-    if (guide) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') onClose();
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        window.removeEventListener('keydown', handleKeyDown);
-      };
-    }
-  }, [guide, onClose]);
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
+
+  // Dynamic modal layer: handles Escape isolation, focus trap, and layer ordering
+  const { zIndex } = useModalLayer({
+    id: 'contextual-guide-modal',
+    isOpen: Boolean(guide),
+    onClose,
+    dialogRef,
+    initialFocusRef
+  });
 
   useEffect(() => {
     setCopiedPrompt(false);
@@ -83,7 +80,7 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
         bottom: 0,
         backgroundColor: 'rgba(23, 18, 30, 0.72)',
         backdropFilter: 'blur(6px)',
-        zIndex: 1000,
+        zIndex,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -91,7 +88,12 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
       }}
     >
       <div 
-        className="paper-card animate-fade-in"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="guide-dialog-title"
+        tabIndex={-1}
+        className="paper-card animate-fade-in modal-dialog-responsive"
         style={{
           width: '100%',
           maxWidth: '860px',
@@ -106,17 +108,20 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
         }}
       >
         {/* Modal Top Header */}
-        <div style={{
-          padding: '18px 24px',
-          background: 'linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px',
-          flexWrap: 'wrap',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
-        }}>
+        <div 
+          className="modal-header-responsive"
+          style={{
+            padding: '18px 24px',
+            background: 'linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%)',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            flexWrap: 'wrap',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
+          }}
+        >
           <div style={{ flex: 1, minWidth: '240px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span style={{
@@ -140,14 +145,17 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
               </span>
             </div>
 
-            <h2 style={{
-              fontSize: '18px',
-              fontWeight: 800,
-              color: '#ffffff',
-              lineHeight: 1.3,
-              fontFamily: 'var(--font-serif)',
-              margin: 0
-            }}>
+            <h2 
+              id="guide-dialog-title"
+              style={{
+                fontSize: '18px',
+                fontWeight: 800,
+                color: '#ffffff',
+                lineHeight: 1.3,
+                fontFamily: 'var(--font-serif)',
+                margin: 0
+              }}
+            >
               {guide.title}
             </h2>
             <p style={{ margin: '2px 0 0', fontSize: '12.5px', color: 'rgba(255, 255, 255, 0.85)' }}>
@@ -156,7 +164,9 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
           </div>
 
           <button
+            ref={initialFocusRef}
             onClick={onClose}
+            aria-label="Закрыть окно гайда"
             title="Закрыть (Esc)"
             style={{
               background: 'rgba(255, 255, 255, 0.15)',
@@ -217,15 +227,18 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
         </div>
 
         {/* Modal Scrollable Body */}
-        <div style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '24px',
-          background: 'var(--paper-soft)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px'
-        }}>
+        <div 
+          className="modal-body-responsive"
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '24px',
+            background: 'var(--paper-soft)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}
+        >
 
           {/* Core Insight Callout */}
           <div style={{
@@ -386,9 +399,14 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
                 borderRadius: 'var(--radius-xs)',
                 padding: '12px'
               }}>
-                <span style={{ fontSize: '11px', color: 'var(--secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Черновик рабочей гипотезы (H1):
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--secondary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Черновик рабочей гипотезы (H1):
+                  </span>
+                  <span style={{ fontSize: '10px', background: '#fef3c7', color: '#b45309', padding: '1px 6px', borderRadius: '3px', fontWeight: 800, fontFamily: 'var(--mono)' }}>
+                    ТРЕБУЕТ ПРОВЕРКИ
+                  </span>
+                </div>
                 <p style={{ fontSize: '13px', color: 'var(--ink)', margin: '2px 0 0', fontStyle: 'italic' }}>
                   «{guide.researchBridge.hypothesisDraft}»
                 </p>

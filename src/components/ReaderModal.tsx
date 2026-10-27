@@ -12,23 +12,28 @@ import {
   BookOpen,
   ListFilter,
   Sparkles,
-  Compass
+  Compass,
+  FileEdit
 } from 'lucide-react';
 import { ReaderSource } from '../data/reader-sources';
 import { findUnderstandingCard } from '../data/understanding-cards';
+import { useModalLayer } from '../utils/modal-stack';
+import { ResearchDraftInitialData } from './ResearchDraftModal';
 
 interface ReaderModalProps {
   source: ReaderSource | null;
   onClose: () => void;
   onOpenUnderstandingCard?: (cardId: string) => void;
   onOpenContextualGuide?: (guideId: string) => void;
+  onOpenResearchDraft?: (data: ResearchDraftInitialData) => void;
 }
 
 export const ReaderModal: React.FC<ReaderModalProps> = ({ 
   source, 
   onClose,
   onOpenUnderstandingCard,
-  onOpenContextualGuide
+  onOpenContextualGuide,
+  onOpenResearchDraft
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
@@ -37,30 +42,17 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
   const [viewMode, setViewMode] = useState<'text' | 'file'>('text');
   const [continuousScroll, setContinuousScroll] = useState(false);
 
-  // Lock body scroll while modal is open, restore when closed
-  useEffect(() => {
-    if (source) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          onClose();
-        }
-      };
-      window.addEventListener('keydown', handleKeyDown);
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
 
-      // Default to file view if source has a file and user prefers or resets
-      if (source.fileUrl) {
-        // keep text as comfortable default, but with prominent PDF tab
-      }
-
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        window.removeEventListener('keydown', handleKeyDown);
-      };
-    }
-  }, [source, onClose]);
+  // Dynamic modal layer: handles Escape isolation, focus trap, and layer ordering
+  const { zIndex } = useModalLayer({
+    id: 'reader-modal',
+    isOpen: Boolean(source),
+    onClose,
+    dialogRef,
+    initialFocusRef
+  });
 
   // Reset page when source changes
   useEffect(() => {
@@ -114,12 +106,17 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 200,
+        zIndex,
         padding: '12px'
       }}
     >
       <div 
-        className="paper-card"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reader-dialog-title"
+        tabIndex={-1}
+        className="paper-card modal-dialog-responsive"
         style={{
           width: '100%',
           maxWidth: '920px',
@@ -135,16 +132,19 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
       >
         
         {/* Top Header */}
-        <div style={{
-          padding: '12px 18px',
-          background: 'var(--ink)',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px',
-          flexWrap: 'wrap'
-        }}>
+        <div 
+          className="modal-header-responsive"
+          style={{
+            padding: '12px 18px',
+            background: 'var(--ink)',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            flexWrap: 'wrap'
+          }}
+        >
           <div style={{ overflow: 'hidden', flex: 1, minWidth: '220px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
               <span style={{ fontSize: '11px', color: 'var(--ochre-border)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, fontFamily: 'var(--mono)' }}>
@@ -163,15 +163,18 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                 </span>
               )}
             </div>
-            <h3 style={{ 
-              fontSize: '15px', 
-              fontWeight: 700, 
-              whiteSpace: 'nowrap', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis',
-              maxWidth: '460px',
-              color: '#ffffff'
-            }}>
+            <h3 
+              id="reader-dialog-title"
+              style={{ 
+                fontSize: '15px', 
+                fontWeight: 700, 
+                whiteSpace: 'nowrap', 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                maxWidth: '460px',
+                color: '#ffffff'
+              }}
+            >
               {source.title}
             </h3>
           </div>
@@ -291,6 +294,40 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
               </button>
             )}
 
+            {/* Research Draft Button */}
+            {onOpenResearchDraft && (
+              <button
+                onClick={() => onOpenResearchDraft({
+                  sourceId: source.id,
+                  sourceTitle: source.title,
+                  sourceAuthor: source.author,
+                  citation: source.citation || `${source.author}. ${source.title}. ${source.year || ''}`,
+                  topic: `Конспект первоисточника: ${source.title}`
+                })}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-full)',
+                  padding: '5px 11px',
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  boxShadow: '0 2px 6px rgba(16, 185, 129, 0.35)',
+                  transition: 'all 0.15s ease'
+                }}
+                title="Открыть Черновик исследования по данному первоисточнику"
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+              >
+                <FileEdit size={12} color="#ffffff" />
+                <span>Черновик</span>
+              </button>
+            )}
+
             {/* Quick Actions */}
             {viewMode === 'text' && (
               <>
@@ -407,7 +444,9 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
 
             {/* Close Button */}
             <button
+              ref={initialFocusRef}
               onClick={onClose}
+              aria-label="Закрыть окно ридера"
               style={{
                 background: 'rgba(255, 255, 255, 0.2)',
                 border: 'none',
