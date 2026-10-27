@@ -431,16 +431,24 @@ body {
 }
 
 /* Modal Mobile & Keyboard Responsiveness */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .modal-overlay-responsive {
+    padding: 6px !important;
+  }
   .modal-dialog-responsive {
-    max-height: 94vh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 98vh !important;
+    max-height: 98vh !important;
     border-radius: var(--radius-md) !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
   .modal-header-responsive {
-    padding: 12px 16px !important;
+    padding: 10px 14px !important;
   }
   .modal-body-responsive {
-    padding: 14px !important;
+    padding: 14px 12px !important;
   }
   .modal-btn-touch {
     min-height: 38px;

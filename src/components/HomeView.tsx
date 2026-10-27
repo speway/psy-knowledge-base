@@ -15,9 +15,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { SectionTab } from './Header';
-import { FACULTY_MEMBERS } from '../data/faculty';
-import { READER_SOURCES } from '../data/reader-sources';
-import { GLOSSARY_TERMS } from '../data/glossary';
+import { PORTAL_STATS } from '../data/portal-stats';
 
 interface HomeViewProps {
   onSelectTab: (tab: SectionTab) => void;
@@ -115,7 +113,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               style={{ padding: '9px 16px', fontSize: '13.5px' }}
             >
               <Library size={16} color="var(--primary)" />
-              <span>Библиотека ({READER_SOURCES.length} источников)</span>
+              <span>Библиотека ({PORTAL_STATS.sourcesCount} источников)</span>
             </button>
 
             <button
@@ -124,145 +122,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               style={{ padding: '9px 16px', fontSize: '13.5px' }}
             >
               <Search size={15} color="var(--primary)" />
-              <span>Поиск по порталу (Ctrl+K)</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* PROFESSOR T.YU. BAZAROV MISSION BANNER */}
-      <div 
-        className="paper-card"
-        style={{
-          padding: '24px 28px',
-          marginBottom: '28px',
-          background: 'linear-gradient(135deg, #2b173e 0%, #3e1c5c 100%)',
-          color: '#ffffff',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid rgba(245, 158, 11, 0.28)',
-          boxShadow: '0 8px 24px rgba(43, 23, 62, 0.18)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.82)', fontWeight: 600 }}>
-            Научная традиция кафедры · Кафедра психологии Филиала МГУ в г. Ташкенте
-          </span>
-          <span className="pill" style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.35)', fontSize: '11px', padding: '2px 8px' }}>
-            20 лет кафедре (2006–2026)
-          </span>
-        </div>
-
-        <blockquote style={{
-          margin: '0 0 14px 0',
-          padding: '0 0 0 16px',
-          borderLeft: '3px solid #f59e0b',
-          fontSize: '17px',
-          lineHeight: 1.5,
-          fontFamily: 'var(--font-serif)',
-          fontStyle: 'italic',
-          color: '#fdfbfe'
-        }}>
-          «Главное — превратить знакомство с текстами в увлекательное путешествие с выходом на собственные исследования»
-        </blockquote>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.14)',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12.5px',
-              fontWeight: 800,
-              color: '#ffffff'
-            }}>
-              ТЮ
-            </div>
-            <div>
-              <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#ffffff' }}>
-                Тахир Юсупович Базаров
-              </div>
-              <div style={{ fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.75)' }}>
-                доктор психологических наук, заслуженный профессор Московского университета, заведующий кафедрой психологии филиала МГУ
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => onOpenUnderstandingCard('card-bazarov-sokol-2026')}
-              style={{
-                background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: 'var(--radius-sm)',
-                padding: '7px 13px',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
-                transition: 'background-color 0.2s ease, transform 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
-            >
-              <Sparkles size={13} />
-              <span>Методика «СОКОЛ» (Карточка понимания)</span>
-            </button>
-
-            <button
-              onClick={() => onOpenReaderBySourceId('kniga_psihologiya_20_let_2026')}
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '7px 13px',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'}
-            >
-              <BookMarked size={13} />
-              <span>Книга «20 лет кафедры» (PDF)</span>
-            </button>
-
-            <button
-              onClick={onOpenResearchDraft}
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.22)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '7px 13px',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'}
-            >
-              <FileEdit size={13} />
-              <span>Черновик исследования</span>
+              <span>Поиск по материалам</span>
             </button>
           </div>
         </div>
@@ -394,7 +254,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Library size={20} />
               </div>
               <span className="pill pill-ochre" style={{ fontSize: '11px', fontWeight: 600 }}>
-                {READER_SOURCES.length} источников · PDF
+                {PORTAL_STATS.sourcesCount} источников · PDF
               </span>
             </div>
 
@@ -464,7 +324,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Users size={20} />
               </div>
               <span className="pill pill-teal" style={{ fontSize: '11px', fontWeight: 600 }}>
-                {FACULTY_MEMBERS.length} преподавателя
+                {PORTAL_STATS.facultyCount} преподавателя
               </span>
             </div>
 
@@ -535,7 +395,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Bookmark size={20} />
               </div>
               <span className="pill" style={{ background: 'rgba(99, 102, 241, 0.1)', color: '#6366f1', border: '1px solid rgba(99, 102, 241, 0.25)', fontSize: '11px', fontWeight: 600 }}>
-                {GLOSSARY_TERMS.length} терминов
+                {PORTAL_STATS.glossaryCount} терминов
               </span>
             </div>
 

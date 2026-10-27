@@ -16,7 +16,6 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { COURSES, Course, SeminarItem } from '../data/courses';
-import { ResearchJourneyBanner } from './ResearchJourneyBanner';
 import { findUnderstandingCard } from '../data/understanding-cards';
 import { ResearchDraftInitialData } from './ResearchDraftModal';
 
@@ -69,21 +68,6 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
   return (
     <div style={{ paddingBottom: '90px' }}>
       
-      {/* Pedagogical Principle Banner (Prof. T.Y. Bazarov) */}
-      <ResearchJourneyBanner
-        onOpenBazarovCard={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
-        onOpenAllCards={() => onOpenUnderstandingCard && onOpenUnderstandingCard('card-bazarov-sokol-2026')}
-        onOpenResearchGuide={() => onOpenContextualGuide && onOpenContextualGuide('guide-how-to-do-research')}
-        onOpenResearchDraft={() => onOpenResearchDraft && onOpenResearchDraft({
-          sourceId: 'bazarov_sokol_2026',
-          sourceTitle: 'Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)»',
-          sourceAuthor: 'Базаров Т.Ю., Гасимов А.Ф.',
-          citation: 'Базаров Т.Ю., Гасимов А.Ф. Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)» // Социальная психология и общество. 2026. Т. 17. № 2. С. 202–220. DOI: 10.17759/sps.2026170212',
-          topic: 'Влияние отзывчивости лидера на групповую динамику и решение задач в условиях неопределенности',
-          starterHypothesis: 'Предполагается, что высокая чувствительность лидера к межличностным отношениям в группе опосредует психологическую безопасность и продуктивность совместной деятельности.'
-        })}
-      />
-
       {/* Course Hero Card */}
       <div className="paper-card" style={{
         padding: '24px 24px',

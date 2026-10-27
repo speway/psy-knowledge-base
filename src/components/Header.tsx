@@ -86,23 +86,11 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
           <button
             onClick={onOpenSearch}
             className="btn-ghost"
-            style={{ borderRadius: 'var(--radius-full)', padding: '7px 14px', fontSize: '12px' }}
-            title="Поиск по порталу (Ctrl+K)"
+            style={{ borderRadius: 'var(--radius-full)', padding: '7px 14px', fontSize: '13px' }}
+            title="Поиск по порталу"
           >
-            <Search size={14} color="var(--primary)" />
+            <Search size={15} color="var(--primary)" />
             <span style={{ display: 'none' }} className="search-text-desktop">Поиск</span>
-            <kbd style={{
-              display: 'none',
-              marginLeft: '4px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontFamily: 'var(--mono)',
-              background: 'var(--paper-soft)',
-              borderRadius: '4px',
-              border: '1px solid var(--line)'
-            }} className="search-kbd-desktop">
-              ⌘K
-            </kbd>
           </button>
         </div>
 
@@ -110,7 +98,6 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
           @media (min-width: 860px) {
             .desktop-nav-container { display: flex !important; }
             .search-text-desktop { display: inline !important; }
-            .search-kbd-desktop { display: inline !important; }
           }
         `}</style>
 

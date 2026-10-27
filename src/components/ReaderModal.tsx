@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   X, 
   ChevronLeft, 
@@ -13,7 +13,8 @@ import {
   ListFilter,
   Sparkles,
   Compass,
-  FileEdit
+  FileEdit,
+  ArrowRight
 } from 'lucide-react';
 import { ReaderSource } from '../data/reader-sources';
 import { findUnderstandingCard } from '../data/understanding-cards';
@@ -41,9 +42,24 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'text' | 'file'>('text');
   const [continuousScroll, setContinuousScroll] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
-  const dialogRef = React.useRef<HTMLDivElement>(null);
-  const initialFocusRef = React.useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  // Track viewport width for responsive PDF fallback
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Dynamic modal layer: handles Escape isolation, focus trap, and layer ordering
   const { zIndex } = useModalLayer({
@@ -54,9 +70,10 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
     initialFocusRef
   });
 
-  // Reset page when source changes; default to full file view if fileUrl is available
+  // Reset page and mode when source changes
   useEffect(() => {
     setCurrentPage(0);
+    // On desktop, default to file view if fileUrl is available; on mobile, default to file view only if pages are sparse
     setViewMode(source?.fileUrl ? 'file' : 'text');
   }, [source?.id, source?.fileUrl]);
 
@@ -69,6 +86,15 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
       return source.fileName;
     }
     return source.fileUrl;
+  })();
+
+  const safeFileUrl = (() => {
+    if (!resolvedFileUrl) return '';
+    try {
+      return encodeURI(resolvedFileUrl);
+    } catch (_) {
+      return resolvedFileUrl;
+    }
   })();
 
   const totalPages = source.pages.length;
@@ -88,6 +114,8 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
     return { fontSize: '16px', lineHeight: 1.7 };
   };
 
+  const matchedCard = findUnderstandingCard(source.understandingCardId || source.id);
+
   return (
     <div 
       onClick={(e) => {
@@ -95,13 +123,14 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
           onClose();
         }
       }}
+      className="modal-overlay-responsive"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'rgba(45, 31, 63, 0.72)',
+        background: 'rgba(35, 22, 50, 0.78)',
         backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'center',
@@ -119,19 +148,19 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
         className="paper-card modal-dialog-responsive"
         style={{
           width: '100%',
-          maxWidth: '920px',
+          maxWidth: '940px',
           height: '92vh',
           maxHeight: '92vh',
           display: 'flex',
           flexDirection: 'column',
           background: '#fffdfa',
           borderRadius: 'var(--radius-lg)',
-          boxShadow: 'var(--shadow-lg)',
+          boxShadow: '0 24px 64px rgba(25, 12, 38, 0.4)',
           overflow: 'hidden'
         }}
       >
         
-        {/* Top Header */}
+        {/* Top Header: 2-Tier Responsive Layout */}
         <div 
           className="modal-header-responsive"
           style={{
@@ -139,53 +168,111 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
             background: 'var(--ink)',
             color: '#ffffff',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '12px',
-            flexWrap: 'wrap'
+            flexDirection: 'column',
+            gap: '10px',
+            flexShrink: 0
           }}
         >
-          <div style={{ overflow: 'hidden', flex: 1, minWidth: '220px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--ochre-border)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, fontFamily: 'var(--mono)' }}>
-                {source.author} {source.year ? `(${source.year})` : ''}
-              </span>
-              {source.fileSize && (
-                <span style={{
-                  fontSize: '10px',
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  color: '#ffffff',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  fontFamily: 'var(--mono)'
+          {/* Tier 1: Title, Author, Badges & Close Button */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '12px',
+            width: '100%'
+          }}>
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px', flexWrap: 'wrap' }}>
+                <span style={{ 
+                  fontSize: '11px', 
+                  color: 'var(--ochre-border)', 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.05em', 
+                  fontWeight: 700, 
+                  fontFamily: 'var(--mono)',
+                  whiteSpace: 'nowrap'
                 }}>
-                  {source.fileSize}
+                  {source.author} {source.year ? `(${source.year})` : ''}
                 </span>
-              )}
+
+                {source.fileSize && (
+                  <span style={{
+                    fontSize: '10px',
+                    background: 'rgba(255, 255, 255, 0.16)',
+                    color: '#ffffff',
+                    padding: '1px 6px',
+                    borderRadius: '4px',
+                    fontFamily: 'var(--mono)',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {source.fileSize}
+                  </span>
+                )}
+              </div>
+
+              <h3 
+                id="reader-dialog-title"
+                style={{ 
+                  fontSize: '15px', 
+                  fontWeight: 700, 
+                  color: '#ffffff',
+                  margin: 0,
+                  lineHeight: 1.3,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical'
+                }}
+                title={source.title}
+              >
+                {source.title}
+              </h3>
             </div>
-            <h3 
-              id="reader-dialog-title"
-              style={{ 
-                fontSize: '15px', 
-                fontWeight: 700, 
-                whiteSpace: 'nowrap', 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                maxWidth: '460px',
-                color: '#ffffff'
+
+            {/* Always-accessible Close [X] button */}
+            <button
+              ref={initialFocusRef}
+              onClick={onClose}
+              aria-label="Закрыть окно ридера"
+              style={{
+                background: 'rgba(255, 255, 255, 0.18)',
+                border: 'none',
+                color: '#ffffff',
+                width: '34px',
+                height: '34px',
+                borderRadius: 'var(--radius-sm)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                flexShrink: 0,
+                transition: 'background-color 0.15s ease'
               }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.28)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)'}
+              title="Закрыть (ESC)"
             >
-              {source.title}
-            </h3>
+              <X size={18} />
+            </button>
           </div>
 
-          {/* Mode Switcher Tabs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {/* Tier 2: Action Toolbar (Wrap-enabled for mobile) */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            flexWrap: 'wrap',
+            width: '100%',
+            paddingTop: '6px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            {/* View Mode Toggle: Conspectus vs Full File */}
             <div style={{
-              display: 'flex',
+              display: 'inline-flex',
               background: 'rgba(255, 255, 255, 0.12)',
               borderRadius: 'var(--radius-full)',
-              padding: '3px',
+              padding: '2px',
               gap: '2px'
             }}>
               <button
@@ -195,17 +282,17 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: 'var(--radius-full)',
-                  padding: '5px 12px',
-                  fontSize: '11.5px',
+                  padding: '4px 10px',
+                  fontSize: '11px',
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  transition: 'background-color 0.2s ease, opacity 0.2s ease'
+                  transition: 'background-color 0.15s ease'
                 }}
               >
-                <BookOpen size={13} />
+                <BookOpen size={12} />
                 <span>Конспект</span>
               </button>
 
@@ -217,80 +304,47 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: 'var(--radius-full)',
-                    padding: '5px 12px',
-                    fontSize: '11.5px',
+                    padding: '4px 10px',
+                    fontSize: '11px',
                     fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    transition: 'background-color 0.2s ease, opacity 0.2s ease'
+                    transition: 'background-color 0.15s ease'
                   }}
                 >
-                  <FileText size={13} />
+                  <FileText size={12} />
                   <span>Полный файл</span>
                 </button>
               )}
             </div>
 
-            {/* Understanding Card button if available */}
-            {(() => {
-              const matchedCard = findUnderstandingCard(source.understandingCardId || source.id);
-              if (matchedCard && onOpenUnderstandingCard) {
-                return (
-                  <button
-                    onClick={() => onOpenUnderstandingCard(matchedCard.id)}
-                    style={{
-                      background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: 'var(--radius-full)',
-                      padding: '5px 12px',
-                      fontSize: '11.5px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      boxShadow: '0 2px 8px rgba(217, 119, 6, 0.4)',
-                      transition: 'all 0.15s ease'
-                    }}
-                    title="Открыть Карточку понимания по модели проф. Т.Ю. Базарова"
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
-                  >
-                    <Sparkles size={12} color="#fef3c7" />
-                    <span>Карточка понимания</span>
-                  </button>
-                );
-              }
-              return null;
-            })()}
-
-            {/* Contextual Guide button */}
-            {onOpenContextualGuide && (
+            {/* Understanding Card button */}
+            {matchedCard && onOpenUnderstandingCard && (
               <button
-                onClick={() => onOpenContextualGuide('guide-how-to-do-research')}
+                onClick={() => onOpenUnderstandingCard(matchedCard.id)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.14)',
+                  background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: 'var(--radius-full)',
-                  padding: '5px 10px',
-                  fontSize: '11.5px',
-                  fontWeight: 600,
+                  padding: '4px 10px',
+                  fontSize: '11px',
+                  fontWeight: 700,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
+                  boxShadow: '0 2px 6px rgba(217, 119, 6, 0.4)',
                   transition: 'all 0.15s ease'
                 }}
-                title="Гайд исследователя: выход на ВКР"
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)'}
+                title="Открыть Карточку понимания"
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
               >
-                <Compass size={12} />
-                <span>Гайд ВКР</span>
+                <Sparkles size={11} color="#fef3c7" />
+                <span>Карточка</span>
               </button>
             )}
 
@@ -309,9 +363,9 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: 'var(--radius-full)',
-                  padding: '5px 11px',
-                  fontSize: '11.5px',
-                  fontWeight: 800,
+                  padding: '4px 10px',
+                  fontSize: '11px',
+                  fontWeight: 700,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -323,28 +377,54 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
               >
-                <FileEdit size={12} color="#ffffff" />
+                <FileEdit size={11} color="#ffffff" />
                 <span>Черновик</span>
               </button>
             )}
 
-            {/* Quick Actions */}
+            {/* Contextual Guide button */}
+            {onOpenContextualGuide && (
+              <button
+                onClick={() => onOpenContextualGuide('guide-how-to-do-research')}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.14)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-full)',
+                  padding: '4px 9px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'all 0.15s ease'
+                }}
+                title="Гайд исследователя: выход на ВКР"
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)'}
+              >
+                <Compass size={11} />
+                <span>Гайд ВКР</span>
+              </button>
+            )}
+
+            {/* Quick Text Formatting Actions (Visible in text mode) */}
             {viewMode === 'text' && (
               <>
                 {/* Font Size Toggle */}
-                <div style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.12)', borderRadius: '6px', padding: '2px', gap: '2px' }}>
+                <div style={{ display: 'inline-flex', background: 'rgba(255, 255, 255, 0.12)', borderRadius: '6px', padding: '1px', gap: '1px' }}>
                   <button
                     onClick={() => setFontSize(f => f === 'lg' ? 'md' : 'sm')}
                     style={{
-                      background: fontSize === 'sm' ? 'rgba(255, 255, 255, 0.2)' : 'none',
+                      background: fontSize === 'sm' ? 'rgba(255, 255, 255, 0.25)' : 'none',
                       border: 'none',
                       color: '#ffffff',
-                      padding: '4px 7px',
-                      fontSize: '11px',
+                      padding: '3px 6px',
+                      fontSize: '10.5px',
                       cursor: 'pointer',
                       fontWeight: 600,
-                      borderRadius: '4px',
-                      transition: 'background-color 0.15s ease'
+                      borderRadius: '4px'
                     }}
                     title="Уменьшить шрифт"
                   >
@@ -353,15 +433,14 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                   <button
                     onClick={() => setFontSize(f => f === 'sm' ? 'md' : 'lg')}
                     style={{
-                      background: fontSize === 'lg' ? 'rgba(255, 255, 255, 0.2)' : 'none',
+                      background: fontSize === 'lg' ? 'rgba(255, 255, 255, 0.25)' : 'none',
                       border: 'none',
                       color: '#ffffff',
-                      padding: '4px 7px',
-                      fontSize: '12px',
+                      padding: '3px 6px',
+                      fontSize: '11px',
                       cursor: 'pointer',
                       fontWeight: 600,
-                      borderRadius: '4px',
-                      transition: 'background-color 0.15s ease'
+                      borderRadius: '4px'
                     }}
                     title="Увеличить шрифт"
                   >
@@ -373,19 +452,19 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                 <button
                   onClick={() => setUseSerif(s => !s)}
                   style={{
-                    background: useSerif ? 'rgba(184, 59, 28, 0.4)' : 'rgba(255, 255, 255, 0.12)',
+                    background: useSerif ? 'rgba(184, 59, 28, 0.45)' : 'rgba(255, 255, 255, 0.12)',
                     border: 'none',
                     color: '#ffffff',
-                    padding: '5px 8px',
+                    padding: '4px 7px',
                     borderRadius: '6px',
-                    fontSize: '11.5px',
+                    fontSize: '11px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center'
                   }}
-                  title="Переключить шрифт"
+                  title="Переключить шрифт (с засечками / без)"
                 >
-                  <Type size={13} />
+                  <Type size={12} />
                 </button>
 
                 {/* Continuous Scroll Toggle */}
@@ -393,12 +472,12 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                   <button
                     onClick={() => setContinuousScroll(c => !c)}
                     style={{
-                      background: continuousScroll ? 'rgba(75, 50, 104, 0.8)' : 'rgba(255, 255, 255, 0.12)',
+                      background: continuousScroll ? 'rgba(75, 50, 104, 0.85)' : 'rgba(255, 255, 255, 0.12)',
                       border: 'none',
                       color: '#ffffff',
-                      padding: '5px 8px',
+                      padding: '4px 8px',
                       borderRadius: '6px',
-                      fontSize: '11.5px',
+                      fontSize: '11px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -406,38 +485,58 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                     }}
                     title={continuousScroll ? "Постраничный режим" : "Сплошной свиток"}
                   >
-                    <ListFilter size={13} />
-                    <span style={{ fontSize: '11px' }}>{continuousScroll ? 'Постранично' : 'Весь текст'}</span>
+                    <ListFilter size={12} />
+                    <span>{continuousScroll ? 'Постранично' : 'Весь текст'}</span>
                   </button>
                 )}
               </>
             )}
 
-            {/* Direct File Download / Open in tab */}
+            {/* Direct File Action on Desktop / Mobile */}
             {source.fileUrl && (
-              <a
-                href={resolvedFileUrl}
-                download={source.fileName || true}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.14)',
-                  border: 'none',
-                  color: '#ffffff',
-                  padding: '5px 10px',
-                  borderRadius: '6px',
-                  fontSize: '11.5px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  textDecoration: 'none'
-                }}
-                title="Скачать файл первоисточника"
-              >
-                <Download size={13} />
-                <span style={{ fontSize: '11px' }}>Скачать</span>
-              </a>
+              <>
+                <button
+                  onClick={() => window.open(safeFileUrl, '_blank')}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.14)',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '4px 9px',
+                    borderRadius: '6px',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                  title="Открыть полный PDF во весь экран"
+                >
+                  <ExternalLink size={12} />
+                  <span>Вкладка</span>
+                </button>
+
+                <a
+                  href={safeFileUrl}
+                  download={source.fileName || true}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.14)',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '4px 9px',
+                    borderRadius: '6px',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    textDecoration: 'none'
+                  }}
+                  title="Скачать файл первоисточника на устройство"
+                >
+                  <Download size={12} />
+                  <span>Скачать</span>
+                </a>
+              </>
             )}
 
             {/* Copy Citation */}
@@ -447,110 +546,237 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                 background: copied ? 'var(--teal)' : 'rgba(255, 255, 255, 0.12)',
                 border: 'none',
                 color: '#ffffff',
-                padding: '5px 10px',
+                padding: '4px 9px',
                 borderRadius: '6px',
-                fontSize: '11.5px',
+                fontSize: '11px',
                 cursor: 'pointer',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
-                transition: 'all 0.15s ease'
+                transition: 'all 0.15s ease',
+                marginLeft: 'auto'
               }}
-              title="Скопировать библиографическую ссылку"
+              title="Скопировать ГОСТ-ссылку"
             >
-              {copied ? <Check size={13} /> : <Copy size={13} />}
-              <span style={{ fontSize: '11px' }}>{copied ? 'Скопировано' : 'Ссылка'}</span>
-            </button>
-
-            {/* Close Button */}
-            <button
-              ref={initialFocusRef}
-              onClick={onClose}
-              aria-label="Закрыть окно ридера"
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                border: 'none',
-                color: '#ffffff',
-                width: '32px',
-                height: '32px',
-                borderRadius: 'var(--radius-sm)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                marginLeft: '4px'
-              }}
-              title="Закрыть (ESC)"
-            >
-              <X size={18} />
+              {copied ? <Check size={12} /> : <Copy size={12} />}
+              <span>{copied ? 'Скопировано' : 'ГОСТ'}</span>
             </button>
           </div>
         </div>
 
         {/* Content Area */}
         {viewMode === 'file' && source.fileUrl ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#2d1f3f08', overflow: 'hidden' }}>
-            
-            {/* File Info Bar */}
+          isMobile ? (
+            /* Dedicated Mobile Document Screen (Bypasses broken mobile Chrome iframe plugin) */
             <div style={{
-              padding: '10px 18px',
+              flex: 1,
+              overflowY: 'auto',
+              padding: '20px 14px',
               background: 'var(--paper-soft)',
-              borderBottom: '1px solid var(--line)',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '12.5px',
-              color: 'var(--ink)'
+              justifyContent: 'center',
+              boxSizing: 'border-box'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FileText size={15} color="var(--primary)" />
-                <span><strong>Файл первоисточника:</strong> {source.fileName}</span>
-                {source.fileSize && <span className="pill pill-neutral">{source.fileSize}</span>}
-              </div>
+              <div style={{
+                background: '#ffffff',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '24px 18px',
+                maxWidth: '420px',
+                width: '100%',
+                boxShadow: 'var(--shadow-md)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '16px',
+                boxSizing: 'border-box',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '16px',
+                  background: 'var(--primary-light)',
+                  color: 'var(--primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <FileText size={28} />
+                </div>
 
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <a
-                  href={resolvedFileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-ghost"
-                  style={{ padding: '4px 10px', fontSize: '11.5px', textDecoration: 'none' }}
-                >
-                  <ExternalLink size={12} />
-                  Открыть в новой вкладке
-                </a>
-                <a
-                  href={resolvedFileUrl}
-                  download={source.fileName || true}
-                  className="btn-ink"
-                  style={{ padding: '4px 12px', fontSize: '11.5px', textDecoration: 'none' }}
-                >
-                  <Download size={12} />
-                  Скачать оригинал
-                </a>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      {source.category || 'Первоисточник'}
+                    </span>
+                    {source.fileSize && (
+                      <span style={{ fontSize: '10.5px', background: 'var(--paper)', border: '1px solid var(--line)', color: 'var(--muted)', padding: '1px 6px', borderRadius: '4px' }}>
+                        {source.fileSize}
+                      </span>
+                    )}
+                  </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ink)', margin: '0 0 6px', lineHeight: 1.35 }}>
+                    {source.title}
+                  </h3>
+                  <p style={{ fontSize: '13px', color: 'var(--muted)', margin: 0, fontWeight: 600 }}>
+                    {source.author} {source.year ? `(${source.year})` : ''}
+                  </p>
+                </div>
+
+                {/* Mobile Document Actions */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+                  <button
+                    onClick={() => window.open(safeFileUrl, '_blank')}
+                    style={{
+                      width: '100%',
+                      background: 'var(--primary)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '12px 16px',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 12px rgba(75, 50, 104, 0.25)',
+                      transition: 'background-color 0.15s ease'
+                    }}
+                  >
+                    <ExternalLink size={16} />
+                    <span>Читать полный PDF</span>
+                  </button>
+
+                  <a
+                    href={safeFileUrl}
+                    download={source.fileName || true}
+                    style={{
+                      width: '100%',
+                      background: 'var(--surface)',
+                      color: 'var(--ink)',
+                      border: '1px solid var(--line-strong)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '11px 16px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      textDecoration: 'none',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <Download size={15} />
+                    <span>Скачать файл ({source.fileSize || 'PDF'})</span>
+                  </a>
+
+                  <button
+                    onClick={() => setViewMode('text')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--muted)',
+                      fontSize: '12.5px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      padding: '6px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <BookOpen size={14} />
+                    <span>Перейти к текстовому конспекту</span>
+                  </button>
+                </div>
+
+                <div style={{
+                  fontSize: '11.5px',
+                  color: 'var(--muted)',
+                  lineHeight: 1.45,
+                  background: 'var(--paper)',
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px dashed var(--line)'
+                }}>
+                  💡 Полный PDF открывается в нативном просмотрщике браузера телефона с поддержкой масштабирования, поиска и быстрого перехода.
+                </div>
               </div>
             </div>
+          ) : (
+            /* Desktop Embedded Frame View */
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#2d1f3f08', overflow: 'hidden' }}>
+              {/* File Info Bar */}
+              <div style={{
+                padding: '10px 18px',
+                background: 'var(--paper-soft)',
+                borderBottom: '1px solid var(--line)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '12.5px',
+                color: 'var(--ink)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
+                  <FileText size={15} color="var(--primary)" style={{ flexShrink: 0 }} />
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <strong>Файл первоисточника:</strong> {source.fileName}
+                  </span>
+                  {source.fileSize && <span className="pill pill-neutral" style={{ flexShrink: 0 }}>{source.fileSize}</span>}
+                </div>
 
-            {/* Embedded Document Frame */}
-            <div style={{ flex: 1, position: 'relative' }}>
-              <iframe
-                src={`${resolvedFileUrl}#toolbar=1&navpanes=0`}
-                title={source.title}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none',
-                  display: 'block'
-                }}
-              />
+                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                  <a
+                    href={safeFileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost"
+                    style={{ padding: '4px 10px', fontSize: '11.5px', textDecoration: 'none' }}
+                  >
+                    <ExternalLink size={12} />
+                    Открыть в новой вкладке
+                  </a>
+                  <a
+                    href={safeFileUrl}
+                    download={source.fileName || true}
+                    className="btn-ink"
+                    style={{ padding: '4px 12px', fontSize: '11.5px', textDecoration: 'none' }}
+                  >
+                    <Download size={12} />
+                    Скачать оригинал
+                  </a>
+                </div>
+              </div>
+
+              {/* Embedded Document Frame */}
+              <div style={{ flex: 1, position: 'relative' }}>
+                <iframe
+                  src={`${safeFileUrl}#toolbar=1&navpanes=0`}
+                  title={source.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    display: 'block'
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )
         ) : (
           /* TEXT VIEW CANVAS */
           <div style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '28px 24px',
+            padding: '24px 20px',
             fontFamily: useSerif ? 'var(--font-serif)' : 'var(--font-sans)',
             color: 'var(--ink)',
             background: '#fffdfa',
@@ -571,7 +797,7 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                 color: 'var(--muted)'
               }}>
                 <strong style={{ color: 'var(--ink)', display: 'block', marginBottom: '2px' }}>Библиографическая ссылка:</strong>
-                <p>{source.citation}</p>
+                <p style={{ margin: '0 0 6px' }}>{source.citation}</p>
                 {source.fileUrl && (
                   <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: '1px dashed var(--line)' }}>
                     <button
@@ -590,7 +816,8 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                       }}
                     >
                       <FileText size={12} />
-                      Открыть полный файл первоисточника ({source.fileName}) →
+                      <span>Открыть полный файл первоисточника ({source.fileName || 'PDF'})</span>
+                      <ArrowRight size={12} />
                     </button>
                   </div>
                 )}
@@ -633,31 +860,32 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
         {/* Footer Pagination (when in paginated text mode) */}
         {viewMode === 'text' && !continuousScroll && totalPages > 1 && (
           <div style={{
-            padding: '12px 20px',
+            padding: '10px 16px',
             background: 'var(--surface)',
             borderTop: '1px solid var(--line)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '12px'
+            gap: '12px',
+            flexShrink: 0
           }}>
             <button
               onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
               disabled={currentPage === 0}
               className="btn-ghost"
               style={{
-                padding: '6px 14px',
-                fontSize: '12.5px',
+                padding: '6px 12px',
+                fontSize: '12px',
                 cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
                 opacity: currentPage === 0 ? 0.35 : 1
               }}
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={15} />
               Назад
             </button>
 
-            <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--mono)' }}>
-              Стр. {pageNum} · фрагмент {currentPage + 1} из {totalPages}
+            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--mono)' }}>
+              Стр. {pageNum} · {currentPage + 1}/{totalPages}
             </span>
 
             <button
@@ -665,14 +893,14 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
               disabled={currentPage === totalPages - 1}
               className="btn-ghost"
               style={{
-                padding: '6px 14px',
-                fontSize: '12.5px',
+                padding: '6px 12px',
+                fontSize: '12px',
                 cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
                 opacity: currentPage === totalPages - 1 ? 0.35 : 1
               }}
             >
               Вперёд
-              <ChevronRight size={16} />
+              <ChevronRight size={15} />
             </button>
           </div>
         )}
