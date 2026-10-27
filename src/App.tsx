@@ -1,4 +1,17 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { 
+  ArrowUp, 
+  ExternalLink, 
+  FileEdit, 
+  Sparkles, 
+  Compass, 
+  Search, 
+  BookOpen, 
+  Library, 
+  Users, 
+  Bookmark, 
+  GraduationCap 
+} from 'lucide-react';
 import { Header, SectionTab } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { HomeView } from './components/HomeView';
@@ -224,125 +237,317 @@ export const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Site Footer */}
+      {/* Redesigned Modern Academic Footer */}
       <footer style={{
         background: 'var(--surface)',
         borderTop: '1px solid var(--line)',
-        padding: '28px 0 95px',
-        marginTop: 'auto'
+        padding: '48px 0 100px',
+        marginTop: 'auto',
+        color: 'var(--ink)'
       }}>
         <div className="app-container">
+          
+          {/* Main Footer Grid: Brand/Ecosystem + 3 Navigation Columns */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
+            gap: '36px 28px',
+            marginBottom: '40px'
+          }}>
+            
+            {/* Column 1: Brand Identity & Scientific Sector */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '340px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'var(--primary)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '20px',
+                  fontWeight: 800,
+                  boxShadow: '0 4px 10px rgba(75, 50, 104, 0.25)',
+                  flexShrink: 0
+                }}>
+                  Ψ
+                </div>
+                <div>
+                  <div style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)', lineHeight: 1.2 }}>
+                    Научный сектор ТФ МГУ
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600 }}>
+                    База знаний направления «Психология»
+                  </div>
+                </div>
+              </div>
+
+              <p style={{ fontSize: '12.5px', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
+                Единая цифровая среда учебных курсов, первоисточников в PDF и исследовательских инструментов для студентов кафедры психологии (2026).
+              </p>
+
+              {/* Developer Badge */}
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--muted)' }}>Разработка:</span>
+                <a
+                  href="https://t.me/speway"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    color: 'var(--primary)',
+                    background: 'var(--primary-light)',
+                    padding: '2px 8px',
+                    borderRadius: 'var(--radius-full)',
+                    textDecoration: 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+                >
+                  <span>by spw</span>
+                  <ExternalLink size={10} />
+                </a>
+              </div>
+            </div>
+
+            {/* Column 2: Digital Ecosystem of the Scientific Sector */}
+            <div>
+              <div style={{ fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--primary)', marginBottom: '14px' }}>
+                Проекты сектора
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <li>
+                  <a
+                    href="https://psy-msutf.vercel.app/ru"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--ink)', textDecoration: 'none', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+                  >
+                    <span>Портал научного сектора</span>
+                    <ExternalLink size={12} color="var(--primary)" />
+                  </a>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Главный ресурс СНО факультета</div>
+                </li>
+
+                <li>
+                  <a
+                    href="https://psy-case-trainer.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--ink)', textDecoration: 'none', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+                  >
+                    <span>Тренажёр кейсов</span>
+                    <ExternalLink size={12} color="var(--primary)" />
+                  </a>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Практикум клинических и психологических задач</div>
+                </li>
+
+                <li>
+                  <a
+                    href="https://psy-stat-lab.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'var(--ink)', textDecoration: 'none', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+                  >
+                    <span>СтатЛаб</span>
+                    <ExternalLink size={12} color="var(--primary)" />
+                  </a>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Статистический анализ для курсовых и ВКР</div>
+                </li>
+
+                <li>
+                  <a
+                    href="https://psy-knowledge-base.vercel.app"
+                    style={{ color: 'var(--primary)', textDecoration: 'none', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}
+                  >
+                    <span>База знаний</span>
+                    <span style={{ fontSize: '10px', background: 'var(--primary-light)', color: 'var(--primary)', padding: '1px 5px', borderRadius: '3px' }}>Текущий</span>
+                  </a>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Первоисточники, семинары и словарь</div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Portal Navigation */}
+            <div>
+              <div style={{ fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink)', marginBottom: '14px' }}>
+                Разделы портала
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                <li>
+                  <button
+                    onClick={() => { setActiveTab('disciplines'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <BookOpen size={13} />
+                    <span>Учебные семинары (1–9)</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => { setActiveTab('reader'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <Library size={13} />
+                    <span>Библиотека первоисточников</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => { setActiveTab('teachers'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <Users size={13} />
+                    <span>Преподаватели кафедры</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => { setActiveTab('glossary'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <Bookmark size={13} />
+                    <span>Терминологический словарь</span>
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => { setActiveTab('archive'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <GraduationCap size={13} />
+                    <span>Стандарты НИРС и оформления ВКР</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Student Research Tools & Quick Access */}
+            <div>
+              <div style={{ fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink)', marginBottom: '14px' }}>
+                Инструменты студента
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                <li>
+                  <button
+                    onClick={() => handleOpenResearchDraft()}
+                    style={{ background: 'none', border: 'none', padding: 0, color: '#b83b1c', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <FileEdit size={13} color="#b83b1c" />
+                    <span>Черновик исследования</span>
+                  </button>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Локальное сохранение на устройстве</div>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => handleOpenUnderstandingCard('card-bazarov-sokol-2026')}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--ochre)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <Sparkles size={13} color="var(--ochre)" />
+                    <span>Методика «СОКОЛ» (Т.Ю. Базаров)</span>
+                  </button>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Карточка понимания в 6 шагов</div>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => handleOpenContextualGuide('guide-how-to-do-research')}
+                    style={{ background: 'none', border: 'none', padding: 0, color: '#059669', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <Compass size={13} color="#059669" />
+                    <span>Гайд выхода на ВКР</span>
+                  </button>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '1px' }}>Логика научного исследования</div>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => setIsSearchOpen(true)}
+                    style={{ background: 'none', border: 'none', padding: 0, color: 'var(--muted)', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
+                  >
+                    <Search size={13} />
+                    <span>Поиск по материалам</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Bottom Bar: Copyright, University tribute, Scroll-To-Top button */}
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
-            textAlign: 'center',
-            gap: '12px'
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '14px',
+            paddingTop: '22px',
+            borderTop: '1px solid var(--line-soft)',
+            fontSize: '12px',
+            color: 'var(--muted)'
           }}>
-            {/* Top row: Scientific sector portal + by spw */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              flexWrap: 'wrap',
-              fontSize: '13.5px'
-            }}>
-              <a
-                href="https://psy-msutf.vercel.app/ru"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: 'var(--ink)',
-                  textDecoration: 'none',
-                  fontWeight: 700,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <span>Научный сектор ТФ МГУ</span>
-                <span style={{ fontSize: '11px', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px' }}>
-                  2026
-                </span>
-              </a>
-
-              <span style={{ color: 'var(--line-strong)', userSelect: 'none' }}>·</span>
-
-              <a 
-                href="https://t.me/speway" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{
-                  color: 'var(--primary)',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                by spw
-              </a>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span>© 2026 Студенческий научный сектор психологии ТФ МГУ</span>
+              <span style={{ opacity: 0.4 }}>•</span>
+              <span>Филиал МГУ имени М.В. Ломоносова в г. Ташкенте</span>
             </div>
 
-            {/* Middle row: All projects of the scientific sector */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '14px',
-              flexWrap: 'wrap',
-              fontSize: '12.5px',
-              color: 'var(--muted)',
-              paddingTop: '8px',
-              borderTop: '1px solid var(--line-soft)'
-            }}>
-              <span style={{ fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted)', fontWeight: 600 }}>
-                Проекты сектора:
-              </span>
-
-              <a
-                href="https://psy-msutf.vercel.app/ru"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: 'var(--ink)', textDecoration: 'none' }}
-              >
-                Портал сектора
-              </a>
-
-              <span style={{ opacity: 0.4 }}>•</span>
-
-              <a
-                href="https://psy-case-trainer.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: 'var(--ink)', textDecoration: 'none' }}
-              >
-                Тренажёр кейсов
-              </a>
-
-              <span style={{ opacity: 0.4 }}>•</span>
-
-              <a
-                href="https://psy-stat-lab.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: 'var(--ink)', textDecoration: 'none' }}
-              >
-                СтатЛаб
-              </a>
-
-              <span style={{ opacity: 0.4 }}>•</span>
-
-              <a
-                href="https://psy-knowledge-base.vercel.app"
-                style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}
-              >
-                База знаний
-              </a>
-            </div>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              style={{
+                background: 'var(--paper-soft)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-full)',
+                padding: '6px 14px',
+                fontSize: '11.5px',
+                fontWeight: 600,
+                color: 'var(--ink)',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--surface)';
+                e.currentTarget.style.borderColor = 'var(--primary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--paper-soft)';
+                e.currentTarget.style.borderColor = 'var(--line)';
+              }}
+              title="Вернуться к началу страницы"
+            >
+              <span>Наверх</span>
+              <ArrowUp size={12} color="var(--primary)" />
+            </button>
           </div>
+
         </div>
       </footer>
 
