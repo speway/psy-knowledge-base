@@ -663,6 +663,9 @@ export const READER_SOURCES: ReaderSource[] = [
     "author": "А. Н. Леонтьев",
     "source": "Психология мотивации и эмоций / под ред. Ю.Б. Гиппенрейтер. М.: ЧеРо, 2002, с. 57–79",
     "category": "Мотивация",
+    "fileUrl": "/assets/docs/Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileName": "Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileType": "pdf",
     "seminarNums": [
       1,
       4,
@@ -887,6 +890,9 @@ export const READER_SOURCES: ReaderSource[] = [
     "author": "А. А. Бодалев, В. В. Столин",
     "year": "1987",
     "category": "Методология и диагностика",
+    "fileUrl": "/assets/docs/Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileName": "Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileType": "pdf",
     "seminarNums": [
       1,
       5
@@ -906,6 +912,9 @@ export const READER_SOURCES: ReaderSource[] = [
     "author": "К. Э. Изард",
     "year": "1999",
     "category": "Эмоции",
+    "fileUrl": "/assets/docs/Хрестоматия_Психология_эмоций_Гиппенрейтер_Вилюнас_2.pdf",
+    "fileName": "Хрестоматия_Психология_эмоций_Гиппенрейтер_Вилюнас_2.pdf",
+    "fileType": "pdf",
     "seminarNums": [
       6,
       7,
@@ -926,6 +935,9 @@ export const READER_SOURCES: ReaderSource[] = [
     "author": "П. Экман",
     "year": "2010",
     "category": "Эмоции",
+    "fileUrl": "/assets/docs/Хрестоматия_Психология_эмоций_Гиппенрейтер_Вилюнас_2.pdf",
+    "fileName": "Хрестоматия_Психология_эмоций_Гиппенрейтер_Вилюнас_2.pdf",
+    "fileType": "pdf",
     "seminarNums": [
       7,
       8
@@ -1326,6 +1338,9 @@ export const READER_SOURCES: ReaderSource[] = [
     "author": "А. Н. Леонтьев",
     "source": "Психология мотивации и эмоций / под ред. Ю.Б. Гиппенрейтер. М.: ЧеРо, 2002, с. 57–79",
     "category": "Мотивация",
+    "fileUrl": "/assets/docs/Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileName": "Гиппенрейтер_Ю_Б_хрестоматия_Психология_мотивации_и_эмоций.pdf",
+    "fileType": "pdf",
     "seminarNums": [
       1,
       4,

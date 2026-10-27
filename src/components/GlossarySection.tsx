@@ -214,12 +214,13 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
             padding: '4px 10px',
             borderRadius: 'var(--radius-sm)',
             fontSize: '12px',
-            fontWeight: selectedLetter === null ? 800 : 600,
+            fontWeight: 600,
             background: selectedLetter === null ? 'var(--ink)' : 'var(--surface)',
             color: selectedLetter === null ? '#ffffff' : 'var(--ink)',
             border: '1px solid ' + (selectedLetter === null ? 'var(--ink)' : 'var(--line)'),
             cursor: 'pointer',
-            flexShrink: 0
+            flexShrink: 0,
+            transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
           }}
         >
           Все (280)
@@ -238,12 +239,13 @@ export const GlossarySection: React.FC<GlossarySectionProps> = ({ initialSearchT
               borderRadius: 'var(--radius-sm)',
               fontSize: '12px',
               fontFamily: 'var(--mono)',
-              fontWeight: selectedLetter === letter ? 800 : 600,
+              fontWeight: 600,
               background: selectedLetter === letter ? 'var(--ochre)' : 'var(--surface)',
               color: selectedLetter === letter ? '#ffffff' : 'var(--ink)',
               border: '1px solid ' + (selectedLetter === letter ? 'var(--ochre)' : 'var(--line)'),
               cursor: 'pointer',
-              flexShrink: 0
+              flexShrink: 0,
+              transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
             }}
           >
             {letter}

@@ -3,7 +3,6 @@ import {
   Clock, 
   User, 
   BookOpen, 
-  Lightbulb, 
   Tag, 
   ArrowUpRight, 
   Layers, 
@@ -545,30 +544,7 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
             </div>
           </div>
 
-          {/* BLOCK 3: Methodological tip */}
-          {currentSeminar.tips && (
-            <div style={{
-              background: 'var(--paper-soft)',
-              border: '1px solid var(--line)',
-              borderLeft: '4px solid var(--teal)',
-              padding: '14px 18px',
-              borderRadius: 'var(--radius-sm)',
-              marginBottom: '18px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '10px'
-            }}>
-              <Lightbulb size={18} color="var(--teal)" style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div>
-                <span style={{ fontWeight: 800, fontSize: '11.5px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Методический акцент преподавателя (А.А. Туниянц):
-                </span>
-                <p style={{ fontSize: '13px', color: 'var(--ink)', marginTop: '3px', lineHeight: 1.55, margin: '4px 0 0 0' }}>
-                  {currentSeminar.tips}
-                </p>
-              </div>
-            </div>
-          )}
+
 
           {/* BLOCK 4: Key terms */}
           {currentSeminar.terms && currentSeminar.terms.length > 0 && (

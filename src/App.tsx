@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header, SectionTab } from './components/Header';
 import { BottomNav } from './components/BottomNav';
+import { HomeView } from './components/HomeView';
 import { CoursesView } from './components/CoursesView';
 import { LibraryView } from './components/LibraryView';
 import { GlossarySection } from './components/GlossarySection';
@@ -17,7 +18,7 @@ import { ContextualGuide, CONTEXTUAL_GUIDES, findContextualGuide } from './data/
 import { bringModalToTop } from './utils/modal-stack';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<SectionTab>('disciplines');
+  const [activeTab, setActiveTab] = useState<SectionTab>('home');
   const [readerSource, setReaderSource] = useState<ReaderSource | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [glossarySearchQuery, setGlossarySearchQuery] = useState('');
@@ -87,11 +88,17 @@ export const App: React.FC = () => {
     bringModalToTop('contextual-guide-modal', trigger);
   };
 
-  const handleOpenResearchDraft = (data: ResearchDraftInitialData, triggerElement?: HTMLElement | null) => {
+  const handleOpenResearchDraft = (data?: ResearchDraftInitialData, triggerElement?: HTMLElement | null) => {
     const trigger = triggerElement !== undefined 
       ? triggerElement 
       : (typeof document !== 'undefined' ? (document.activeElement as HTMLElement) : null);
-    setActiveResearchDraft(data);
+    setActiveResearchDraft(data || {
+      sourceId: 'bazarov_sokol_2026',
+      sourceTitle: 'Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)»',
+      sourceAuthor: 'Базаров Т.Ю., Гасимов А.Ф.',
+      citation: 'Базаров Т.Ю., Гасимов А.Ф. Разработка методики «Способ оценки качества отзывчивости личности (СОКОЛ)» // Социальная психология и общество. 2026. Т. 17. № 2. С. 202–220',
+      topic: 'Исследование студента: отзывчивость и групповая динамика'
+    });
     bringModalToTop('research-draft-modal', trigger);
   };
 
@@ -127,6 +134,17 @@ export const App: React.FC = () => {
       {/* Main Content */}
       <main style={{ flex: 1, paddingTop: '28px' }}>
         <div className="app-container">
+          {activeTab === 'home' && (
+            <HomeView
+              onSelectTab={setActiveTab}
+              onOpenReaderBySourceId={handleOpenReaderBySourceId}
+              onOpenUnderstandingCard={handleOpenUnderstandingCard}
+              onOpenResearchDraft={() => handleOpenResearchDraft()}
+              onOpenSearch={() => setIsSearchOpen(true)}
+              onSelectFacultyMember={handleNavigateToFaculty}
+            />
+          )}
+
           {activeTab === 'disciplines' && (
             <CoursesView
               onOpenReaderBySourceId={handleOpenReaderBySourceId}

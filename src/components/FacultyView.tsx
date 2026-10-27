@@ -33,7 +33,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
   const [internalSelectedId, setInternalSelectedId] = useState<string>(selectedFacultyId);
   const [activeProfileTab, setActiveProfileTab] = useState<'research' | 'projects' | 'publications' | 'courses' | 'theses' | 'collaborations'>('research');
   const [searchFilter, setSearchFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'leaders' | 'phd' | 'alumni'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'leaders' | 'phd' | 'lecturers'>('all');
   const [copiedContact, setCopiedContact] = useState(false);
 
   // Sync prop changes
@@ -49,7 +49,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
   };
 
   const handleCopyContacts = () => {
-    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\n${faculty.office || 'Кафедра психологии, Ташкентский филиал МГУ'}${faculty.sourceBookPage ? `\nИсточник: Юбилейное издание кафедры «20 лет профессиональной традиции», стр. ${faculty.sourceBookPage}` : ''}`;
+    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\n${faculty.office || 'Кафедра психологии, Ташкентский филиал МГУ'}`;
     navigator.clipboard?.writeText(text);
     setCopiedContact(true);
     setTimeout(() => setCopiedContact(false), 2200);
@@ -72,8 +72,8 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
     if (categoryFilter === 'phd') {
       return Boolean(f.defenseInfo || f.badge?.includes('д.пс.н') || f.badge?.includes('Кандидат') || f.badge?.includes('PhD') || f.badge?.includes('Доктор'));
     }
-    if (categoryFilter === 'alumni') {
-      return f.experience.includes('Выпуск') || Boolean(f.badge?.includes('Выпуск')) || ['tuniyants-a-a', 'pronin-r-o', 'ryabova-m-s', 'rodnina-k-a', 'karieva-n-t', 'karimova-n-a', 'tsoy-s-v', 'khabiev-t-r', 'aziz-karieva-m-t', 'tashkhodjaeva-o-o', 'akhmedova-m-i', 'faizullina-r-s', 'makhmudova-kh-a', 'kerimova-d-k', 'muminova-s-a'].includes(f.id);
+    if (categoryFilter === 'lecturers') {
+      return !['bazarov-t-yu', 'ruzibaev-d-b'].includes(f.id);
     }
     return true;
   });
@@ -132,7 +132,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               className={`pill ${categoryFilter === 'leaders' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Руководство кафедры
+              Руководство
             </button>
             <button
               onClick={() => setCategoryFilter('phd')}
@@ -142,11 +142,11 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               Доктора наук и PhD
             </button>
             <button
-              onClick={() => setCategoryFilter('alumni')}
-              className={`pill ${categoryFilter === 'alumni' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => setCategoryFilter('lecturers')}
+              className={`pill ${categoryFilter === 'lecturers' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Выпускники-преподаватели
+              Преподаватели кафедры
             </button>
           </div>
         </div>
@@ -194,10 +194,10 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                   padding: '10px 14px',
                   borderRadius: 'var(--radius-sm)',
                   cursor: 'pointer',
-                  border: isSelected ? '1.5px solid var(--primary)' : '1px solid var(--line)',
+                  border: '1px solid ' + (isSelected ? 'var(--primary)' : 'var(--line)'),
                   background: isSelected ? 'var(--primary-light)' : 'var(--surface-soft)',
-                  boxShadow: isSelected ? '0 4px 12px rgba(75, 50, 104, 0.12)' : 'none',
-                  transition: 'all 0.15s ease'
+                  boxShadow: isSelected ? '0 2px 8px rgba(75, 50, 104, 0.12)' : 'none',
+                  transition: 'background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease'
                 }}
               >
                 {/* Micro Thumbnail / Monogram */}
@@ -449,35 +449,22 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               borderRadius: 'var(--radius-sm)',
               padding: '12px 16px',
               marginBottom: '14px',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              flexWrap: 'wrap',
               fontSize: '12.5px'
             }}>
-              {faculty.office && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
-                  <MapPin size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
-                  <span>{faculty.office}</span>
-                </div>
-              )}
-              {faculty.sourceBookPage && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
-                  <BookOpen size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
-                  <span>Книга «20 лет кафедры»: <strong>стр. {faculty.sourceBookPage}</strong></span>
-                </div>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
+                <MapPin size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
+                <span>{faculty.office || 'Кафедра психологии, Ташкентский филиал МГУ'}</span>
+              </div>
               {faculty.email && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
                   <Mail size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
                   <a href={`mailto:${faculty.email}`} style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
                     {faculty.email}
                   </a>
-                </div>
-              )}
-              {faculty.istinaId && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
-                  <Award size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
-                  <span>ИСТИНА ID: <strong style={{ fontFamily: 'var(--mono)' }}>{faculty.istinaId}</strong></span>
                 </div>
               )}
             </div>
@@ -570,42 +557,48 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
         </div>
 
         {/* Profile Internal Tabs */}
-        <div style={{
-          display: 'flex',
-          borderBottom: '2px solid var(--line)',
-          margin: '22px 0 20px',
-          gap: '4px',
-          overflowX: 'auto',
-          WebkitOverflowScrolling: 'touch'
-        }}>
-          {[
-            { id: 'research', label: `Сферы исследований (${faculty.interestsList.length})` },
-            { id: 'projects', label: `Проекты и гранты (${faculty.projects.length})` },
-            { id: 'publications', label: `Публикации (${faculty.publications.length})` },
-            { id: 'courses', label: `Читаемые курсы (${faculty.coursesTaught.length})` },
-            { id: 'theses', label: `Темы ВКР и НИР (${faculty.thesisTopics.length})` },
-            { id: 'collaborations', label: `Научные связи (${faculty.collaborations.length})` }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveProfileTab(tab.id as any)}
-              style={{
-                padding: '10px 16px',
-                border: 'none',
-                background: 'none',
-                borderBottom: activeProfileTab === tab.id ? '3px solid var(--primary)' : '3px solid transparent',
-                color: activeProfileTab === tab.id ? 'var(--primary)' : 'var(--muted)',
-                fontWeight: activeProfileTab === tab.id ? 800 : 600,
-                fontSize: '13.5px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {(() => {
+          const profileTabs = [
+            { id: 'research', label: `Сферы исследований (${faculty.interestsList.length})`, count: faculty.interestsList.length },
+            { id: 'projects', label: `Проекты и гранты (${faculty.projects.length})`, count: faculty.projects.length },
+            { id: 'publications', label: `Публикации (${faculty.publications.length})`, count: faculty.publications.length },
+            { id: 'courses', label: `Читаемые курсы (${faculty.coursesTaught.length})`, count: faculty.coursesTaught.length },
+            { id: 'theses', label: `Темы ВКР и НИР (${faculty.thesisTopics.length})`, count: faculty.thesisTopics.length },
+            { id: 'collaborations', label: `Научные связи (${faculty.collaborations.length})`, count: faculty.collaborations.length }
+          ].filter(tab => tab.id === 'research' || tab.count > 0);
+
+          return (
+            <div style={{
+              display: 'flex',
+              borderBottom: '2px solid var(--line)',
+              margin: '22px 0 20px',
+              gap: '4px',
+              overflowX: 'auto',
+              WebkitOverflowScrolling: 'touch'
+            }}>
+              {profileTabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveProfileTab(tab.id as any)}
+                  style={{
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'none',
+                    borderBottom: activeProfileTab === tab.id ? '3px solid var(--primary)' : '3px solid transparent',
+                    color: activeProfileTab === tab.id ? 'var(--primary)' : 'var(--muted)',
+                    fontWeight: 600,
+                    fontSize: '13.5px',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'color 0.2s ease, border-color 0.2s ease'
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* TAB 1: Research Spheres */}
         {activeProfileTab === 'research' && (
@@ -771,26 +764,41 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
 
                     <div style={{ fontSize: '12.5px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px' }}>
                       <strong style={{ color: 'var(--ink)', marginRight: '4px' }}>Ответственные исполнители:</strong>
-                      {proj.team.map((member, idx) => (
-                        <a
-                          key={idx}
-                          href={member.istinaUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="pill pill-neutral"
-                          style={{
-                            fontSize: '11.5px',
-                            textDecoration: 'none',
-                            fontWeight: member.name.includes(faculty.name.split(' ')[0]) ? 800 : 500,
-                            background: member.name.includes(faculty.name.split(' ')[0]) ? 'var(--primary-light)' : 'var(--surface)',
-                            borderColor: member.name.includes(faculty.name.split(' ')[0]) ? 'var(--primary)' : 'var(--line)',
-                            color: member.name.includes(faculty.name.split(' ')[0]) ? 'var(--primary)' : 'var(--ink)'
-                          }}
-                        >
-                          {member.name}
-                          <ExternalLink size={10} />
-                        </a>
-                      ))}
+                      {proj.team.map((member, idx) => {
+                        const isCurrentFaculty = member.name.includes(faculty.name.split(' ')[0]);
+                        const memberStyle = {
+                          fontSize: '11.5px',
+                          textDecoration: 'none',
+                          fontWeight: 600,
+                          background: isCurrentFaculty ? 'var(--primary-light)' : 'var(--surface)',
+                          borderColor: isCurrentFaculty ? 'var(--primary)' : 'var(--line)',
+                          color: isCurrentFaculty ? 'var(--primary)' : 'var(--ink)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        };
+                        return member.istinaUrl ? (
+                          <a
+                            key={idx}
+                            href={member.istinaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pill pill-neutral"
+                            style={memberStyle}
+                          >
+                            <span>{member.name}</span>
+                            <ExternalLink size={10} />
+                          </a>
+                        ) : (
+                          <span
+                            key={idx}
+                            className="pill pill-neutral"
+                            style={memberStyle}
+                          >
+                            {member.name}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
 

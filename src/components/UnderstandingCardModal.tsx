@@ -287,10 +287,10 @@ ${card.researchPerspective.points.map((p, idx) => `${idx + 1}. ${p}`).join('\n')
                   borderRadius: 'var(--radius-full)',
                   padding: '4px 10px',
                   fontSize: '11.5px',
-                  fontWeight: isCurrent ? 800 : 600,
+                  fontWeight: 600,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
+                  transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
                 }}
               >
                 {c.author.split(' ')[0]} {c.year ? `(${c.year})` : ''}

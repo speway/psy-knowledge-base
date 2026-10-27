@@ -197,12 +197,12 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                   borderRadius: 'var(--radius-full)',
                   padding: '5px 12px',
                   fontSize: '11.5px',
-                  fontWeight: viewMode === 'text' ? 800 : 500,
+                  fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
-                  transition: 'all 0.15s ease'
+                  transition: 'background-color 0.2s ease, opacity 0.2s ease'
                 }}
               >
                 <BookOpen size={13} />
@@ -219,12 +219,12 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
                     borderRadius: 'var(--radius-full)',
                     padding: '5px 12px',
                     fontSize: '11.5px',
-                    fontWeight: viewMode === 'file' ? 800 : 500,
+                    fontWeight: 600,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    transition: 'all 0.15s ease'
+                    transition: 'background-color 0.2s ease, opacity 0.2s ease'
                   }}
                 >
                   <FileText size={13} />
@@ -332,17 +332,37 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
             {viewMode === 'text' && (
               <>
                 {/* Font Size Toggle */}
-                <div style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.12)', borderRadius: '6px', padding: '2px' }}>
+                <div style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.12)', borderRadius: '6px', padding: '2px', gap: '2px' }}>
                   <button
                     onClick={() => setFontSize(f => f === 'lg' ? 'md' : 'sm')}
-                    style={{ background: 'none', border: 'none', color: '#ffffff', padding: '4px 7px', fontSize: '11px', cursor: 'pointer', fontWeight: fontSize === 'sm' ? 800 : 400 }}
+                    style={{
+                      background: fontSize === 'sm' ? 'rgba(255, 255, 255, 0.2)' : 'none',
+                      border: 'none',
+                      color: '#ffffff',
+                      padding: '4px 7px',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      borderRadius: '4px',
+                      transition: 'background-color 0.15s ease'
+                    }}
                     title="Уменьшить шрифт"
                   >
                     A-
                   </button>
                   <button
                     onClick={() => setFontSize(f => f === 'sm' ? 'md' : 'lg')}
-                    style={{ background: 'none', border: 'none', color: '#ffffff', padding: '4px 7px', fontSize: '12px', cursor: 'pointer', fontWeight: fontSize === 'lg' ? 800 : 400 }}
+                    style={{
+                      background: fontSize === 'lg' ? 'rgba(255, 255, 255, 0.2)' : 'none',
+                      border: 'none',
+                      color: '#ffffff',
+                      padding: '4px 7px',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      borderRadius: '4px',
+                      transition: 'background-color 0.15s ease'
+                    }}
                     title="Увеличить шрифт"
                   >
                     A+

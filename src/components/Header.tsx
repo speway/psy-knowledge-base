@@ -1,7 +1,7 @@
 import React from 'react';
-import { BookOpen, Library, Bookmark, Users, GraduationCap, Search } from 'lucide-react';
+import { Home, BookOpen, Library, Bookmark, Users, GraduationCap, Search } from 'lucide-react';
 
-export type SectionTab = 'disciplines' | 'reader' | 'glossary' | 'teachers' | 'archive';
+export type SectionTab = 'home' | 'disciplines' | 'reader' | 'glossary' | 'teachers' | 'archive';
 
 interface HeaderProps {
   activeTab: SectionTab;
@@ -17,7 +17,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
         {/* Academic Brand Identity */}
         <div 
           className="brand"
-          onClick={() => onSelectTab('disciplines')}
+          onClick={() => onSelectTab('home')}
+          title="На главную страницу портала"
+          style={{ cursor: 'pointer' }}
         >
           <div className="brand-mark">Ψ</div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -29,6 +31,14 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
         {/* Desktop Navigation Tabs */}
         <nav style={{ display: 'none' }} className="desktop-nav-container">
           <div className="nav-tab-list">
+            <button
+              onClick={() => onSelectTab('home')}
+              className={`nav-tab-button ${activeTab === 'home' ? 'active' : ''}`}
+            >
+              <Home size={14} />
+              <span>Главная</span>
+            </button>
+
             <button
               onClick={() => onSelectTab('disciplines')}
               className={`nav-tab-button ${activeTab === 'disciplines' ? 'active' : ''}`}
@@ -46,19 +56,19 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
             </button>
 
             <button
-              onClick={() => onSelectTab('glossary')}
-              className={`nav-tab-button ${activeTab === 'glossary' ? 'active' : ''}`}
-            >
-              <Bookmark size={14} />
-              <span>Словарь</span>
-            </button>
-
-            <button
               onClick={() => onSelectTab('teachers')}
               className={`nav-tab-button ${activeTab === 'teachers' ? 'active' : ''}`}
             >
               <Users size={14} />
               <span>Кафедра</span>
+            </button>
+
+            <button
+              onClick={() => onSelectTab('glossary')}
+              className={`nav-tab-button ${activeTab === 'glossary' ? 'active' : ''}`}
+            >
+              <Bookmark size={14} />
+              <span>Словарь</span>
             </button>
 
             <button
@@ -97,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onOpenSe
         </div>
 
         <style>{`
-          @media (min-width: 840px) {
+          @media (min-width: 860px) {
             .desktop-nav-container { display: flex !important; }
             .search-text-desktop { display: inline !important; }
             .search-kbd-desktop { display: inline !important; }

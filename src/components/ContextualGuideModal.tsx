@@ -214,10 +214,10 @@ ${guide.researchBridge.suggestedMethods.join(', ')}
                   borderRadius: 'var(--radius-full)',
                   padding: '4px 10px',
                   fontSize: '11px',
-                  fontWeight: isCurrent ? 800 : 600,
+                  fontWeight: 600,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
+                  transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
                 }}
               >
                 {g.title.split(':')[0]}
