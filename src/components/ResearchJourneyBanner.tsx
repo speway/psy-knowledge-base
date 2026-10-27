@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Compass, BookOpen, Layers, ArrowRight, Lightbulb, FileEdit } from 'lucide-react';
+import { Sparkles, ArrowRight, FileEdit, Layers } from 'lucide-react';
 
 interface ResearchJourneyBannerProps {
   onOpenBazarovCard: () => void;
@@ -11,46 +11,45 @@ interface ResearchJourneyBannerProps {
 export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
   onOpenBazarovCard,
   onOpenAllCards,
-  onOpenResearchGuide,
   onOpenResearchDraft
 }) => {
   return (
     <div 
       className="paper-card animate-fade-in"
       style={{
-        padding: '24px 26px',
-        marginBottom: '24px',
-        background: 'linear-gradient(135deg, #2b173e 0%, #431f63 50%, #2f1847 100%)',
+        padding: '22px 24px',
+        marginBottom: '22px',
+        background: 'linear-gradient(135deg, #2b173e 0%, #3e1c5c 100%)',
         color: '#ffffff',
         borderRadius: 'var(--radius-lg)',
-        border: '1px solid rgba(245, 158, 11, 0.3)',
-        boxShadow: '0 12px 32px rgba(43, 23, 62, 0.25)',
+        border: '1px solid rgba(245, 158, 11, 0.25)',
+        boxShadow: '0 8px 24px rgba(43, 23, 62, 0.18)',
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      {/* Background Decorative Crest / Watermark */}
+      {/* Background Decorative Crest */}
       <div style={{
         position: 'absolute',
-        right: '-18px',
-        bottom: '-28px',
-        fontSize: '140px',
+        right: '-14px',
+        bottom: '-24px',
+        fontSize: '120px',
         fontFamily: 'var(--font-serif)',
-        color: 'rgba(255, 255, 255, 0.04)',
+        color: 'rgba(255, 255, 255, 0.035)',
         userSelect: 'none',
         pointerEvents: 'none'
       }}>
         Ψ
       </div>
 
-      {/* Top Badge */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+      {/* Top Meta Line */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{
-            background: 'rgba(245, 158, 11, 0.25)',
+            background: 'rgba(245, 158, 11, 0.2)',
             color: '#fef3c7',
-            border: '1px solid rgba(245, 158, 11, 0.45)',
-            padding: '3px 10px',
+            border: '1px solid rgba(245, 158, 11, 0.35)',
+            padding: '2px 9px',
             borderRadius: 'var(--radius-full)',
             fontSize: '11px',
             fontWeight: 800,
@@ -60,25 +59,21 @@ export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
             alignItems: 'center',
             gap: '5px'
           }}>
-            <Sparkles size={12} color="#f59e0b" />
+            <Sparkles size={11} color="#f59e0b" />
             ПЕДАГОГИЧЕСКИЙ ПРИНЦИП КАФЕДРЫ
           </span>
-          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.75)' }}>
+          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.72)' }}>
             Филиал МГУ в г. Ташкенте · Направление «Психология»
           </span>
         </div>
-
-        <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.6)', fontFamily: 'var(--mono)' }}>
-          КАРТОЧКА ПОНИМАНИЯ
-        </span>
       </div>
 
       {/* Quote */}
       <blockquote style={{
-        margin: '0 0 14px 0',
-        padding: '0 0 0 16px',
+        margin: '0 0 12px 0',
+        padding: '0 0 0 14px',
         borderLeft: '3px solid #f59e0b',
-        fontSize: '17px',
+        fontSize: '16px',
         lineHeight: 1.45,
         fontFamily: 'var(--font-serif)',
         fontStyle: 'italic',
@@ -87,138 +82,116 @@ export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
         «Главное — превратить знакомство с текстами в увлекательное путешествие с выходом на собственные исследования»
       </blockquote>
 
-      {/* Attribution */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' }}>
+      {/* Author Attribution */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
         <div style={{
-          width: '32px',
-          height: '32px',
+          width: '28px',
+          height: '28px',
           borderRadius: '50%',
-          background: 'rgba(255, 255, 255, 0.15)',
-          border: '1px solid rgba(255, 255, 255, 0.25)',
+          background: 'rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '14px',
+          fontSize: '12px',
           fontWeight: 800
         }}>
           ТЮ
         </div>
         <div>
-          <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#ffffff' }}>
+          <span style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff' }}>
             Тахир Юсупович Базаров
-          </div>
-          <div style={{ fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.75)' }}>
-            Доктор психологических наук, профессор, заведующий кафедрой психологии филиала МГУ в г. Ташкенте
-          </div>
+          </span>
+          <span style={{ fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.7)', marginLeft: '6px' }}>
+            · заведующий кафедрой психологии филиала МГУ, профессор
+          </span>
         </div>
       </div>
 
-      {/* Action Buttons Row */}
+      {/* Calm 2-Action Row */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '10px',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
-        paddingTop: '14px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.12)'
+        gap: '10px',
+        paddingTop: '12px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
-        <button
-          onClick={onOpenBazarovCard}
-          style={{
-            background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: 'var(--radius-sm)',
-            padding: '9px 16px',
-            fontSize: '12.5px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-            transition: 'all 0.18s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
-        >
-          <Sparkles size={14} />
-          <span>Методика «СОКОЛ» (Карточка понимания)</span>
-        </button>
-
-        <button
-          onClick={onOpenAllCards}
-          style={{
-            background: 'rgba(255, 255, 255, 0.14)',
-            color: '#ffffff',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '9px 14px',
-            fontSize: '12.5px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.18s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.14)'}
-        >
-          <Layers size={14} />
-          <span>Каталог карточек понимания (7)</span>
-        </button>
-
-        <button
-          onClick={onOpenResearchGuide}
-          style={{
-            background: 'transparent',
-            color: '#fef3c7',
-            border: '1px dashed rgba(245, 158, 11, 0.5)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '9px 14px',
-            fontSize: '12.5px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.18s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(245, 158, 11, 0.15)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-        >
-          <Compass size={14} />
-          <span>Гайд: от чтения к исследованию</span>
-          <ArrowRight size={13} />
-        </button>
-
-        {onOpenResearchDraft && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <button
-            onClick={onOpenResearchDraft}
+            onClick={onOpenBazarovCard}
             style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
               color: '#ffffff',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              padding: '9px 15px',
-              fontSize: '12.5px',
+              padding: '7px 14px',
+              fontSize: '12px',
               fontWeight: 800,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)',
-              transition: 'all 0.18s ease'
+              boxShadow: '0 2px 10px rgba(217, 119, 6, 0.3)',
+              transition: 'all 0.15s ease'
             }}
-            title="Открыть интерактивный Черновик исследования студента"
             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
           >
-            <FileEdit size={14} />
-            <span>Черновик исследования</span>
+            <Sparkles size={13} />
+            <span>Методика «СОКОЛ» (Карточка понимания)</span>
           </button>
-        )}
+
+          {onOpenResearchDraft && (
+            <button
+              onClick={onOpenResearchDraft}
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '7px 14px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease'
+              }}
+              title="Открыть интерактивный Черновик исследования студента"
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'}
+            >
+              <FileEdit size={13} />
+              <span>Черновик исследования</span>
+            </button>
+          )}
+        </div>
+
+        <button
+          onClick={onOpenAllCards}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.85)',
+            fontSize: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+            textDecoration: 'underline',
+            textUnderlineOffset: '3px'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)'}
+        >
+          <Layers size={12} />
+          <span>Все карточки понимания</span>
+          <ArrowRight size={11} />
+        </button>
       </div>
     </div>
   );
