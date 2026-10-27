@@ -33,7 +33,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
   const [internalSelectedId, setInternalSelectedId] = useState<string>(selectedFacultyId);
   const [activeProfileTab, setActiveProfileTab] = useState<'research' | 'projects' | 'publications' | 'courses' | 'theses' | 'collaborations'>('research');
   const [searchFilter, setSearchFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'ready' | 'curators' | 'dev'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'leaders' | 'phd' | 'alumni'>('all');
   const [copiedContact, setCopiedContact] = useState(false);
 
   // Sync prop changes
@@ -49,7 +49,7 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
   };
 
   const handleCopyContacts = () => {
-    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\nКабинет: ${faculty.office || 'Кафедра психологии'}\nКонсультации: ${faculty.consultationHours || 'По расписанию кафедры'}\nEmail: ${faculty.email || 'dep.psychology@msu.uz'}`;
+    const text = `${faculty.name}\n${faculty.role} · ${faculty.department}\n${faculty.office || 'Кафедра психологии, Ташкентский филиал МГУ'}${faculty.sourceBookPage ? `\nИсточник: Юбилейное издание кафедры «20 лет профессиональной традиции», стр. ${faculty.sourceBookPage}` : ''}`;
     navigator.clipboard?.writeText(text);
     setCopiedContact(true);
     setTimeout(() => setCopiedContact(false), 2200);
@@ -66,14 +66,14 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
 
     if (!matchesSearch) return false;
 
-    if (categoryFilter === 'ready') {
-      return !f.isUnderDevelopment;
+    if (categoryFilter === 'leaders') {
+      return ['bazarov-t-yu', 'ruzibaev-d-b', 'usmanova-e-z', 'sultanova-l-z', 'pronin-r-o', 'ryabova-m-s'].includes(f.id);
     }
-    if (categoryFilter === 'curators') {
-      return f.id === 'bazarov-t-yu';
+    if (categoryFilter === 'phd') {
+      return Boolean(f.defenseInfo || f.badge?.includes('д.пс.н') || f.badge?.includes('Кандидат') || f.badge?.includes('PhD') || f.badge?.includes('Доктор'));
     }
-    if (categoryFilter === 'dev') {
-      return !!f.isUnderDevelopment;
+    if (categoryFilter === 'alumni') {
+      return f.experience.includes('Выпуск') || Boolean(f.badge?.includes('Выпуск')) || ['tuniyants-a-a', 'pronin-r-o', 'ryabova-m-s', 'rodnina-k-a', 'karieva-n-t', 'karimova-n-a', 'tsoy-s-v', 'khabiev-t-r', 'aziz-karieva-m-t', 'tashkhodjaeva-o-o', 'akhmedova-m-i', 'faizullina-r-s', 'makhmudova-kh-a', 'kerimova-d-k', 'muminova-s-a'].includes(f.id);
     }
     return true;
   });
@@ -128,25 +128,25 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
               Все преподаватели ({FACULTY_MEMBERS.length})
             </button>
             <button
-              onClick={() => { setCategoryFilter('all'); handleSelectFaculty('tuniyants-a-a'); }}
-              className={`pill ${faculty.id === 'tuniyants-a-a' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => setCategoryFilter('leaders')}
+              className={`pill ${categoryFilter === 'leaders' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Туниянц А.А.
+              Руководство кафедры
             </button>
             <button
-              onClick={() => { setCategoryFilter('all'); handleSelectFaculty('bazarov-t-yu'); }}
-              className={`pill ${faculty.id === 'bazarov-t-yu' ? 'pill-primary' : 'pill-neutral'}`}
+              onClick={() => setCategoryFilter('phd')}
+              className={`pill ${categoryFilter === 'phd' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              Базаров Т.Ю. (Куратор)
+              Доктора наук и PhD
             </button>
             <button
-              onClick={() => setCategoryFilter('dev')}
-              className={`pill ${categoryFilter === 'dev' ? 'pill-ochre' : 'pill-neutral'}`}
+              onClick={() => setCategoryFilter('alumni')}
+              className={`pill ${categoryFilter === 'alumni' ? 'pill-primary' : 'pill-neutral'}`}
               style={{ cursor: 'pointer', padding: '4px 10px', fontSize: '12px' }}
             >
-              В процессе оцифровки ({FACULTY_MEMBERS.filter(f => f.isUnderDevelopment).length})
+              Выпускники-преподаватели
             </button>
           </div>
         </div>
@@ -460,10 +460,10 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                   <span>{faculty.office}</span>
                 </div>
               )}
-              {faculty.consultationHours && (
+              {faculty.sourceBookPage && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ink)' }}>
-                  <Clock size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
-                  <span>Консультации: {faculty.consultationHours}</span>
+                  <BookOpen size={13} color="var(--primary)" style={{ flexShrink: 0 }} />
+                  <span>Книга «20 лет кафедры»: <strong>стр. {faculty.sourceBookPage}</strong></span>
                 </div>
               )}
               {faculty.email && (
@@ -481,6 +481,36 @@ export const FacultyView: React.FC<FacultyViewProps> = ({
                 </div>
               )}
             </div>
+
+            {/* PhD Defense Special Card if available */}
+            {faculty.defenseInfo && (
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(75, 50, 104, 0.06) 0%, rgba(184, 59, 28, 0.05) 100%)',
+                border: '1px solid var(--primary-border)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '12px 16px',
+                marginBottom: '14px',
+                fontSize: '12.5px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: 'var(--primary)', marginBottom: '4px' }}>
+                  <Award size={14} color="var(--ochre)" />
+                  <span>Учёная степень: {faculty.defenseInfo.degree} ({faculty.defenseInfo.year} г.)</span>
+                </div>
+                <div style={{ color: 'var(--ink)', marginBottom: '3px' }}>
+                  <strong>Тема исследования:</strong> «{faculty.defenseInfo.topic}»
+                </div>
+                {faculty.defenseInfo.advisor && (
+                  <div style={{ color: 'var(--muted)', fontSize: '12px' }}>
+                    <strong>Научный руководитель:</strong> {faculty.defenseInfo.advisor}
+                  </div>
+                )}
+                {faculty.defenseInfo.date && (
+                  <div style={{ color: 'var(--muted)', fontSize: '11.5px', marginTop: '3px' }}>
+                    Защита состоялась {faculty.defenseInfo.date} в совете при {faculty.defenseInfo.institution || 'НУУз им. Мирзо Улугбека'}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Quick Action Links */}
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>

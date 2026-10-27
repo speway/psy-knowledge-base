@@ -45,25 +45,8 @@ export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
       {/* Top Meta Line */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{
-            background: 'rgba(245, 158, 11, 0.2)',
-            color: '#fef3c7',
-            border: '1px solid rgba(245, 158, 11, 0.35)',
-            padding: '2px 9px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '11px',
-            fontWeight: 800,
-            letterSpacing: '0.04em',
-            fontFamily: 'var(--mono)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '5px'
-          }}>
-            <Sparkles size={11} color="#f59e0b" />
-            ПЕДАГОГИЧЕСКИЙ ПРИНЦИП КАФЕДРЫ
-          </span>
-          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.72)' }}>
-            Филиал МГУ в г. Ташкенте · Направление «Психология»
+          <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.82)', fontWeight: 600 }}>
+            Филиал МГУ имени М.В. Ломоносова в г. Ташкенте · Направление «Психология»
           </span>
         </div>
       </div>
@@ -103,7 +86,7 @@ export const ResearchJourneyBanner: React.FC<ResearchJourneyBannerProps> = ({
             Тахир Юсупович Базаров
           </span>
           <span style={{ fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.7)', marginLeft: '6px' }}>
-            · заведующий кафедрой психологии филиала МГУ, профессор
+            · доктор психологических наук, заслуженный профессор Московского университета
           </span>
         </div>
       </div>

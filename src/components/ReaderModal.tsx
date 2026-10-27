@@ -54,11 +54,11 @@ export const ReaderModal: React.FC<ReaderModalProps> = ({
     initialFocusRef
   });
 
-  // Reset page when source changes
+  // Reset page when source changes; default to full file view if fileUrl is available
   useEffect(() => {
     setCurrentPage(0);
-    setViewMode('text');
-  }, [source?.id]);
+    setViewMode(source?.fileUrl ? 'file' : 'text');
+  }, [source?.id, source?.fileUrl]);
 
   if (!source) return null;
 

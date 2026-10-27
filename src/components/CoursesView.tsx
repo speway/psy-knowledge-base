@@ -308,36 +308,59 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
               </span>
             </div>
 
-            {/* Contextual Seminar Guide Action (single button for the seminar) */}
-            {onOpenContextualGuide && (
-              <button
-                onClick={() => {
-                  if (currentSeminar.num <= 2) onOpenContextualGuide('guide-self-determination');
-                  else if (currentSeminar.num === 3) onOpenContextualGuide('guide-functional-autonomy');
-                  else if (currentSeminar.num <= 5) onOpenContextualGuide('guide-achievement-motivation');
-                  else if (currentSeminar.num <= 8) onOpenContextualGuide('guide-emotions-representation');
-                  else onOpenContextualGuide('guide-bazarov-sokol-framework');
-                }}
-                style={{
-                  background: 'var(--surface)',
-                  color: 'var(--primary)',
-                  border: '1px solid var(--primary-border)',
-                  borderRadius: 'var(--radius-full)',
-                  padding: '4px 12px',
-                  fontSize: '11.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  transition: 'all 0.15s ease'
-                }}
-                title="Открыть методический гайд кафедры по данной теме"
-              >
-                <Compass size={12} />
-                <span>Гайд к семинару и ВКР</span>
-              </button>
-            )}
+            {/* Seminar Actions: Clean toolbar at seminar level instead of duplicating on every question */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+              {/* Contextual Seminar Guide Action */}
+              {onOpenContextualGuide && (
+                <button
+                  onClick={() => {
+                    if (currentSeminar.num <= 2) onOpenContextualGuide('guide-self-determination');
+                    else if (currentSeminar.num === 3) onOpenContextualGuide('guide-functional-autonomy');
+                    else if (currentSeminar.num <= 5) onOpenContextualGuide('guide-achievement-motivation');
+                    else if (currentSeminar.num <= 8) onOpenContextualGuide('guide-emotions-representation');
+                    else onOpenContextualGuide('guide-bazarov-sokol-framework');
+                  }}
+                  className="btn-ghost"
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '11.5px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                  title="Открыть методический гайд кафедры по данной теме"
+                >
+                  <Compass size={12} color="var(--primary)" />
+                  <span>Гайд темы</span>
+                </button>
+              )}
+
+              {/* Research Draft Button for the current seminar */}
+              {onOpenResearchDraft && (
+                <button
+                  onClick={() => onOpenResearchDraft({
+                    sourceId: currentSeminar.questions[0]?.sourceId || 'leontiev_da_general',
+                    sourceTitle: currentSeminar.questions[0]?.sourceTitle || currentSeminar.title,
+                    sourceAuthor: currentSeminar.questions[0]?.sourceAuthor || 'Кафедра психологии',
+                    citation: `Семинар №${currentSeminar.num}: ${currentSeminar.title} // Программа курса «Психология мотивации и эмоций», 2026`,
+                    topic: `Исследовательский черновик: Семинар №${currentSeminar.num} (${currentSeminar.title})`,
+                    seminarNum: currentSeminar.num
+                  })}
+                  className="btn-ghost"
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '11.5px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                  title="Открыть Черновик исследования по материалам этого семинара"
+                >
+                  <FileEdit size={12} color="var(--primary)" />
+                  <span>Черновик</span>
+                </button>
+              )}
+            </div>
           </div>
 
           <h2 style={{
@@ -462,72 +485,18 @@ export const CoursesView: React.FC<CoursesViewProps> = ({
                         </span>
                       </div>
 
-                      {/* Right: Calm, uncluttered action buttons (no rainbow overload) */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                        
-                        {/* Understanding Card: subtle pill */}
-                        {matchedCard && onOpenUnderstandingCard && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onOpenUnderstandingCard(matchedCard.id);
-                            }}
-                            className="pill pill-ochre"
-                            style={{
-                              cursor: 'pointer',
-                              fontSize: '11px',
-                              padding: '2px 8px',
-                              fontWeight: 700,
-                              transition: 'all 0.15s ease'
-                            }}
-                            title="Открыть Карточку понимания первоисточника"
-                          >
-                            <Sparkles size={10} />
-                            <span>Карточка</span>
-                          </button>
-                        )}
-
-                        {/* Research Draft: subtle pill */}
-                        {onOpenResearchDraft && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onOpenResearchDraft({
-                                sourceId: q.sourceId,
-                                sourceTitle: q.sourceTitle,
-                                sourceAuthor: q.sourceAuthor,
-                                citation: `${q.sourceAuthor}. ${q.sourceTitle} (стр. ${q.sourcePages}) // Учебная программа курса «Психология мотивации и эмоций», семинар №${currentSeminar.num}, вопрос №${idx + 1}`,
-                                topic: `Семинар №${currentSeminar.num}, вопрос №${idx + 1}: ${q.text}`,
-                                seminarNum: currentSeminar.num,
-                                questionNum: idx + 1
-                              });
-                            }}
-                            className="pill pill-primary"
-                            style={{
-                              cursor: 'pointer',
-                              fontSize: '11px',
-                              padding: '2px 8px',
-                              fontWeight: 700,
-                              transition: 'all 0.15s ease'
-                            }}
-                            title="Открыть Черновик исследования по данному вопросу"
-                          >
-                            <FileEdit size={10} />
-                            <span>Черновик</span>
-                          </button>
-                        )}
-
-                        {/* Primary reader link */}
+                      {/* Right: Clean, elegant primary reader action */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{
                           fontSize: '12px',
                           fontWeight: 700,
                           color: 'var(--primary)',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '2px',
-                          marginLeft: '2px'
+                          gap: '3px'
                         }}>
-                          Читать <ArrowUpRight size={12} />
+                          <span>Открыть в ридере</span>
+                          <ArrowUpRight size={13} />
                         </span>
                       </div>
                     </div>

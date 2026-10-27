@@ -174,7 +174,13 @@ export const LibraryView: React.FC<LibraryViewProps> = ({ onOpenReader, onOpenUn
               gap: '8px'
             }}>
               <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>
-                {source.pages.length} фрагм. текста
+                {source.fileUrl ? (
+                  <span className="pill pill-teal" style={{ fontSize: '11px', padding: '2px 8px' }}>
+                    {source.fileSize ? `Полный PDF · ${source.fileSize}` : 'Полный файл PDF'}
+                  </span>
+                ) : (
+                  <span>{source.pages.length} фрагм. текста</span>
+                )}
               </span>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
