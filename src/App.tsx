@@ -190,43 +190,40 @@ export const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Academic Editorial Footer */}
+      {/* Site Footer */}
       <footer style={{
         background: 'var(--surface)',
         borderTop: '1px solid var(--line)',
-        padding: '40px 0 95px',
+        padding: '24px 0 95px',
         marginTop: 'auto'
       }}>
         <div className="app-container">
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
             alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            flexWrap: 'wrap',
             textAlign: 'center',
-            maxWidth: '720px',
-            margin: '0 auto'
+            fontSize: '13px',
+            color: 'var(--muted)'
           }}>
-            <div className="brand-mark" style={{ width: '42px', height: '42px', fontSize: '24px' }}>
-              Ψ
-            </div>
-
-            <p style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)', letterSpacing: '0.01em' }}>
-              Филиал Московского государственного университета имени М.В. Ломоносова в городе Ташкенте
-            </p>
-
-            <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.55 }}>
-              Неофициальный учебно-методический портал · База знаний направления «Психология»<br />
-              Инициатива Студенческого научного сектора психологии ТФ МГУ при согласовании с кафедрой.
-            </p>
-
-            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '12px', color: 'var(--muted-light)', paddingTop: '10px', borderTop: '1px solid var(--line)' }}>
-              <span>Научный сектор психологии</span>
-              <span>•</span>
-              <span>Оцифрованная библиотека первоисточников</span>
-              <span>•</span>
-              <span>Профили преподавателей и семинары</span>
-            </div>
+            <span>Научный сектор</span>
+            <span style={{ opacity: 0.5 }}>·</span>
+            <a 
+              href="https://t.me/speway" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                color: 'var(--primary)',
+                textDecoration: 'none',
+                fontWeight: 600
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+              onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+            >
+              by spw
+            </a>
           </div>
         </div>
       </footer>

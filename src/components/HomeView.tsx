@@ -716,22 +716,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       </div>
 
-      {/* FOOTER ACADEMIC CREDENTIALS */}
-      <div style={{
-        textAlign: 'center',
-        padding: '24px 16px',
-        borderTop: '1px solid var(--line)',
-        color: 'var(--muted)',
-        fontSize: '12.5px'
-      }}>
-        <p style={{ marginBottom: '6px', fontWeight: 600, color: 'var(--ink-soft)' }}>
-          Кафедра психологии Филиала Московского государственного университета имени М.В. Ломоносова в г. Ташкенте
-        </p>
-        <p style={{ margin: 0 }}>
-          Официальные материалы монографии «20 лет профессиональной традиции» (2006–2026) · Программы семинарских курсов и НИРС
-        </p>
-      </div>
-
     </div>
   );
 };
